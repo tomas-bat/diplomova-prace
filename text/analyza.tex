@@ -15,6 +15,13 @@ Zaznamenávání odpracovaného času může být potřeba z~několika různých
 
 Celkově zaznamenávání slouží k~lepšímu řízení času, sledování produktivity a optimalizaci využití pracovního času pro jednotlivce i~organizace.
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=10cm]{clockify-ios.png}
+	\caption{Clockify – iOS aplikace pro měření času \cite{clockify-ios}}
+	\label{fig:clockify-ios}
+\end{figure}
+
 %---------------------------------------------------------------
 \section{Spouštěče měření času}
 %---------------------------------------------------------------
@@ -27,3 +34,41 @@ Jedním z~cílů této práce je prozkoumat různá řešení pro spouštěče m
 
 Za fyzické spouštěče měření času lze považovat jakoukoli formu fyzického ovladače, kterou může uživatel nějak ovládat a tím spouštět časovač měření času.
 
+Častým typem fyzického spouštěče je nějaká forma takzvaného platónského tělesa (krychle, osmistěn, dvanáctistěn, atd.), které může uživatel otáčet. Podle toho, na kterou stranu ho položí, tak se spustí časovač s danými parametry. Různé strany tělesa mohou sloužit například pro identifikování toho, na kterém projektu uživatel zrovna pracuje.
+
+Mezi fyzické spouštěče patří například tyto produkty:
+\begin{itemize}
+\item\textbf{TIMEFLIP:} Dvanáctistěnné těleso, na které si uživatel může nalepovat cokoli, co bude identifikovat odpracovaný čas. Těleso se propojí s~mobilní aplikací, která poté spravuje naměřený čas. \cite{timeflip}
+\item\textbf{TIMEULAR:} Stejný princip jako TIMEFLIP, akorát používá osmistěnné těleso. Jednotlivé strany jdou také přizpůsobovat nálepkami. \cite{timeular}
+\item\textbf{timeBuzzer:} Fyzické tlačítko, které lze umístit na stůl a zapojit do počítače. Stisknutí tlačítka otevře okno měřící aplikace, otočením tlačítka lze vybrat projekt a opětovným stisknutím se začne daný projekt měřit. \cite{timebuzzer}
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[b]{5.2cm}
+		\includegraphics[width=5.2cm]{timeflip.jpeg}
+		\caption{TIMEFLIP – Kostka a aplikace \cite{timeflip}}
+		\label{pic:timeflip}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{7cm}
+		\includegraphics[width=7cm]{timebuzzer.jpeg}
+		\caption{timeBuzzer – tlačítko a aplikace \cite{timebuzzer}}
+		\label{pic:timebuzzer}
+	\end{subfigure}
+\end{figure}
+
+Všechny ze zmíněných produktů poskytují veřejné API pro aplikace, se kterými komunikují \cite{timeflip-api} \cite{timeular-api} \cite{timebuzzer-api}. Pokud by tedy bylo potřeba produkty propojit s~vlastní aplikací, která by mohla naměřený čas spravovat, bylo by potřeba, aby aplikace komunikovala s~těmito nástroji. Pořád by byl potřeba prostředník, kterým by byla aplikace daného produktu. Výjimkou je v~těchto produktech pouze TIMEFLIP, který poskytuje veřejný protokol pro BLE komunikaci \cite{timeflip-ble-api}. Tento produkt by tedy mohl komunikovat s~novou aplikací napřímo.
+
+Pokud by nová aplikace měla umožňovat budoucí propojení s~jakýmkoli dalším hardwarovým produktem, tak by také měla poskytovat veřejné API, které by takovou komunikaci umožňovalo. Vývoj takových produktů by mohl být předmětem návrhu pro budoucí vylepšení aplikace.
+
+%---------------------------------------------------------------
+\subsection{Softwarové}
+%---------------------------------------------------------------
+
+Za softwarové spouštěče měření času lze považovat určité formy integrace a automatizace v~rámci zařízení, na kterém aplikace běží. V~případě aplikace na platformě iOS to mohou být následující možnosti:
+\begin{itemize}
+\item\textbf{Automatizace podle polohy:} Aplikace by mohla reagovat na polohu uživatele a spouštět nebo vypínat časovač na základně informace, kde se uživatel nachází. Uživatel by si mohl například nastavit určitá místa, kde by chtěl, aby se automaticky spustil časovač. Mohl by se zapnout přímo s~konkrétními přednastavenými parametry (projekt, klient, \dots), nebo by se jen mohlo ukázat upozornění, aby si uživatel časovač zapl sám, s~parametry, které zadá. Podobně by aplikace mohla reagovat i na opuštění nějakého místa – například pokud uživatel opustí místo, které má označeno jako práci, tak by dostal upozornění, zda si nechce vypnout časovač.
+\item\textbf{Automatizace podle času:} Jednoduchá forma automatizace by mohla fungovat na základě času. V~přednastavených časech by se mohl zapnout nebo vypnout časovač s~danými parametry, nebo by aplikace mohla uživatele jen upozornit.
+\item\textbf{Automatizace podle kalendáře:} Užitečná by také mohla být integrace s~kalendářem uživatele. Podle naplánovaných událostí by se časovač mohl automaticky zapínat, přepínat, nebo vypínat, s~parametry z~kalendáře. Nebo opět pouze uživatele upozornit, zda si kvůli nějaké události nechce měření času aktualizovat.
+\end{itemize}
