@@ -39,7 +39,7 @@ Za fyzické spouštěče měření času lze považovat jakoukoli formu fyzické
 Mezi fyzické spouštěče patří například tyto produkty:
 \begin{itemize}
 \item\textbf{TIMEFLIP:} Dvanáctistěnné těleso, na které si uživatel může nalepovat cokoli, co bude identifikovat odpracovaný čas. Těleso se propojí s~mobilní aplikací, která poté spravuje naměřený čas. \cite{timeflip}
-\item\textbf{TIMEULAR:} Stejný princip jako TIMEFLIP, akorát používá osmistěnné těleso. Jednotlivé strany jdou také přizpůsobovat nálepkami. \cite{timeular}
+\item\textbf{TIMEULAR:} Stejný princip jako \emph{TIMEFLIP}, akorát používá osmistěnné těleso. Jednotlivé strany jdou také přizpůsobovat nálepkami. \cite{timeular}
 \item\textbf{timeBuzzer:} Fyzické tlačítko, které lze umístit na stůl a zapojit do počítače. Stisknutí tlačítka otevře okno měřící aplikace, otočením tlačítka lze vybrat projekt a opětovným stisknutím se začne daný projekt měřit. \cite{timebuzzer}
 \end{itemize}
 
@@ -58,7 +58,7 @@ Mezi fyzické spouštěče patří například tyto produkty:
 	\end{subfigure}
 \end{figure}
 
-Všechny ze zmíněných produktů poskytují veřejné API pro aplikace, se kterými komunikují \cite{timeflip-api} \cite{timeular-api} \cite{timebuzzer-api}. Pokud by tedy bylo potřeba produkty propojit s~vlastní aplikací, která by mohla naměřený čas spravovat, bylo by potřeba, aby aplikace komunikovala s~těmito nástroji. Pořád by byl potřeba prostředník, kterým by byla aplikace daného produktu. Výjimkou je v~těchto produktech pouze TIMEFLIP, který poskytuje veřejný protokol pro BLE komunikaci \cite{timeflip-ble-api}. Tento produkt by tedy mohl komunikovat s~novou aplikací napřímo.
+Všechny ze zmíněných produktů poskytují veřejné API pro aplikace, se kterými komunikují \cite{timeflip-api} \cite{timeular-api} \cite{timebuzzer-api}. Pokud by tedy bylo potřeba produkty propojit s~vlastní aplikací, která by mohla naměřený čas spravovat, bylo by potřeba, aby aplikace komunikovala s~těmito nástroji. Pořád by byl potřeba prostředník, kterým by byla aplikace daného produktu. Výjimkou je v~těchto produktech pouze \emph{TIMEFLIP}, který poskytuje veřejný protokol pro BLE komunikaci \cite{timeflip-ble-api}. Tento produkt by tedy mohl komunikovat s~novou aplikací napřímo.
 
 Pokud by nová aplikace měla umožňovat budoucí propojení s~jakýmkoli dalším hardwarovým produktem, tak by také měla poskytovat veřejné API, které by takovou komunikaci umožňovalo. Vývoj takových produktů by mohl být předmětem návrhu pro budoucí vylepšení aplikace.
 
@@ -68,7 +68,105 @@ Pokud by nová aplikace měla umožňovat budoucí propojení s~jakýmkoli dalš
 
 Za softwarové spouštěče měření času lze považovat určité formy integrace a automatizace v~rámci zařízení, na kterém aplikace běží. V~případě aplikace na platformě iOS to mohou být následující možnosti:
 \begin{itemize}
-\item\textbf{Automatizace podle polohy:} Aplikace by mohla reagovat na polohu uživatele a spouštět nebo vypínat časovač na základně informace, kde se uživatel nachází. Uživatel by si mohl například nastavit určitá místa, kde by chtěl, aby se automaticky spustil časovač. Mohl by se zapnout přímo s~konkrétními přednastavenými parametry (projekt, klient, \dots), nebo by se jen mohlo ukázat upozornění, aby si uživatel časovač zapl sám, s~parametry, které zadá. Podobně by aplikace mohla reagovat i na opuštění nějakého místa – například pokud uživatel opustí místo, které má označeno jako práci, tak by dostal upozornění, zda si nechce vypnout časovač.
+\item\textbf{Automatizace podle polohy:} Aplikace by mohla reagovat na polohu uživatele a spouštět nebo vypínat časovač na základně informace, kde se uživatel nachází. Uživatel by si mohl například nastavit určitá místa, kde by chtěl, aby se automaticky spustil časovač. Mohl by se zapnout přímo s~konkrétními přednastavenými parametry (projekt, klient, \dots), nebo by se jen mohlo ukázat upozornění, aby si uživatel časovač zapnul sám, s~parametry, které zadá. Podobně by aplikace mohla reagovat i na opuštění nějakého místa – například pokud uživatel opustí místo, které má označeno jako práci, tak by dostal upozornění, zda si nechce vypnout časovač.
 \item\textbf{Automatizace podle času:} Jednoduchá forma automatizace by mohla fungovat na základě času. V~přednastavených časech by se mohl zapnout nebo vypnout časovač s~danými parametry, nebo by aplikace mohla uživatele jen upozornit.
 \item\textbf{Automatizace podle kalendáře:} Užitečná by také mohla být integrace s~kalendářem uživatele. Podle naplánovaných událostí by se časovač mohl automaticky zapínat, přepínat, nebo vypínat, s~parametry z~kalendáře. Nebo opět pouze uživatele upozornit, zda si kvůli nějaké události nechce měření času aktualizovat.
+\item\textbf{Automatizace podle režimu soustředění:} Systém iOS umožňuje od verze 15.0 uživatelům používat takzvané \emph{Režimy soustředění} \cite{ios-focus-modes}. Uživatel si může konfigurovat různé režimy a nastavovat, jaké mu v~tomto režimu budou chodit upozornění, jaké aplikace může používat, kdo mu může volat, apod. Od iOS verze 16 také Apple umožňuje vývojářům přizpůsobovat chování aplikace podle toho, jaký režim soustředění je zapnutý \cite{ios-focus-modes-adjustment}. Toho by se dalo vhodně využít například tak, že by se mohl automaticky spouštět časovač (nebo by uživatel mohl být upozorněn) podle toho, do jakého režimu soustředění se uživatel právě přepnul.
+\item\textbf{Automatizace pomocí zkratek:} Apple nabízí uživatelům s~iOS verze 13.0 novější aplikaci \emph{Zkratky} \cite{ios-shortcuts-app}, která umožňuje tvorbu vlastních automatizujících procesů \cite{ios-shortcuts}. Tento způsob automatizace umožňuje uživatelům i~vývojářům velkou míru přizpůsobitelnosti – zkratky jdou propojovat s~dalšími aplikacemi, s~hlasovým asistentem a s~mnoha různými akcemi. Všechny předchozí způsoby automatizace jdou také nějakým způsobem vytvořit pomocí zkratek. \cite{ios-shortcuts-developer}
 \end{itemize}
+
+%---------------------------------------------------------------
+\section{Existující systémy pro měření a správu odpracovaného času}
+%---------------------------------------------------------------
+
+Systémů pro měření a správu odpracovaného času existuje mnoho. Existuje dokonce několik různých článků o~tom, které systémy jsou nejlepší a jaké je jejich srovnání \cite{forbes-tracking-apps-article} \cite{zapier-tracking-apps-article}. Následující výběr příkladů je učiněn podle těchto článku, podle osobní preference a podle počtu stažení na iOS platformě.
+
+%---------------------------------------------------------------
+\subsection{Clockify}
+%---------------------------------------------------------------
+
+Clockify je jednoduchá a rozšířená aplikace primárně určená pro měření a správu odpracovaného času. Mobilní aplikace má více než 1 milion stažení \cite{clockify-app-magic} a celý systém používají miliony lidí \cite{clockify-customers}. 
+
+V článku Forbes je hodnocena jako celkově nejlepší aplikace pro měření času pro rok 2024. Má široké spektrum funkcionalit – umožňuje měření a správu času pro různé projekty, klienty a zařízení. Mimo měření času nabízí také sledování prezence pro mzdy a účetnictví, optimalizaci produktivity zaměstnanců, měření vykazovatelného času a sdílení pokroku na projektech s~klienty. \cite{forbes-tracking-apps-article}
+
+Clockify nabízí aplikace pro mnoho platforem: Desktopovou aplikaci pro Mac, Windows a Linux, doplněk webového prohlížeče pro Chrome, Firefox a Edge, mobilní aplikaci pro iOS a Android a nakonec sdílené Kioskové řešení, na kterém si uživatelé mohou zapisovat příchody, přestávky a další. \cite{clockify-apps}
+
+V~základní variantě je používání aplikace zdarma. Clockify ale nabízí i~placené plány, které nabízí přidané funkce, jako audity naměřených časů, používání přestávek a další. Tyto placené plány mohou stát od \$3.99 měsíčně za uživatele až po \$11.99 měsíčně za uživatele. \cite{clockify-pricing} 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{clockify-timer.jpg}
+	\caption{Časovač na měření času v~aplikaci Clockify \cite{clockify-features}}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{clockify-report.jpg}
+	\caption{Reporty v~aplikaci Clockify \cite{clockify-features}}
+\end{figure}
+
+Clockify nabízí dobře zdokumentované API pro své služby \cite{clockify-api}. Napojení na funkce systému lze tedy jednoduše udělat i~z~vlastního řešení. Do Clockify lze také data importovat z~CSV tabulek, jsou-li data vhodně naformátována \cite{clockify-import-timesheets}.
+
+Mezi nevýhody systému Clockify Forbes uvádí, že projekty nejdou označit jako dokončené, a že shrnující reporty mohou být zpočátku matoucí. Celkově Clockify ale vnímá jako nejlepší řešení pro pokrytí celé škály funkcionalit.
+
+%---------------------------------------------------------------
+\subsection{Toggl Track}
+%---------------------------------------------------------------
+
+Toggl track je další poměrně rozšířená aplikace pro měření a správu času. Na platformě iOS má více než 1 milion stažení \cite{toggl-track-app-magic}. 
+
+Forbes tuto aplikaci považuje za nejlepší pro malé týmy, protože nabízí plán zdarma pro týmy do 5 uživatelů a nabízí neomezený počet klientů a projektů. \cite{forbes-tracking-apps-article}
+
+Aplikace nabízí určitou formu automatické detekce toho, že uživatel nemá zapnutý časovač, i když pracuje, nebo automatickou detekci naopak toho, že uživatel už nepracuje, ale časovač má zapnutý. Aplikace nabízí detailní denní, týdenní a měsíční reporty.
+
+Toggl Track také pokrývá více platforem: Webovou aplikací, mobilní aplikací pro iOS a Android a desktopovou aplikací pro Windows a Mac. \cite{toggl-track}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{toggl-track.png}
+	\caption{Aplikace Toggl Track \cite{toggl-track}}
+\end{figure}
+
+%---------------------------------------------------------------
+\subsection{Deputy}
+%---------------------------------------------------------------
+
+Deputy je další aplikací, která umožňuje měření a správu odpracovaného času. Jejím hlavním účelem je však plánování směn zaměstnanců. Je uvedena jako jeden z~příkladů proto, aby šlo nahlédnout na problém měření času i~z~jiného úhlu, než striktně měření času primárně za účelem vykazování, fakturování nebo analýzy efektivity. Je také velice rozšířenou aplikací – počty stažení na mobilních telefonech překračují 5 milionů \cite{deputy-app-magic}.
+
+Právě plánování směn zaměstnanců je hlavním důvodem, proč Forbes tuto aplikaci ve svém seznamu zmiňuje. Aplikace totiž nabízí plánování neomezeného počtu směn za měsíc. Uživatelé se mohou přihlásit k~aplikacím pro plánování a pro prezenci zvlášť. I~neplacený plán umožňuje automatické plánování směn, což šetří čas manažerům. Toto plánování umožňuje i~započítání obědových pauz, přestávek a dalšího, přímo do plánu směn, podle příslušných zákonů.  \cite{forbes-tracking-apps-article}
+
+Deputy nabízí aplikaci pro měření odpracovaného času pro mobilní platformy iOS a Android. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{deputy.png}
+	\caption{Aplikace Deputy \cite{deputy-time-tracking-app}}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
