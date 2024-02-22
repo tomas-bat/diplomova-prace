@@ -93,21 +93,24 @@ Clockify nabízí aplikace pro mnoho platforem: Desktopovou aplikaci pro Mac, Wi
 
 V~základní variantě je používání aplikace zdarma. Clockify ale nabízí i~placené plány, které nabízí přidané funkce, jako audity naměřených časů, používání přestávek a další. Tyto placené plány mohou stát od \$3.99 měsíčně za uživatele až po \$11.99 měsíčně za uživatele. \cite{clockify-pricing} 
 
-\begin{figure}[h]
+\begin{figure}[p]
 	\centering
-	\includegraphics[width=\textwidth]{clockify-timer.jpg}
+	\includegraphics[width=0.9\textwidth]{clockify-timer.jpg}
 	\caption{Časovač na měření času v~aplikaci Clockify \cite{clockify-features}}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\textwidth]{clockify-report.jpg}
+	\label{fig:clockify-timer}
+	\vspace{1cm}
+	\includegraphics[width=0.9\textwidth]{clockify-report.jpg}
 	\caption{Reporty v~aplikaci Clockify \cite{clockify-features}}
+	\label{fig:clockify-report}
 \end{figure}
 
 Clockify nabízí dobře zdokumentované API pro své služby \cite{clockify-api}. Napojení na funkce systému lze tedy jednoduše udělat i~z~vlastního řešení. Do Clockify lze také data importovat z~CSV tabulek, jsou-li data vhodně naformátována \cite{clockify-import-timesheets}.
 
 Mezi nevýhody systému Clockify Forbes uvádí, že projekty nejdou označit jako dokončené, a že shrnující reporty mohou být zpočátku matoucí. Celkově Clockify ale vnímá jako nejlepší řešení pro pokrytí celé škály funkcionalit.
+
+Na obrázku \ref{fig:clockify-timer} je vidět hlavní obrazovka ve webové verzi aplikace – časovač. Uživatel si zde může časovat ručně zapnout a vypnout, přidělit projekt, přidat značky, označit vykazovatelnost a přidat popisek. Také má možnost přidat odpracovaný čas ručně, tedy ne pomocí časovače. K~tomu stačí jen napsat čas začátku a konce. Pod ovládacím panelem časovače potom uživatel vidí seznam svých již zadaných časových záznamů, které zde může jakkoli upravovat.
+
+Dále je na obrázku \ref{fig:clockify-report} vidět obrazovka určená pro reporty. Uživatel si zde může vybrat časový úsek, pro který chce report vypracovat, a může si nastavit filtry, podle kterých chce časové vstupy filtrovat (tým, klient, projekt, úkol, značka, stav a popisek). Po aplikování filtru poté uživatel uvidí report své práce vyhovující zadaným parametrům, který si může exportovat ve formátech PDF, CSV a Excel.
 
 %---------------------------------------------------------------
 \subsection{Toggl Track}
@@ -143,10 +146,77 @@ Deputy nabízí aplikaci pro měření odpracovaného času pro mobilní platfor
 	\caption{Aplikace Deputy \cite{deputy-time-tracking-app}}
 \end{figure}
 
+%---------------------------------------------------------------
+\section{Vývoj mobilních aplikací pro systém iOS}
+%---------------------------------------------------------------
 
+Tato sekce se věnuje několika klíčovým tématům souvisejícím s~vývojem aplikací pro zařízení s operačním systémem iOS. Tyto témata shrnuje a poskytuje tím základ pro diskuzi o~vývoji aplikací pro tento systém.
 
+%---------------------------------------------------------------
+\subsection{Historie a vývoj iOS platformy}
+%---------------------------------------------------------------
 
+Historie operačního systému iOS začala v~roce 2007, kdy byl představen a začal se prodávat první mobilní telefon od společnosti Apple, kterým byl iPhone. V~tomto telefonu byl od výroby nainstalován operační systém, který ještě v~tu dobu nenesl název \emph{iOS}, ale \emph{iPhone OS}. Název \emph{iOS} se začal používat až později od verze systému 4. Přestože z~dnešního pohledu chybělo v~systému mnoho funkcí, se kterými si dnes mobilní telefony spojujeme, jako možnost instalace aplikací třetích stran, tak to byl v~tu dobu velký posun. Věci jako \emph{Multitouch screen}, vizuální znázornění hlasové schránky, nebo integrace s~\emph{iTunes}, byly obrovskou výhodou. Mezi předinstalované aplikace patřil kalendář, fotky, fotoaparát, poznámky, prohlížeč webu \emph{Safari}, e-mailový klient, telefon a \emph{iPod} (který se později rozdělil na aplikace pro hudbu a aplikace pro videa).
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=10cm]{iphone.png}
+	\caption{První model mobilního telefonu iPhone \cite{iphone-review}}
+\end{figure}
+
+O~rok později, v~roce 2008, byla představena nová generace mobilního telefonu s~názvem iPhone~3G, se kterým také vznikla nová verze operačního systému iOS (iPhone OS) 2.0. Hlavní novinkou této nové verze byl nový obchod s~aplikacemi třetích stran, \emph{App Store}. Až 500 aplikací bylo v~obchodě k~dispozici v~době, kdy byl zpřístupněn uživatelům.
+
+V~roce 2009 poté s~novým iPhonem 3GS přišla verze iOS (iPhone OS) 3, která přinesla hlavně vylepšení, jako možnost používat kopírování a vkládání, vyhledávání přes \emph{Spotlight}, podporu MMS a možnost natáčet videa (do té doby iPhone uměl pouze pořizovat fotky). Také to byla první verze operačního systému, která fungovala i~na nových tabletech od společnosti Apple – na iPadech. První iPad byl představen v~roce 2010.
+
+V~roce 2010 byl představen nový iPhone 4 a s~ním verze operačního systému 4. Od této verze se začal používat název \emph{iOS}, který nahradil do té doby používaný \emph{iPhone OS}. Toto nové pojmenování mělo sjednocovat názvosloví pro více zařízení – iPhone, iPad a iPod. iPhone 4 byl poměrně velkou změnou, protože disponoval novým hranatým designem a iOS 4 přineslo novinky, které tento operační systém pomalu začaly rýsovat do dnešní podoby. Mezi novinky patřil \emph{FaceTime}, \emph{multitasking}, \emph{iBooks}, organizování aplikací do složek, osobní hotspot nebo sdílení dat pomocí \emph{AirPlay} a \emph{AirPrint}. Také to byla první verze iOS, která nepodporovala všechny dosud vydané iPhony, protože nebyla kompatibilní s~prvním iPhonem.
+
+O~rok později, s~iPhonem 4S, byl představen iOS verze 5. Apple v~ní reagoval na rostoucí trend bezdrátovosti a \emph{cloud computing} představením několika nových funkcí a platforem. Mezi ně patřil třeba iCloud nebo synchronizace s~iTunes přes Wi-Fi. Také vznikla platforma \emph{iMessage} a začalo se používat oznamovací centrum.
+
+Dalším modelem byl iPhone 5, který poprvé změnil velikost displeje a zvětšil ji z 3,5 palce na 4. S~tímto modelem přišla verze iOS 6, kterou doprovázelo mnoho problémů. V~této verzi Apple představil hlasového asistenta \emph{Siri}, který i~přes to, že ho později předčila konkurence, byl poměrně zásadní novinkou. Dále Apple v~nové verzi představil nové aplikace pro mapy, na které do té doby používal řešení od firmy Google. Tyto mapy od začátku obsahovaly mnoho chyb a celkově byly považovány za dost nedokončené, což způsobilo ve firmě mnoho problémů.
+
+V~roce 2013, s~novým modelem iPhone 5S, přišla verze iOS 7. Tato verze zásadním způsobem změnila vzhled uživatelského rozhraní, které se na začátku od uživatelů netěšilo příliš dobrému přijetí, ale po několika vylepšeních a po tom, co si uživatelé na nový vzhled zvykli, tak problémy ustaly. Mezi nové funkce této verze se řadí sdílení dat s~dalšími uživateli přes \emph{AirDrop}, používání operačního systému v~displejích automobilů přes \emph{CarPlay}, ovládací centrum, nebo nový způsob odemykání zařízení pomocí otisku prstu – \emph{Touch ID}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=10cm]{ios7.jpg}
+	\caption{Nový vzhled iOS verze 7 \cite{ios-7-design}}
+\end{figure}
+
+S~dalším rokem a novým modelem iPhone 6 přišla verze iOS 8. iPhone 6 opět zásadně změnil svůj vzhled, ale v~operačním systému se moc zásadních změn nedělo. Apple se v~této verzi soustředil hlavně na nové funkce. Mezi ně se řadí \emph{Apple Music}, placení přes \emph{Apple Pay}, cloudové úložiště \emph{iCloud Drive}, sdílení práce mezi Apple zařízeními přes \emph{Handoff}, rodinné sdílení a další.
+
+Rok 2015 přinesl iPhone 6S a iOS 9. V~této verzi se Apple soustředil hlavně na optimalizaci a stabilitu, příliš nových funkcí představeno nebylo – pouze nasvícení pro noční používání \emph{Night shift}, režim nízké spotřeby a možnost používat veřejný testovací beta program.
+
+Dalším modelem byl v~roce 2016 iPhone 7 s~iOS~10. Opět nepřinesl moc nových funkcí, mimo například možnosti mazat původní nainstalované aplikace.
+
+O~rok později poté s iPhonem~8 přišel iOS~11. V~této verzi se Apple soustředil převážně na nové funkcionality pro iPad, které se jeho použití snažily přiblížit k~plnohodnotnému počítači. Nově přibyly funkce jako podpora tužky \emph{Apple Pencil}, podpora více otevřených oken a pracovních ploch nebo prohlížeč souborů. Apple ale na závěr představení představil ještě další nový iPhone – iPhone X. Jednalo se o~další velký redesign, kdy se výrazně zvětšila plocha displeje, zmizelo přední tlačítko a vzniklo ověření uživatele pomocí obličeje – \emph{Face ID}.
+
+V~roce 2018 Apple představil iPhone~XS a levnější variantu XR, se kterými přišel iOS~12, kde se jednalo opět jen o~mírná vylepšení. 
+
+S~dalším rokem přišel iPhone~11 a iOS~13. Tento systém už se rozdělil – pro zařízení iPad nyní vznikl oddělený \emph{iPadOS}. V~iOS~13 Apple představil možnost tmavého režimu pro celý systém, nové možnosti bezpečnosti a soukromí a s~tím související možnost přihlášení přes Apple.
+
+V~roce 2020 s~iPhonem~12 a iOS~14 Apple přidal několik menších změn a vylepšení, jako \emph{Widgety} na domovské obrazovce.
+
+Podobně to bylo i~v~roce 2021, kdy Apple s~novým iPhonem~13 a iOS~15 přidával velké množství menších vylepšení, primárně do vlastních aplikací.
+
+S~rokem 2022 přišel iPhone~14 a iOS~16, který přinesl sadu vylepšení a nových funkcí pro zamčenou obrazovku, spolu s~dalšími vylepšeními,
+
+Poslední velký update iOS přišel v~roce 2023 s~iPhonem~15 a iOS~17. A jak už bylo v~posledních letech zvykem, tak tato aktualizace přinášela větší množství menších vylepšení a aktualizací, které ale už nijak zásadně neměnily systém a interakci s~ním. \cite{history-of-ios}
+
+Za těchto 17 let vývoje se operační systém iOS dostal do stavu, kdy ho v~současnou chvíli používá $1,46$ miliard aktivních uživatelů. Mobilních telefonů iPhone se od roku 2007 prodalo $2,3$ miliard. \cite{iphone-user-statistics}
+
+%---------------------------------------------------------------
+\subsection{Vývojové nástroje a prostředí}
+%---------------------------------------------------------------
+
+Jak již bylo zmíněno v~předchozí sekci, obchod s~aplikacemi \emph{App Store} byl uživatelům dostupný od roku 2008. Ve stejnou dobu také Apple zpřístupnil vývojářům iPhone SDK ve svém vývojovém prostředí \emph{Xcode}. Toto vývojové prostředí od Applu již existovalo od roku 2003, kdy vzniklo jako rebranding původního vývojového prostředí \emph{Project Builder}. S~příchodem App Storu Apple umožnil všem vývojářům v~Xcodu vyvíjet aplikace pro iPhone OS od verze 2.0 pomocí zmíněného iPhone SDK. 
+
+Vývojové prostředí Xcode je jednotné integrované vývojové prostředí, které slouží pro vývoj aplikací pro všechny platformy společnosti Apple. Lze stáhnout zdarma z~obchodu \emph{Mac App Store} nebo ze stránek společnosti Apple. Instalace vývojového prostředí obsahuje i~instalaci dalších pomocných nástrojů, jako je simulátor zařízení (iPhone, iPad, \dots), nástroje příkazové řádky, a další. \cite{xcode-history}
+
+Pro nativní vývoj iOS aplikací se dříve používal programovací jazyk \emph{Objective-C} \cite{objc} a pro tvorbu uživatelského rozhraní knihovna \emph{UIKit}. V~roce 2014 Apple přidal podporu svého nového programovacího jazyku \emph{Swift} \cite{swift} a v~roce 2019 přidal podporu nové deklarativní knihovny pro tvorbu uživatelského rozhraní \emph{SwiftUI} \cite{swiftui}.
+
+%---------------------------------------------------------------
+\subsection{Architektura aplikací}
+%---------------------------------------------------------------
 
 
 
