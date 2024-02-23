@@ -279,6 +279,22 @@ Jednotlivé architektury mají také své aktualizované varianty pro nově pou�
 
 Jednou z~novějších architektur, které využívají výhody deklarativních UI knihoven, jako je \emph{SwiftUI}, je \emph{Model-View-Intent} (zkráceně MVI). \emph{View} a \emph{Model} reprezentují stejné vrstvy jako doposud a \emph{Intent} reprezentuje nějaký úmysl vyvolat určitou akci. Tím může být například kliknutí uživatele. Konkrétní \emph{Intent} poté pomocí nějaké byznysové logiky aktualizuje stav, podle kterého se následně aktualizuje \emph{View}. \cite{swiftui-mvi}
 
+Všechny výše popsané architektury pracují s~daty pomocí nějakého \emph{Modelu} (\emph{Viper} pomocí \emph{Interactoru}). Práce s~daty ale obvykle není jednoduchá logika, která by si zasloužila pouze zmínku o~tom, že se o~ní stará nějaký \emph{Model}. Může se totiž jednat o~poměrně komplikovanou doménovou a byznysovou logiku, stahování dat ze serveru, cache dat, práce s~databází, a další. V~tomto ohledu je namístě diskutovat o~nějaké obecnější architektuře aplikace, ne pouze o~prezentační logice, tedy primárně o~logice uživatelského rozhraní. Obecným zvykem je aplikace rozdělovat do třívrstvé architektury. Tyto vrstvy se mohou nazývat různě, ale obvykle jde o:
+\begin{itemize}
+\item\textbf{Prezentační vrstva:} Logika uživatelského rozhraní, interakce s~uživatelem, obrazovky, \dots
+\item\textbf{Doménová/byznysová vrstva:} Byznysová a doménová logika.
+\item\textbf{Datová vrstva:} Práce s~daty (komunikace se serverem, databáze, \dots)
+\end{itemize}
+Rozšířená architektura, vhodná pro iOS aplikace, která definuje strukturu aplikace, je \emph{Clean Architecture}. Tato architektura je navržena pro dobrou testovatelnost, rozdělení odpovědnosti, a vyhovění dalším zašlým návrhovým vzorům týkajících se návrhu softwaru. V~této architektuře se jednotlivé vrstvy skládají z~následujících částí:
+\begin{itemize}
+\item\textbf{Prezentační vrstva:} \emph{View}, \emph{View Controllery}, \emph{View Modely}, a další, podle dané architektury (MVC, MVVM, Viper, \dots). Tato vrstva má závislost na doménové vrstvě a volá její \emph{Use Cases}.
+\item\textbf{Doménová vrstva:} Rozhraní \emph{Use Cases} a jejich implementace, rozhraní \emph{Repositories}, které \emph{Use Cases} používají a doménové objekty. \emph{Use Cases} obsahují byznysovou logiku aplikace a datovou logiku nechávají na \emph{Repositories}.
+\item\textbf{Datová vrstva:} Implementace \emph{Repositories}, rozhraní \emph{Providers} a implementace \emph{Providers}. Implementace repozitářů jsou nezávislé na konkrétních knihovnách třetích stran, obsahují logiku s~daty. Implementace \emph{Providers} už jsou závislé na konkrétních knihovnách. Jednotlivé \emph{Providers} se mohou starat například o~práci s~konkrétní databází nebo s~konkrétní knihovnou pro serverovou komunikaci.
+\end{itemize}
+V~\emph{Clean Architecture} se také pracuje s~\emph{Dependency Injection}, což řeší logiku toho, které konkrétní implementace budou dosazeny jednotlivým rozhraním (\emph{Use Cases, Repositories, Providers}). \cite{ios-clean-arch-mvvm}
+
+
+
 
 
 
