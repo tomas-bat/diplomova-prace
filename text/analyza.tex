@@ -218,7 +218,66 @@ Pro nativní vývoj iOS aplikací se dříve používal programovací jazyk \emp
 \subsection{Architektura aplikací}
 %---------------------------------------------------------------
 
+Jako u~každého softwarového projektu, architektura je důležitou součástí jeho návrhu. K~architekturám mobilních aplikací existuje mnoho přístupů. Například u~Android aplikací sám Google doporučuje, jaké architektonické vzory by měly být používány a doporučuje architektury pro tyto aplikace \cite{android-app-arch}. Apple přímo žádné architektury pro aplikace cílící na iOS platformu nedoporučuje. 
 
+Dokumentace pro iOS platformu ale obsahuje mnoho ukázek kódu věnujících se konkrétním tématům (například \cite{swift-ui-tutorial-complex-interfaces}), kde je vždy nějaký náznak architektury připraven. V~těchto ukázkách se vyskytuje architektura \emph{Model-View-Controller} (zkráceně MVC). Narozdíl od tradiční MVC architektury se ta používaná Applem mírně liší, jelikož tradiční MVC architektura není moc dobře aplikovatelná na moderní iOS vývoj. Jak lze vidět na obrázcích \ref{fig:mvc}, v~tradičním MVC by mělo \emph{View} být beze stavu a měl by ho pouze překreslovat \emph{View Controller}. Toto sice je možné v~iOS aplikaci implementovat, ale nedává to moc smysl, protože všechny tyto 3 entity jsou hluboce provázané, což dramaticky snižuje jejich opětovné použití. Při použití v~iOS aplikaci je \emph{Controller} mediátorem mezi \emph{View} a \emph{Model}, kteří o~sobě navzájem nic nevědí. Jelikož je ale \emph{View Controller} zpravidla velice provázán s~\emph{View}, tak vzniká potřeba psát masivní \emph{View Controller}. Proto se v~iOS vývoji často referuje na MVC jako na \emph{Massive View Controller}.
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[b]{0.35\textwidth}
+		\centering
+		\includegraphics[width=6cm]{traditional-mvc.png}
+		\caption{Tradiční MVC architektura}
+	\end{subfigure}
+	\hspace{1cm}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=7cm]{apple-mvc.png}
+		\caption{MVC architektura v~iOS aplikacích}
+	\end{subfigure}
+	\caption{Architektura Model-View-Controller \cite{ios-architecture-patterns}}
+	\label{fig:mvc}
+\end{figure}
+
+Architektura MVC je ale v~ukázkách kódu od Applu používána pravděpodobně převážně proto, protože se hodí pro výstižné a krátké ukázky kódu – obsahuje totiž minimální \emph{overhead}. Pro potřeby větších projektů začíná být nedostačující. Nelze nijak testovat logika prezentování, a \emph{View} také nelze pomocí jednotkových testů otestovat. Jediné, co lze testovat, je \emph{Model}. A velkou nevýhodou je právě zmíněný masivní \emph{View Controller}, který pro složitější obrazovky přestává být přehledný.
+
+Velmi rozšířenou architekturou v~iOS vývoji je \emph{Model-View-ViewModel} (zkráceně MVVM). \emph{View} a \emph{Model} zastávají stejnou funkci jako v~MVC, a mediátorem je zde \emph{View Model}. \emph{View} je v~tomto případě konkrétní obrazovka a/nebo \emph{View Controller}. \emph{View Model} je nezávislý na knihovně uživatelského rozhraní, což umožňuje jeho lepší testovatelnost. Drží stav obrazovky, vyvolává změny pro \emph{Model} a aktualizuje se podle něj. Vizuální reprezentace architektury MVVM lze nahlédnout v~obrázku \ref{fig:mvvm}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=10cm]{mvvm.png}
+	\caption{Architektura MVVM \cite{ios-architecture-patterns}}
+	\label{fig:mvvm}
+\end{figure}
+
+Další rozšířenou architekturou v~iOS aplikacích je \emph{Viper}. Tato architektura nepochází ze skupiny MV(X). \emph{Viper} se snaží vzít rozdělovaní odpovědností o~krok dále – obsahuje 5 vrstev:
+\begin{itemize}
+\item\textbf{View:} Zastává stejnou funkcionalitu jako v MV(X), tedy \emph{View} a/nebo \emph{View Controller}.
+\item\textbf{Interactor:} Obsahuje byznysovou logiku související s~daty, jako tvorba instancí nebo načítání dat ze serveru.
+\item\textbf{Presenter:} Obsahuje byznysovou logiku UI, ale je nezávislý na UI knihovně. Volá metody \emph{Interactoru}.
+\item\textbf{Entities:} Čisté objekty dat.
+\item\textbf{Router:} Odpovědný za přechody mezi \emph{Viper} moduly.
+\end{itemize}
+Tato architektura je poměrně volná v~tom, co bude konkrétní \emph{Viper} modul reprezentovat. Může to být jedna samotná obrazovka, ale může to být celá část aplikace. Lze si všimnout několika rozdílů od architektur ze skupiny MV(X):
+\begin{itemize}
+\item Model (interakce s~daty) je přesunut do \emph{Interactoru} pomocí \emph{Entities}.
+\item Pouze povinnosti UI reprezentace \emph{Controlleru}/\emph{View Modelu} je přesunuta do \emph{Presenteru}, ale ne byznysová logika s~daty.
+\item \emph{Viper} explicitně adresuje odpovědnost navigace, kterou řeší \emph{Router}.
+\end{itemize}
+Vizualizace architektury \emph{Viper} lze nahlédnout v~obrázku \ref{fig:viper}. \cite{ios-architecture-patterns}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=12cm]{viper.png}
+	\caption{Architektura \emph{Viper} \cite{ios-architecture-patterns}}
+	\label{fig:viper}
+\end{figure}
+
+Existuje také rozšíření architektury MVVM o~navigační logiku, takzvaná MVVM-C, kde písmeno C představuje \emph{Flow Coordinator}. Tato vrstva je odpovědná za navigační tok, vytváří instance \emph{View} a/nebo \emph{View Controller} a prezentuje je, předává data mezi těmito instancemi a obsluhuje akce uživatele. Struktura \emph{Flow Coordinatoru} je vhodně navržena tak, aby se dala také dobře testovat. \cite{ios-mvvm-c}
+
+Jednotlivé architektury mají také své aktualizované varianty pro nově používanou deklarativní UI knihovnu \emph{SwiftUI}. Všechny ze zmíněných architektur se dají vhodně použít i~s~touto knihovnou. Ve \emph{SwiftUI} už se jednotlivé obrazovky nerozdělují na \emph{View} a \emph{View Controller}, ale zůstává zde pouze \emph{View}. \emph{SwiftUI} ale ze své podstaty jako deklarativní knihovna přináší nové možnosti, jak k~architektuře aplikace přistupovat.
+
+Jednou z~novějších architektur, které využívají výhody deklarativních UI knihoven, jako je \emph{SwiftUI}, je \emph{Model-View-Intent} (zkráceně MVI). \emph{View} a \emph{Model} reprezentují stejné vrstvy jako doposud a \emph{Intent} reprezentuje nějaký úmysl vyvolat určitou akci. Tím může být například kliknutí uživatele. Konkrétní \emph{Intent} poté pomocí nějaké byznysové logiky aktualizuje stav, podle kterého se následně aktualizuje \emph{View}. \cite{swiftui-mvi}
 
 
 
