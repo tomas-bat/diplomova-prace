@@ -79,7 +79,7 @@ Za softwarové spouštěče měření času lze považovat určité formy integr
 \section{Existující systémy pro měření a správu odpracovaného času}
 %---------------------------------------------------------------
 
-Systémů pro měření a správu odpracovaného času existuje mnoho. Existuje dokonce několik různých článků o~tom, které systémy jsou nejlepší a jaké je jejich srovnání \cite{forbes-tracking-apps-article} \cite{zapier-tracking-apps-article}. Následující výběr příkladů je učiněn podle těchto článku, podle osobní preference a podle počtu stažení na iOS platformě.
+Systémů pro měření a správu odpracovaného času existuje mnoho. Existuje dokonce několik různých článků o~tom, které systémy jsou nejlepší a jaké je jejich srovnání \cite{forbes-tracking-apps-article} \cite{zapier-tracking-apps-article}. Následující výběr příkladů je učiněn podle těchto článků, podle osobní preference a podle počtu stažení na iOS platformě. U~každého příkladu jsou také rozebrány možnosti importu dat, od kterých se mohou odvíjet požadavky na export dat z~nové aplikace.
 
 %---------------------------------------------------------------
 \subsection{Clockify}
@@ -130,6 +130,8 @@ Toggl Track také pokrývá více platforem: Webovou aplikací, mobilní aplikac
 	\caption{Aplikace Toggl Track \cite{toggl-track}}
 \end{figure}
 
+Toggl Track také nabízí možnost importu dat z~CSV tabulky, ve velmi podobném formátu jako Clockify \cite{toggl-track-import-csv}. A stejně jako Clockify nabízí vlastní otevřené API \cite{toggl-track-api}.
+
 %---------------------------------------------------------------
 \subsection{Deputy}
 %---------------------------------------------------------------
@@ -145,6 +147,8 @@ Deputy nabízí aplikaci pro měření odpracovaného času pro mobilní platfor
 	\includegraphics[width=\textwidth]{deputy.png}
 	\caption{Aplikace Deputy \cite{deputy-time-tracking-app}}
 \end{figure}
+
+Stejně jako předchozí systémy, Deputy nabízí možnost importu dat z~CSV tabulky \cite{deputy-import-csv}. Vzhledem k~trochu jinému byznysovému modelu této aplikace ale tyto data musí narozdíl od předchozích systémů obsahovat dodatečná data, jako místo, pauzy na oběd, a další. A ani u~této aplikace nechybí otevřené API \cite{deputy-api}.
 
 %---------------------------------------------------------------
 \section{Vývoj mobilních aplikací pro systém iOS}
@@ -309,11 +313,11 @@ Pro rozdíl mezi cross-platformním a multi-platformním vývojem neexistuje př
 \subsection{Nativní vývoj}
 %---------------------------------------------------------------
 
-Nativní vývoj pro platformu iOS znamená vytváření mobilních aplikací přímo v~jazyce Swift nebo Objective-C s~využitím oficiálních nástrojů poskytovaných společností Apple, jako je Xcode IDE a iOS SDK. Tento přístup umožňuje vytvořit aplikaci, která je optimalizovaná pro konkrétní operační systém a využívá všech funkcí a výhod, které iOS nabízí.
+Nativní vývoj pro platformu iOS znamená vytváření mobilních aplikací přímo v~jazyce \emph{Swift} nebo \emph{Objective-C} s~využitím oficiálních nástrojů poskytovaných společností Apple, jako je Xcode IDE a iOS SDK. Tento přístup umožňuje vytvořit aplikaci, která je optimalizovaná pro konkrétní operační systém a využívá všech funkcí a výhod, které iOS nabízí.
 
 Výhody nativního vývoje pro iOS spočívají především v~plné integraci s~ekosystémem Apple, což zajišťuje vysokou kvalitu, rychlost a stabilitu aplikací. Vývojáři mají přístup ke kompletní sadě nástrojů, dokumentace a podpory přímo od výrobce platformy, což usnadňuje vývoj a řešení potíží. Díky nativnímu přístupu je možné vytvářet aplikace s~vysokou výkonností a možnostmi, které jsou na míru prostředí iOS.
 
-Nevýhody nativního vývoje spočívají v~tom, že vyžaduje znalost specifických jazyků a nástrojů pro každou platformu (Swift/Objective-C pro iOS, Kotlin/Java pro Android), což může zvýšit náklady na vývoj a časovou náročnost. Navíc nativní přístup vyžaduje oddělený vývoj pro každou platformu, což může být neefektivní pro projekty s omezeným rozpočtem nebo krátkým časovým rámcem.
+Nevýhody nativního vývoje spočívají v~tom, že vyžaduje znalost specifických jazyků a nástrojů pro každou platformu (\emph{Swift}/\emph{Objective-C} pro iOS, \emph{Kotlin}/\emph{Java} pro Android), což může zvýšit náklady na vývoj a časovou náročnost. Navíc nativní přístup vyžaduje oddělený vývoj pro každou platformu, což může být neefektivní pro projekty s omezeným rozpočtem nebo krátkým časovým rámcem.
 
 Nativní vývoj je ideální pro projekty, které se zaměřují na plné využití možností iOS platformy, jako jsou výkonné aplikace nebo aplikace s~náročnějším uživatelským rozhraním. Také je vhodný pro aplikace, které potřebují maximální stabilitu a bezpečnost, například bankovní aplikace nebo aplikace pro zpracování citlivých údajů. Pro vývojáře, kteří chtějí mít plnou kontrolu nad každým aspektem aplikace a využít všech funkcí, které iOS nabízí, je nativní vývoj nejlepší volbou.
 
@@ -323,7 +327,7 @@ Nativní vývoj je ideální pro projekty, které se zaměřují na plné využi
 
 Cross-platformní vývoj se zaměřuje na tvorbu mobilních aplikací, které mohou běžet na více než jedné platformě (např. iOS a Android) s~využitím jediného kódu a jednoho vývojového prostředí. Tento přístup umožňuje vývojářům sdílet co nejvíce kódu mezi různými platformami, čímž snižuje náklady a zjednodušuje správu aplikací pro různé zařízení.
 
-Mezi hlavní výhody cross-platformního vývoje patří efektivita a rychlost vývoje díky sdílení kódu mezi platformami. Vývojáři mohou využít frameworky jako Flutter \cite{flutter-cross-platform}, React Native \cite{react-native-cross-platform} nebo Xamarin \cite{xamarin-cross-platform}, které umožňují psát kód v~populárních jazycích (např. JavaScript, TypeScript, Dart, C\#) a následně ho spouštět na různých platformách. Tento přístup také usnadňuje aktualizace a údržbu aplikací, protože změny se projeví na všech podporovaných platformách současně.
+Mezi hlavní výhody cross-platformního vývoje patří efektivita a rychlost vývoje díky sdílení kódu mezi platformami. Vývojáři mohou využít frameworky jako \emph{Flutter} \cite{flutter-cross-platform}, \emph{React Native} \cite{react-native-cross-platform} nebo \emph{Xamarin} \cite{xamarin-cross-platform}, které umožňují psát kód v~populárních jazycích (např. \emph{JavaScript}, \emph{TypeScript}, \emph{Dart}, \emph{C\#}) a následně ho spouštět na různých platformách. Tento přístup také usnadňuje aktualizace a údržbu aplikací, protože změny se projeví na všech podporovaných platformách současně.
 
 Nevýhody cross-platformního vývoje se mohou projevit ve snížené flexibilitě a omezení přístupu k~některým pokročilým funkcím a knihovnám specifickým pro danou platformu. Rovněž může docházet k~omezení rychlosti nebo výkonu aplikace v~porovnání s~nativními aplikacemi. Další nevýhodou může být závislost na externích frameworcích a jejich aktualizacích.
 
@@ -333,9 +337,7 @@ Cross-platformní vývoj je ideální pro projekty, které vyžadují rychlou do
 \subsection{Multi-platformní vývoj}
 %---------------------------------------------------------------
 
-
-
-Multi-platformní vývoj se liší od cross-platformního vývoje tím, že přímo kompiluje zdrojový kód do nativního kódu specifického pro každou platformu, místo aby spoléhal na vrstvu abstrakce nebo interpretaci. To znamená, že výsledná aplikace běží jako nativní aplikace bez vrstvy prostřednictvím frameworku. Typickým příkladem multi-platformního vývoje je použití jazyka jako Kotlin pro Android a Kotlin/Native pro iOS, které se kompilují do nativního kódu pro obě platformy. Tato technologie se nazývá Kotlin Multiplatform \cite{kotlin-multiplatform}.
+Multi-platformní vývoj se liší od cross-platformního vývoje tím, že přímo kompiluje zdrojový kód do nativního kódu specifického pro každou platformu, místo aby spoléhal na vrstvu abstrakce nebo interpretaci. To znamená, že výsledná aplikace běží jako nativní aplikace bez vrstvy prostřednictvím frameworku. Typickým příkladem multi-platformního vývoje je použití jazyka jako \emph{Kotlin} pro Android a \emph{Kotlin/Native} pro iOS, které se kompilují do nativního kódu pro obě platformy. Tato technologie se nazývá \emph{Kotlin Multiplatform} \cite{kotlin-multiplatform}.
 
 Výhody multi-platformního vývoje zahrnují možnost sdílet větší část kódu mezi různými platformami a zároveň dosahovat výkonnosti a funkčnosti nativních aplikací. To znamená, že vývojáři mohou využívat specifické funkce a knihovny pro každou platformu, aniž by se museli spoléhat na obecné abstraktní vrstvy. Tento přístup také umožňuje lepší optimalizaci výkonu a přístup k pokročilým funkcím operačních systémů.
 
@@ -343,23 +345,59 @@ Nevýhody multi-platformního vývoje mohou zahrnovat větší složitost a nár
 
 Multi-platformní vývoj je vhodný pro projekty, které vyžadují vysokou výkonnost a přístup k nativním funkcím a knihovnám, ale zároveň potřebují sdílet co nejvíce kódu mezi platformami. Ideální je pro rozsáhlejší projekty nebo aplikace, které potřebují plnou integraci s operačním systémem, ale zároveň chtějí minimalizovat duplicitu práce a zjednodušit správu a údržbu kódu. Multi-platformní vývoj je také vhodný pro situace, kdy je důležitá konzistence a shoda funkcí mezi různými verzemi aplikace na různých platformách.
 
+%---------------------------------------------------------------
+\section{Backendová řešení pro mobilní aplikace}
+%---------------------------------------------------------------
 
+Backendová část mobilních aplikací hraje klíčovou roli v~poskytování dat, zpracování požadavků a správě uživatelských účtů a obsahu. Tato sekce se zaměřuje na analýzu různých backendových řešení a technologií, které jsou vhodné pro podporu mobilních aplikací. Při výběru správného backendového řešení je důležité pochopit úlohu, kterou backend hraje v~kontextu mobilního prostředí a identifikovat faktory, které ovlivňují výběr a implementaci.
 
+Backendová část mobilní aplikace zajišťuje komunikaci mezi klientem (mobilní aplikací) a serverem, zpracování dat, autentizaci uživatelů, a další klíčové funkce. Tento centrální prvek infrastruktury zabezpečuje efektivní a spolehlivé fungování mobilních aplikací, přičemž umožňuje sdílení dat mezi různými zařízeními a poskytuje uživatelům personalizovaný a interaktivní zážitek.
 
+Při výběru backendového řešení pro mobilní aplikaci je důležité zvážit několik faktorů. Patří mezi ně škálovatelnost a výkon serveru, podpora pro bezpečnostní standardy a autentizaci, možnosti správy uživatelských dat, a také kompatibilita s~konkrétními požadavky a technologiemi použitými ve frontendové části aplikace. Dále je důležité zvážit náklady na provoz, údržbu a rozvoj backendového systému v průběhu životního cyklu aplikace.
 
+Existuje široká škála backendových technologií a frameworků, které lze použít při vývoji mobilních aplikací. Od tradičních serverových platforem a frameworků až po moderní cloudová řešení a služby, každá možnost má své vlastní výhody a nevýhody. Důkladná analýza těchto možností je klíčem k~správnému výběru backendové architektury pro konkrétní mobilní aplikaci.
 
+%---------------------------------------------------------------
+\subsection{Backend as a Service (BaaS) a jiná delegovaná řešení}
+%---------------------------------------------------------------
 
+Tato podsekce se zaměřuje na možnosti, kdy jsou části backendové infrastruktury mobilní aplikace outsourcovány na externí poskytovatele služeb, jako je \emph{Firebase}, \emph{AWS Amplify} nebo \emph{Parse}. Tento přístup umožňuje vývojářům rychle nasadit backendovou část aplikace bez nutnosti spravovat a udržovat vlastní serverovou infrastrukturu.
 
+Jednou z~hlavních výhod BaaS je urychlení vývoje aplikace a snížení nákladů a komplexity provozování backendu. Poskytovatelé BaaS nabízejí hotová řešení pro autentizaci uživatelů, ukládání dat, notifikace, analýzu chování uživatelů a mnoho dalších funkcí, což umožňuje vývojářům zaměřit se více na samotnou funkcionalitu aplikace a méně na infrastrukturální detaily.
 
+Další výhodou je škálovatelnost a výkon poskytovaných služeb, který může být optimalizován poskytovatelem a automaticky přizpůsobován podle potřeb aplikace. Tento přístup je obzvláště užitečný pro malé a střední projekty s~omezenými zdroji nebo pro projekty, které potřebují rychle nasadit MVP (Minimum Viable Product) bez investice do vlastní infrastruktury.
 
+Nevýhodou použití BaaS může být omezení v~možnostech škálování a přizpůsobení, zejména u složitějších aplikací nebo projektů se specifickými požadavky na infrastrukturu. Dále může být problémem závislost na externím poskytovateli služeb a jejich možná změna podmínek nebo dostupnosti.
 
+Jako příklad BaaS lze uvést \emph{Firebase} od společnosti Google \cite{firebase}. Firebase poskytuje širokou škálu služeb, včetně realtime databáze, autentizace, cloudového úložiště, notifikací, analýzy a mnoha dalších. Tato platforma je oblíbená mezi vývojáři pro svou jednoduchost a širokou nabídku poskytovaných funkcí, což umožňuje rychlý vývoj a nasazení mobilních aplikací s~minimálním úsilím na správu backendové infrastruktury.
 
+Dalšími příklady BaaS služeb jsou \emph{AWS Amplify} od společnosti Amazon \cite{aws-amplify} a \emph{Parse} \cite{parse}, který je open-source frameworkem pro tvorbu aplikací. Tyto služby nabízejí podobné funkce jako \emph{Firebase} a umožňují vývojářům využít hotová řešení pro backendovou část svých mobilních aplikací bez nutnosti psát a spravovat vlastní kód pro serverovou stranu.
 
+%---------------------------------------------------------------
+\subsection{Vývoj vlastního backendu}
+%---------------------------------------------------------------
 
+Tato sekce se zaměřuje na možnosti vytvoření a implementace vlastního backendového řešení pro podporu mobilních aplikací. Tento přístup umožňuje vývojářům plnou kontrolu nad backendovou infrastrukturou a její přizpůsobení specifickým požadavkům aplikace.
 
+Jednou z~hlavních výhod vývoje vlastního backendu je možnost plného přizpůsobení infrastruktury a funkcí podle konkrétních potřeb mobilní aplikace. Vývojáři mají kontrolu nad škálovatelností, bezpečností a výkonem backendu, což je zvláště důležité pro aplikace s~vyššími nároky na bezpečnost, správu dat nebo specifické obchodní požadavky.
 
+Další výhodou je snížená závislost na externích poskytovatelích služeb a jejich změnách v podmínkách či dostupnosti. Vlastní backend umožňuje také integraci s~existujícími systémy a infrastrukturou v~organizaci, což může být podstatné pro firemní aplikace nebo projekty s~komplexními integračními požadavky.
 
+Nevýhodou vývoje vlastního backendu může být zvýšená náročnost a časová zátěž vývoje a údržby. Vývojáři si musí sami implementovat všechny potřebné funkce backendu, včetně autentizace, ukládání dat, správy uživatelů a dalších. To může vést ke zvýšeným nákladům a časovému zpoždění při nasazení aplikace na trh.
 
+Mezi nejpoužívanější řešení pro vývoj vlastního backendu patří frameworky jako \emph{Node.js} \cite{node-js} s~frameworky \emph{Express} \cite{node-js-express} nebo \emph{NestJS} \cite{nest-js} pro \emph{JavaScript}/\emph{TypeScript}, \emph{Ruby on Rails} \cite{ruby-on-rails} pro \emph{Ruby}, \emph{Django} \cite{django} pro \emph{Python} nebo \emph{Spring Boot} \cite{spring-boot} pro \emph{Javu}. Tyto frameworky nabízejí komplexní sadu nástrojů pro rychlý vývoj a nasazení backendové aplikace s~podporou různých funkcí, včetně routování, databázového přístupu, autentizace a dalších.
+
+Každý z~těchto frameworků má své výhody a nevýhody. Například \emph{Node.js} s~\emph{Express} je velmi populární pro svou rychlost a flexibilitu, zatímco \emph{Spring Boot} je oblíbený pro svou robustnost a škálovatelnost v~prostředí \emph{Java} \cite{spring-boot-vs-node-js}. Výběr správného frameworku závisí na preferencích vývojářů, technologických požadavcích a cílech aplikace.
+
+%---------------------------------------------------------------
+\section{Závěr analýzy}
+%---------------------------------------------------------------
+
+V~této kapitole byly probrány všechny informace potřebné pro navazující návrh mobilní aplikace pro zaznamenávání odpracovaného času. 
+
+Co se týče domény problému, tak byla provedena rešerše spouštěčů měření času, ze které mohou být vhodně navrženy požadavky pro aplikaci na propojení s~nimi. Dále byla také provedena rešerše existujících systémů pro zaznamenávání odpracovaného času, ze které lze také vhodným způsobem navrhnout požadavky na integraci s~těmito systémy.
+
+Dále se kapitola věnovala vývoji mobilních aplikací pro systém iOS, možnostem cross-platformního a multi-platformního vývoje a možnostem, jak přistupovat k~backendovým řešením podporující mobilní aplikace. Tyto informace by měly být plně postačující pro vhodný návrh funkcionalit aplikace, jejího uživatelského rozhraní, vnitřní architektury a nástrojů k~tomu potřebným.
 
 
 
