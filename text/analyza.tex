@@ -293,6 +293,94 @@ Rozšířená architektura, vhodná pro iOS aplikace, která definuje strukturu 
 \end{itemize}
 V~\emph{Clean Architecture} se také pracuje s~\emph{Dependency Injection}, což řeší logiku toho, které konkrétní implementace budou dosazeny jednotlivým rozhraním (\emph{Use Cases, Repositories, Providers}). \cite{ios-clean-arch-mvvm}
 
+%---------------------------------------------------------------
+\section{Cross-platformní a multi-platformní možnosti}
+%---------------------------------------------------------------
+
+V~současném prostředí mobilního vývoje se rozhodnutí ohledně vhodné platformy pro tvorbu aplikací stává klíčovým faktorem pro úspěch projektu. Existuje široká škála přístupů, které vývojáři mohou zvolit, od tradičních nativních řešení až po moderní multi-platformní a cross-platformní frameworky. Tato sekce se zaměřuje na analýzu těchto možností s~ohledem na tvorbu mobilní aplikace pro zaznamenávání odpracovaného času. Zhodnocuje jejich výhody, nevýhody a vhodnost pro konkrétní aplikaci. Tento přístup umožní lépe pochopit pochopit, jakým směrem se vydat při návrhu a implementaci projektu.
+
+Pro rozdíl mezi cross-platformním a multi-platformním vývojem neexistuje přesná definice a v~různých zdrojích lze nalézt různé interpretace (např. \cite{cross-multiplatform-alternative-intepretation-one} a \cite{cross-multiplatform-alternative-intepretation-two}). V~kontextu vývoje pro mobilní aplikace si budeme tyto pojmy vykládat následovně:
+\begin{itemize}
+\item Cross-platformní vývoj představuje řešení, ve kterých sdílený kód běží na koncových platformách přímo přes nějakou formu abstrakce nebo interpretace.
+\item Multi-platformní vývoj představuje řešení, ve kterých se sdílený kód přímo interpretuje do nativního kódu specifického pro každou platformu.
+\end{itemize}
+
+%---------------------------------------------------------------
+\subsection{Nativní vývoj}
+%---------------------------------------------------------------
+
+Nativní vývoj pro platformu iOS znamená vytváření mobilních aplikací přímo v~jazyce Swift nebo Objective-C s~využitím oficiálních nástrojů poskytovaných společností Apple, jako je Xcode IDE a iOS SDK. Tento přístup umožňuje vytvořit aplikaci, která je optimalizovaná pro konkrétní operační systém a využívá všech funkcí a výhod, které iOS nabízí.
+
+Výhody nativního vývoje pro iOS spočívají především v~plné integraci s~ekosystémem Apple, což zajišťuje vysokou kvalitu, rychlost a stabilitu aplikací. Vývojáři mají přístup ke kompletní sadě nástrojů, dokumentace a podpory přímo od výrobce platformy, což usnadňuje vývoj a řešení potíží. Díky nativnímu přístupu je možné vytvářet aplikace s~vysokou výkonností a možnostmi, které jsou na míru prostředí iOS.
+
+Nevýhody nativního vývoje spočívají v~tom, že vyžaduje znalost specifických jazyků a nástrojů pro každou platformu (Swift/Objective-C pro iOS, Kotlin/Java pro Android), což může zvýšit náklady na vývoj a časovou náročnost. Navíc nativní přístup vyžaduje oddělený vývoj pro každou platformu, což může být neefektivní pro projekty s omezeným rozpočtem nebo krátkým časovým rámcem.
+
+Nativní vývoj je ideální pro projekty, které se zaměřují na plné využití možností iOS platformy, jako jsou výkonné aplikace nebo aplikace s~náročnějším uživatelským rozhraním. Také je vhodný pro aplikace, které potřebují maximální stabilitu a bezpečnost, například bankovní aplikace nebo aplikace pro zpracování citlivých údajů. Pro vývojáře, kteří chtějí mít plnou kontrolu nad každým aspektem aplikace a využít všech funkcí, které iOS nabízí, je nativní vývoj nejlepší volbou.
+
+%---------------------------------------------------------------
+\subsection{Cross-platformní vývoj}
+%---------------------------------------------------------------
+
+Cross-platformní vývoj se zaměřuje na tvorbu mobilních aplikací, které mohou běžet na více než jedné platformě (např. iOS a Android) s~využitím jediného kódu a jednoho vývojového prostředí. Tento přístup umožňuje vývojářům sdílet co nejvíce kódu mezi různými platformami, čímž snižuje náklady a zjednodušuje správu aplikací pro různé zařízení.
+
+Mezi hlavní výhody cross-platformního vývoje patří efektivita a rychlost vývoje díky sdílení kódu mezi platformami. Vývojáři mohou využít frameworky jako Flutter \cite{flutter-cross-platform}, React Native \cite{react-native-cross-platform} nebo Xamarin \cite{xamarin-cross-platform}, které umožňují psát kód v~populárních jazycích (např. JavaScript, TypeScript, Dart, C\#) a následně ho spouštět na různých platformách. Tento přístup také usnadňuje aktualizace a údržbu aplikací, protože změny se projeví na všech podporovaných platformách současně.
+
+Nevýhody cross-platformního vývoje se mohou projevit ve snížené flexibilitě a omezení přístupu k~některým pokročilým funkcím a knihovnám specifickým pro danou platformu. Rovněž může docházet k~omezení rychlosti nebo výkonu aplikace v~porovnání s~nativními aplikacemi. Další nevýhodou může být závislost na externích frameworcích a jejich aktualizacích.
+
+Cross-platformní vývoj je ideální pro projekty, které vyžadují rychlou dostupnost na více platformách s~omezenými zdroji. Hodí se pro aplikace s~jednodušším uživatelským rozhraním, obsahově orientované aplikace (např. novinky, e-commerce), nebo pro firemní aplikace, které nevyžadují specifické funkce jednotlivých platforem. Tento přístup je také vhodný pro malé a střední projekty, kde je důležitá rychlá a efektivní tvorba aplikace pro více platform.
+
+%---------------------------------------------------------------
+\subsection{Multi-platformní vývoj}
+%---------------------------------------------------------------
+
+
+
+Multi-platformní vývoj se liší od cross-platformního vývoje tím, že přímo kompiluje zdrojový kód do nativního kódu specifického pro každou platformu, místo aby spoléhal na vrstvu abstrakce nebo interpretaci. To znamená, že výsledná aplikace běží jako nativní aplikace bez vrstvy prostřednictvím frameworku. Typickým příkladem multi-platformního vývoje je použití jazyka jako Kotlin pro Android a Kotlin/Native pro iOS, které se kompilují do nativního kódu pro obě platformy. Tato technologie se nazývá Kotlin Multiplatform \cite{kotlin-multiplatform}.
+
+Výhody multi-platformního vývoje zahrnují možnost sdílet větší část kódu mezi různými platformami a zároveň dosahovat výkonnosti a funkčnosti nativních aplikací. To znamená, že vývojáři mohou využívat specifické funkce a knihovny pro každou platformu, aniž by se museli spoléhat na obecné abstraktní vrstvy. Tento přístup také umožňuje lepší optimalizaci výkonu a přístup k pokročilým funkcím operačních systémů.
+
+Nevýhody multi-platformního vývoje mohou zahrnovat větší složitost a náročnost vývoje oproti čistě cross-platformním frameworkům. Každá platforma může vyžadovat jiné postupy a úpravy, ačkoli základní kód je sdílen. Některé specifické funkce nebo optimalizace pro konkrétní platformu mohou být obtížnější dosáhnout pomocí multi-platformního přístupu než s nativním vývojem.
+
+Multi-platformní vývoj je vhodný pro projekty, které vyžadují vysokou výkonnost a přístup k nativním funkcím a knihovnám, ale zároveň potřebují sdílet co nejvíce kódu mezi platformami. Ideální je pro rozsáhlejší projekty nebo aplikace, které potřebují plnou integraci s operačním systémem, ale zároveň chtějí minimalizovat duplicitu práce a zjednodušit správu a údržbu kódu. Multi-platformní vývoj je také vhodný pro situace, kdy je důležitá konzistence a shoda funkcí mezi různými verzemi aplikace na různých platformách.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

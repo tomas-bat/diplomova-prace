@@ -1,0 +1,129 @@
+Výslednou aplikaci a její uživatelské rozhraní je potřeba důkladně otestovat. Tato kapitola popisuje implementaci automatických testů a scénáře testování s~reálnými uživateli. Výsledky z~testování jsou poté zhodnoceny.
+
+%---------------------------------------------------------------
+\section{Automatické testování}
+%---------------------------------------------------------------
+
+Pro účely automatizovaného testování se u~Apple platforem používá knihovna \emph{XCTest} \cite{xctest}. Jak již bylo zmíněno, \emph{Clean architecture} ja navržená tak, aby se dala dobře otestovat jednotkovými testy, které jsou popsány v~následující sekci.
+
+Dalšími možnostmi testování jsou UI testy a testy výkonu. Aplikace Trackee implementaci těchto typů testů neobsahuje. Jejich implementace může být podnětem pro budoucí vylepšení aplikace.
+
+%---------------------------------------------------------------
+\subsection{Jednotkové testování}
+%---------------------------------------------------------------
+
+V~aplikaci jsou jednotkovými testy pokryty všechny \emph{View Modely}. Pro každý z~nich je v~modulu, ke kterému patří, soubor, který daný \emph{View Model} testuje. Např. pro \texttt{LoginViewModel.swift} bude testovací soubor \texttt{LoginViewModelTests.swift}.
+
+\emph{View Model} testy jsou navržené tak, aby testovaly každý jednotlivý \emph{Intent}, pokud existuje vhodná možnost, jak test provést. Některé intenty vhodně otestovat nelze – například takové, které otevírají nějaké systémové dialogy, které nemají žádný výstup pro \emph{View Model} aplikace. Daný test tedy vždy ověřuje, zda se stav \emph{View Modelu} po aplikování \emph{Intentu} změnil podle očekávání.
+
+Jednotkové testy \emph{View Modelů} využívají \emph{Mocky} pro \emph{Use Cases}, tedy určité zjednodušené náhrady těchto \emph{Use Cases}, u~kterých si každý test může definovat, co bude daný \emph{Use Case Mock} vracet za hodnotu. Toto je klasický přístup k~jednotkovému testování – testujeme zde \emph{View Modely}, nikoli \emph{Use Cases}.
+
+Předpokládejme tedy, že máme \emph{View Model} se strukturou ve výpisu \ref{code:tested-vm-structure}. Struktura testu poté bude vypadat jako ve výpisu \ref{code:vm-test-sctructure}. Struktura obsahuje následující:
+\begin{itemize}
+\item\texttt{flowController} – \emph{Mock} pro \emph{FlowController}, tedy náhrada reálného controlleru v aplikaci. Tento \emph{Mock} slouží k~tomu, abychom mohli otestovat, jaká hodnota byla vložena do posledního volání funkce \texttt{handleFlow(\_:)} a kolikrát byla tato funkce zavolána. Toto slouží k~otestování toho, zda se bude apikace snažit uživatele navigovat do předpokládané destinace.
+\item\emph{Mocky} pro \emph{Use Cases} – zde vytváříme instance \emph{Mocků} pro \emph{Use Cases}, které jsou v~daném \emph{View Modelu} používány. Je potřeba to dělat takto ručně, protože kdybychom použili registrování pomocí \texttt{Container.shared.registerUseCaseMocks()}, tak bychom nemohli v~testech měnit hodnoty, které dané \emph{Use Cases} budou vracet.
+\item\texttt{createViewModel()} – tato funkce se bude volat na začátku každého testu, aby získal instanci pro otestování. Pokud konstruktor \emph{View Modelu} vyžaduje nějaké parametry, můžou být předány jako parametr této funkce, nebo zde můžou mít nějakou definovanou hodnotu. V~této funkci se také registrují \emph{Mocky} pro \emph{Use Cases} definované výše.
+\item Testovací funkce pro jednotlivé intenty – funkce, které mají v~názvu prefix \texttt{test}, tak se automaticky považují ze testovací funkce a spouštějí se během testu. Každý vhodně otestovatelný intent zde tedy bude mít vlastní funkci, případně více funkcí, pokud lze otestovat úspěch, neúspěch, různé formy úspěchu, a podobně. Tyto funkce dodržují strukturu given-when-then, tedy rozdělení do tří částí (předdefinované hodnoty a konstanty, interakce, ověření).
+\end{itemize}
+
+\begin{listing}
+\caption{Struktura View Modelu pro testování}\label{code:tested-vm-structure}
+\begin{minted}{Swift}
+final class SomeViewModel: BaseViewModel, ViewModel, ObservableObject {
+	
+    // ...
+	
+    @Injected(\.someUseCase) private var someUseCase
+	
+    // ...
+	
+    enum Intent {
+        case doThis
+        case doThat
+    }
+	
+    // ...
+}
+\end{minted}
+\end{listing}
+
+\begin{listing}
+\caption{Struktura View Model testu}\label{code:vm-test-sctructure}
+\begin{minted}{Swift}
+@MainActor
+final class SomeViewModelTests: XCTestCase {
+
+    private let flowController = FlowControllerMock<SomeFlow>(
+        navigationController: UINavigationController()
+    )
+    
+    private let someUseCaseMock = SomeUseCaseMock(
+        executeReturnValue: /* Some default return value */
+    )
+    
+    private func createViewModel(
+        someOptionalParam: SomeType
+    ) -> SomeViewModel {
+        Container.shared.someUseCase.register { self.someUseCaseMock }
+	
+        return SomeViewModel(
+            someParam: someOptionalParam,
+            flowController: flowController
+        )
+    }
+    
+    // MARK: - Tests
+    
+    func testDoThis() async {
+        // given
+        let vm = createViewModel()
+        // ... some constants and given values
+        let someConstant = ...
+    	
+        // when
+        vm.onIntent(.doThis)
+        // ... some interactions
+        await vm.awaitAllTasks()
+		
+        // then
+        // ... assertions
+        XCTAssertEqual(vm.state.someValue, someConstant)
+    }
+    
+    func testDoThat() async {
+        // ...
+    }
+}
+\end{minted}
+\end{listing}
+
+Jednotkové testy \emph{View Modelů} testují byznysovou prezentační vrstvy. Pro otestování dalších vrstev je možné v multiplatformním modulu testovat \emph{Use Cases}, \emph{Repositories} a \emph{Sources}. V backendové části je také možné implementovat jednotkové testy pro \emph{Repositories}, \emph{Sources}, ale i~pro \emph{Routes}. Implementace testů pro tyto vrstvy může být podnětem pro budoucí vylepšení aplikace.
+
+%---------------------------------------------------------------
+\section{Uživatelské testování}
+%---------------------------------------------------------------
+
+Pro účely uživatelského testování byl navržen scénář, podle kterého se testeři mají řídit.
+
+%---------------------------------------------------------------
+\subsection{Scénář}
+%---------------------------------------------------------------
+
+Proces testování je rozdělen do několika scénářů, které by měly pokrývat většinu funkcionalit aplikace, kterých uživatel může využít. Povinnými účastníky během testování budou moderátor a uživatel. Moderátor bude uživateli dávat instrukce a dokumentovat, jak uživatel s~mobilním telefonem interaguje. Uživatel se bude snažit instrukce plnit a bude při tom nahlas popisovat své akce s~telefonem (co vidí, na co se chystá kliknout, co očekává, že se stane, atd.), aby usnadnil následnou analýzu celé situace.
+
+\begin{description}
+\item[Tvorba uživatelského účtu:] Každý nový uživatel mobilní aplikace Trackee si bude muset nejprve vytvořit svůj uživatelský účet. V~tomto scénáři bude uživatel instruován k~tomu, aby aplikaci poprvé spustil, vytvořil si nový uživatelský účet pomocí předepsaného e-mailu a hesla a následně se do aplikace pod tímto účtem přihlásil. 
+\item[Vytvoření nového klienta:] Po úspěšné registraci bude uživatel instruován, aby si vytvořil 2 nové klienty s~předepsanými názvy.
+\item[Vytvoření nového projektu:] Po úspěšném vytvoření klientů bude uživatel instruován, aby vytvořil 2 nové projekty s~předepsanými vlastnostmi.
+\item[Spuštění časovače:] Po úspěšném vytvoření projektů dostane uživatel instrukci, aby spustil časovač pro měření odpracovaného času a přiřadil mu předepsaný projekt a popis.
+\item[Změna začátku časovače:] Uživatel bude instruován k~tomu, aby u~spuštěného časovače změnil začátek na předepsaný čas.
+\item[Zastavení časovače:] Uživatel bude instruován, aby ukončil časovač a uložil časový záznam, který do teď měřil.
+\item[Manuální přidání časového záznamu:] Uživatel bude instruován, aby ručně přidal časový záznam s~předepsanými parametry a časem.
+\item[Úprava projektu:] Uživatel bude instruován, aby aktualizoval předepsaný projekt s~novými předepsanými vlastnostmi.
+\item[Odhlášení a přihlášení na testovací účet:] Uživatel ve svém nově vytvořeném účtě nebude mít dostatek klientů, projektů a časových záznamů, které by odpovídaly dlouhodbějšímu používání aplikace. Pro lepší otestování orientace v~aplikaci bude uživatel instruován, aby se přihlásil na předepsaný testovací účet, který obsahuje větší množství záznamů.
+\item[Odstranění časového záznamu:] Uživatel bude instruován, aby odstranil předepsaný časový záznam z~historie.
+\item[Export historie do CSV souboru:] Uživatel bude instruován, aby vytvořil integraci pro exportování do CSV souboru a exportoval data do tabulky pro předepsané časové období. Dále bude instruován, aby tuto tabulku otevřel ve vhodné aplikaci, kde si ji může prohlédnout (např. \emph{Numbers}).
+\item[Odstranění klienta:] Budeme předpokládat, že si uživatel v~exportované tabulce všimne, že tam má záznamy patřící předepsanému klientovi, které tam mít nechce. Bude tedy instruován, aby klienta smazal a znovu vyexportoval CSV soubor, ve kterém zkontroluje, že žádné záznamy patřící k~tomuto klientovi nejsou.
+\item[Tvorba automatizace pro spuštění časovače:] Uživatel dostane instrukci, aby pomocí aplikace \emph{Zkratky} vytvořil novou automatizaci, která zapne časovač s~předepsanými parametry, pokud se uživatel objeví na předepsané poloze. Bude také instruován, aby tuto automatizaci zkusil ručně spustit a v~aplikaci zkontroloval, že časovač opravu běží.
+\item[Tvorba automatizace pro vypnutí časovače:] Uživatel bude požádán, aby vytvořil automatizaci, která se ho zeptá, zda nechce zastavit běžící časovač, pokud opustí předepsanou polohu. Zde bude také instruován, aby automatizaci zkusil ručně spustit.
+\end{description}
