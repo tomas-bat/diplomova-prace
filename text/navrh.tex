@@ -220,6 +220,23 @@ Chybové a prázdné stavy budou fungovat stejným způsobem, jako u~klientů.
 	\label{fig:projects}
 \end{figure}
 
+%---------------------------------------------------------------
+\subsection{Integrace}
+%---------------------------------------------------------------
+
+Jedním z~cílů práce je stanovit požadavky pro integraci spouštěčů měření času, dále požadavky na integraci aplikace s~existujícími systémy pro měření času, a tyto požadavky v~aplikaci implementovat. Tyto dva typy integrací lze rozdělit do skupin \emph{import} (integrace se spouštěči) a \emph{export} (integrace s~existujícími systémy).
+
+%---------------------------------------------------------------
+\subsubsection{Import}
+%---------------------------------------------------------------
+
+V~sekci \ref{tracking-triggers} byly popsány teoretické možnosti, s~jakými spouštěči by aplikace šla propojit.
+
+Prvním typem spouštěčů měření času byly fyzické spouštěče, tedy nějaké fyzické formy ovladače. Z~uvedených příkladů v~analýze byl pouze jeden, který by uměl uskutečnit napojení na aplikaci napřímo, a to \emph{TTIMEFLIP} \cite{timeflip}, který poskytuje protokol pro BLE komunikaci. Implementace BLE komunikace s~hardwarovým produktem je ale poměrně komplexní záležitost, která byla začleněna nad rámec rozsahu této práce, která se už takto věnuje návrhu a implementaci celé platformy pro měření odpracovaného času. Implementace tohoto typu komunikace tedy může být podnětem pro budoucí rozšíření aplikace.
+
+Důležité ale je, aby na takové rozšíření byla aplikace dobře připravená, a aby minimálně poskytovala veřejné API umožňující se z~jakéhokoli budoucího konfigurovatelného hardwarového řešení na aplikaci napojit.
+
+
 
 
 
