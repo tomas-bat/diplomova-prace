@@ -139,7 +139,7 @@ Na obrázku \ref{fig:timer} lze dále v~horní části obrazovky vidět souhrn �
 
 Vzhledem k~tomu, že v~historii se může časem nacházet mnoho záznamů, měla by tato obrazovka podporovat stránkování, tedy funkci, že nebude ze zdroje načítat všechny záznamy najednou, ale pouze nějaký kus (stránku), a postupně může načítat další, pokud si to uživatel bude přát. Pokud se během načítání objeví chyba, tak se na této obrazovce ovládací panel časovače ani historie záznamů vůbec nezobrazí – zobrazí se pouze popis chyby a tlačítko pro opakování pokusu o~načtení. Pokud uživatel zatím žádné záznamy mít nebude, tak nebude potřeba zobrazovat nějakou explicitní formu prázdné obrazovky – pouze bude ve spodní části obrazovky ovládací panel a nad tím prázdno.
 
-U~obrazovky pro výběr projektu bude také explicitní chybový stav, který ukáže popis chyby včetně tlačítka pro opakování. Na této obrazovce už ale bude potřeba definovat i~prázdný stav, aby se zobrazila nějaká instrukce, že uživatel nemá vytvořené žádné projekty a musí si je vytvořit na místě k~tomu určeném (bude navrženo dále).
+U~obrazovky pro výběr projektu bude také explicitní chybový stav, který ukáže popis chyby včetně tlačítka pro opakování. Na této obrazovce už ale bude potřeba definovat i~prázdný stav, aby se zobrazila nějaká instrukce, že uživatel nemá vytvořené žádné projekty a musí si je vytvořit na místě k~tomu určeném (bude navrženo dále). Prázdná data lze ale ještě rozdělit do dvou kategorií – prázdná data kvůli tomu, že uživatel žádné projekty nemá, nebo prázdná data kvůli tomu, že jeho vyhledávání neodpovídá žádný projekt. Pro tyto dva stavy je potřeba použít rozdílné texty pro uživatele.
 
 %---------------------------------------------------------------
 \subsection{Profil uživatele}
@@ -167,6 +167,58 @@ Poslední kartou v~navigační liště aplikace bude karta s~Profilem. Uživatel
 \end{figure}
 
 V~horní části obrazovky se také nachází uživatelův e-mail, jako indikace toho, na kterém účtě je uživatel přihlášen.
+
+Pokud uživatel klikne na tlačítko klientů, zobrazí se mu seznam jeho klientů, jak lze vidět na obrázku \ref{fig:client-list}. V~tomto seznamu může v~klientech vyhledávat, otevřít detail klienta, nebo vytvořit nového, pomocí tlačítka vpravo nahoře v~navigační liště. Při kliknutí na konkrétního klienta, s~cílem zobrazit jeho detail, i~při kliknutí na volbu tvorby nového klienta, se zobrazí stejná obrazovka detailu, kterou lze nahlédnout na obrázku \ref{fig:new-client}. V~případě zobrazení detailu již existujícího klienta se akorát změní název v~navigační liště a předvyplní se hodnoty klienta. 
+
+Při tvorbě nebo úpravě klienta uživatel může zvolit jeho název. V~budoucnu je možné přidat další parametry, které by mohly být ke klientovi přiděleny. Kliknutím na tlačítko \emph{Uložit} v~navigační liště se upravený klient uloží a uživatel bude odnavigován zpět na seznam klientů. V~případě, že uživatel klikne na tlačítko zrušit, bude také odnavigován zpět na seznam, ale všechny změny budou zahozeny.
+
+Seznam projektů by měl mít také definované stavy pro chybu a prázdná data. V~případě chyby se zobrazí popis chyby a tlačítko pro opakování, v~případě, že uživatel nemá žádné klienty, se zobrazí tato informace a instrukce k~tomu, aby si nějakého klienta vytvořil. Opět je také potřeba rozlišit mezi tím, zda se žádní klienti nezobrazují proto, protože žádní nejsou, nebo protože žádní nevyhovují vyhledávánému výrazu.
+
+Detail klienta bude mít také explicitní chybový stav, ale prázdný stav zde potřeba není, jelikož existující klient musí mít data vždycky, a nový klient určitě žádná nemá, tudíž budou pole prázdná.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{clients.png}
+		\caption{Seznam}
+		\label{fig:client-list}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{new-client.png}
+		\caption{Nový klient}
+		\label{fig:new-client}
+	\end{subfigure}
+	\caption{Klienti}
+	\label{fig:clients}
+\end{figure}
+
+Seznam projektů a detail projektu funguje stejným způsobem, jako u~klientů. Kliknutí na tlačítko projektů v~profilu otevře seznam, odkud lze otevřít detail/tvorbu nového projektu. Seznam projektů lze nahlédnout na obrázku \ref{fig:project-list} a detail projektu na obrázku \ref{fig:new-project}.
+
+Detail projektu narozdíl od klienta obsahuje více informací. Každý projekt musí patřit k~nějakému klientovi, tudíž je potřeba tohoto klienta zvolit, k~čemuž bude sloužit další obrazovka pro výběr klienta, která bude vypadat stejně, jako seznam klientů \ref{fig:client-list}, ale funkčně bude stejná, jako výběr projektu v~časovači \ref{fig:project-selection}. Dále je možnost nastavit jméno projektu, a poté nepovinný údaj o~typu projektu, což bude definovaný seznam hodnot, ze kterého půjde volit (\emph{Práce}, \emph{Škola} a další).
+
+Chybové a prázdné stavy budou fungovat stejným způsobem, jako u~klientů.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{projects.png}
+		\caption{Seznam}
+		\label{fig:project-list}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{new-project.png}
+		\caption{Nový projekt}
+		\label{fig:new-project}
+	\end{subfigure}
+	\caption{Projekty}
+	\label{fig:projects}
+\end{figure}
 
 
 
