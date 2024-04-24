@@ -358,7 +358,7 @@ Při výběru backendového řešení pro mobilní aplikaci je důležité zvá�
 Existuje široká škála backendových technologií a frameworků, které lze použít při vývoji mobilních aplikací. Od tradičních serverových platforem a frameworků až po moderní cloudová řešení a služby, každá možnost má své vlastní výhody a nevýhody. Důkladná analýza těchto možností je klíčem k~správnému výběru backendové architektury pro konkrétní mobilní aplikaci.
 
 %---------------------------------------------------------------
-\subsection{Backend as a Service (BaaS) a jiná delegovaná řešení}
+\subsection{Backend as a Service (BaaS) a jiná delegovaná řešení}\label{baas}
 %---------------------------------------------------------------
 
 Tato podsekce se zaměřuje na možnosti, kdy jsou části backendové infrastruktury mobilní aplikace outsourcovány na externí poskytovatele služeb, jako je \emph{Firebase}, \emph{AWS Amplify} nebo \emph{Parse}. Tento přístup umožňuje vývojářům rychle nasadit backendovou část aplikace bez nutnosti spravovat a udržovat vlastní serverovou infrastrukturu.
@@ -388,6 +388,22 @@ Nevýhodou vývoje vlastního backendu může být zvýšená náročnost a čas
 Mezi nejpoužívanější řešení pro vývoj vlastního backendu patří frameworky jako \emph{Node.js} \cite{node-js} s~frameworky \emph{Express} \cite{node-js-express} nebo \emph{NestJS} \cite{nest-js} pro \emph{JavaScript}/\emph{TypeScript}, \emph{Ruby on Rails} \cite{ruby-on-rails} pro \emph{Ruby}, \emph{Django} \cite{django} pro \emph{Python} nebo \emph{Spring Boot} \cite{spring-boot} pro \emph{Javu}. Tyto frameworky nabízejí komplexní sadu nástrojů pro rychlý vývoj a nasazení backendové aplikace s~podporou různých funkcí, včetně routování, databázového přístupu, autentizace a dalších.
 
 Každý z~těchto frameworků má své výhody a nevýhody. Například \emph{Node.js} s~\emph{Express} je velmi populární pro svou rychlost a flexibilitu, zatímco \emph{Spring Boot} je oblíbený pro svou robustnost a škálovatelnost v~prostředí \emph{Java} \cite{spring-boot-vs-node-js}. Výběr správného frameworku závisí na preferencích vývojářů, technologických požadavcích a cílech aplikace.
+
+%---------------------------------------------------------------
+\subsection{Databáze}
+%---------------------------------------------------------------
+
+Implementace databáze je dalším důležitým prvkem vývoje vlastního backendu pro mobilní aplikace, neboť poskytuje úložiště pro data, která aplikace zpracovává a uchovává. Existuje několik možností pro implementaci databází v~rámci backendového prostředí, které se liší podle typu databáze a potřeb aplikace.
+
+Mezi nejpoužívanější řešení patří relační databáze, jako je \emph{Oracle Database} \cite{oracle-database} nebo \emph{PostgreSQL} \cite{postgresql}, a také \emph{noSQL} databáze, jako je \emph{MongoDB} \cite{mongodb} nebo \emph{Redis} \cite{redis}. Relační databáze jsou založené na modelu relačního datového skladu s~použitím \emph{SQL} (Structured Query Language) pro manipulaci s~daty. Tyto databáze jsou vhodné pro aplikace, které vyžadují komplexní transakční operace a silné zajištění integrity dat. Na druhou stranu \emph{noSQL} databáze jsou navrženy tak, aby byly flexibilnější a lépe škálovatelné pro různé typy dat. Jsou ideální pro aplikace, které mají různorodá data a vyžadují rychlý a flexibilní přístup k~nim.
+
+Výhody relačních databází zahrnují silnou konzistenci dat, vysokou integritu a možnost provádět komplexní dotazy pomocí SQL. Na druhou stranu \emph{noSQL} databáze nabízejí vyšší škálovatelnost, flexibilitu datového modelu a lepší výkon pro určité aplikace s~velkým objemem dat. \cite{fit-lecture-no-sql}
+
+Výběr správného typu databáze závisí na specifických požadavcích a charakteristikách projektu. Pro aplikace s~potřebou silné konzistence a transakcí jsou vhodné relační databáze, zatímco pro aplikace s~velkým objemem různorodých dat a vyššími požadavky na škálovatelnost jsou vhodnější noSQL databáze.
+
+Výběr implementace databázového řešení lze také outsourcovat na externí poskytovatele služeb BaaS. Jak bylo zmíněno v~sekci \ref{baas}, poskytovatelé jako \emph{Firebase} \cite{firebase} nebo \emph{AWS Amplify} \cite{aws-amplify} již implementují databázové řešení, které lze v~rámci těchto platforem využít. Existují také řešení, která poskytují pouze databázi jako externí řešení. Tato řešení jsou někdy nazývána DBaaS (Database as a Service) \cite{mongodb-dbaas}. Příkladem tohoto řešení je například \emph{MongoDB Atlas} \cite{mongodb-atlas}, právě pro databázi \emph{MongoDB}.
+
+V implementaci vlastního backendu pro mobilní aplikace je důležité pečlivě zvážit výběr databázového řešení, aby byly splněny požadavky na výkon, škálovatelnost a bezpečnost aplikace. Zvážení výhod a nevýhod jednotlivých databázových systémů pomůže zajistit optimální implementaci a správu dat pro mobilní aplikaci pro zaznamenávání odpracovaného času.
 
 %---------------------------------------------------------------
 \section{Závěr analýzy}
