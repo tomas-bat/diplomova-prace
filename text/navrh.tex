@@ -168,7 +168,7 @@ Poslední kartou v~navigační liště aplikace bude karta s~Profilem. Uživatel
 
 V~horní části obrazovky se také nachází uživatelův e-mail, jako indikace toho, na kterém účtě je uživatel přihlášen.
 
-Pokud uživatel klikne na tlačítko klientů, zobrazí se mu seznam jeho klientů, jak lze vidět na obrázku \ref{fig:client-list}. V~tomto seznamu může v~klientech vyhledávat, otevřít detail klienta, nebo vytvořit nového, pomocí tlačítka vpravo nahoře v~navigační liště. Při kliknutí na konkrétního klienta, s~cílem zobrazit jeho detail, i~při kliknutí na volbu tvorby nového klienta, se zobrazí stejná obrazovka detailu, kterou lze nahlédnout na obrázku \ref{fig:new-client}. V~případě zobrazení detailu již existujícího klienta se akorát změní název v~navigační liště a předvyplní se hodnoty klienta. 
+Pokud uživatel klikne na tlačítko klientů, zobrazí se mu seznam jeho klientů, jak lze vidět na obrázku \ref{fig:client-list}. V~tomto seznamu může v~klientech vyhledávat, otevřít detail klienta, nebo vytvořit nového, pomocí tlačítka vpravo nahoře v~navigační liště. Při kliknutí na konkrétního klienta, s~cílem zobrazit jeho detail, i~při kliknutí na volbu tvorby nového klienta, se zobrazí stejná obrazovka detailu, kterou lze nahlédnout na obrázku \ref{fig:new-client}. V~případě zobrazení detailu již existujícího klienta se akorát změní název v~navigační liště, předvyplní se hodnoty klienta a zobrazí se navíc tlačítko pro smazání klienta.
 
 Při tvorbě nebo úpravě klienta uživatel může zvolit jeho název. V~budoucnu je možné přidat další parametry, které by mohly být ke klientovi přiděleny. Kliknutím na tlačítko \emph{Uložit} v~navigační liště se upravený klient uloží a uživatel bude odnavigován zpět na seznam klientů. V~případě, že uživatel klikne na tlačítko zrušit, bude také odnavigován zpět na seznam, ale všechny změny budou zahozeny.
 
@@ -232,14 +232,133 @@ Jedním z~cílů práce je stanovit požadavky pro integraci spouštěčů měř
 
 V~sekci \ref{tracking-triggers} byly popsány teoretické možnosti, s~jakými spouštěči by aplikace šla propojit.
 
-Prvním typem spouštěčů měření času byly fyzické spouštěče, tedy nějaké fyzické formy ovladače. Z~uvedených příkladů v~analýze byl pouze jeden, který by uměl uskutečnit napojení na aplikaci napřímo, a to \emph{TTIMEFLIP} \cite{timeflip}, který poskytuje protokol pro BLE komunikaci. Implementace BLE komunikace s~hardwarovým produktem je ale poměrně komplexní záležitost, která byla začleněna nad rámec rozsahu této práce, která se už takto věnuje návrhu a implementaci celé platformy pro měření odpracovaného času. Implementace tohoto typu komunikace tedy může být podnětem pro budoucí rozšíření aplikace.
+Prvním typem spouštěčů měření času byly fyzické spouštěče, tedy nějaké fyzické formy ovladače. Z~uvedených příkladů v~analýze byl pouze jeden, který by uměl uskutečnit napojení na aplikaci napřímo, a to \emph{TIMEFLIP} \cite{timeflip}, který poskytuje protokol pro BLE komunikaci. Implementace BLE komunikace s~hardwarovým produktem je ale poměrně komplexní záležitost, která byla začleněna nad rámec rozsahu této práce, která se už takto věnuje návrhu a implementaci celé platformy pro měření odpracovaného času. Implementace tohoto typu komunikace tedy může být podnětem pro budoucí rozšíření aplikace.
 
 Důležité ale je, aby na takové rozšíření byla aplikace dobře připravená, a aby minimálně poskytovala veřejné API umožňující se z~jakéhokoli budoucího konfigurovatelného hardwarového řešení na aplikaci napojit.
 
+Dalším typem spouštěčů byly softwarové spouštěče, tedy nějaké formy automatizace. V~sekci \ref{software-tracking-triggers} zabývající se tomuto tématu bylo rozebráno několik typů automatizace (podle polohy, času, režimu soustředění, a podobně). Také bylo ale zmíněno systémové řešení pomocí aplikace \emph{Zkratky} \cite{ios-shortcuts-app}, které dokáže automatizaci všech těchto typů vytvořit. \emph{Zkratky} poskytují společné systémové API, které je velmi rozšířené a Apple se snaží vývojáře přesvědčit, aby nějakou část funkcionality aplikace na toto API napojili. Potenciál této platformy je velký, protože její API umožňuje propojování různých procesů navzájem, aplikace si můžou přeposílat výsledky jednotlivých procesů, navazovat na ně a pracovat s~nimi. 
 
+Aplikace se mohou na toto API napojit pomocí definic takzvaných \emph{App Intents}. Apple v~jejich dokumentaci \cite{ios-app-intents} poskytuje podrobné informace k~tomu, jak tyto \emph{App Intents} definovat, jak pro ně vytvářet parametry, a další. Tyto struktury reprezentují nějakou akci aplikace, kterou uživatel může spustit. Nejpoužívanější (podle očekávání) automatizovatelné funkce aplikace budou zapínání časovače, vypínaní časovače a případně rušení časovače. Bylo by tedy vhodné pro tyto tři funkce vytvořit \emph{App Intents}, které uživatelům umožní vytvářet zkratky a automatizace pro jejich spuštění. V~případě zapínání časovače se také naskytuje možnost použití dvou nepovinných parametrů, a to projekt a popis, který bude uživatel chtít k~záznamu přiřadit.
 
+Implementace integrace se systémovými zkratkami umožní širokou a potenciálně velmi rozšiřovatelnou míru integrace, protože se jedná o~společné systémové API, na které lze napojit jakoukoli aplikaci, a spousta aplikací nějakou formu napojení na zkratky implementuje. U~systémových aplikací to dokonce platí pro všechny – pokrytí automatizovatelných funkcí je zde velmi široké.
 
+%---------------------------------------------------------------
+\subsubsection{Export}
+%---------------------------------------------------------------
 
+V~sekci \ref{existing-tracking-solutions} byly popsány populární systémy \emph{Clockify}, \emph{Toggl Track} a \emph{Deputy}, které poskytují funkce pro zaznamenávání odpracovaného času. Všechny tyto systémy poskytují možnost importu dat z~CSV souborů, a u~\emph{Clockify} a \emph{Toggl Track} šlo o~velmi podobné formáty.
+
+Možnost exportu z~aplikace do CSV souboru by tedy byla silným nástrojem, pomocí kterého by se záznamy z~aplikace mohly nejen importovat do těchto systémů, ale byla by uživatelům poskytnuta volná možnost, co s~exportovanými daty dělat. V~různých programech by si je mohli dle svého uvážení analyzovat, vizualizovat, a další. Možnost exportu dat do CSV souboru by tedy v~aplikaci neměla chybět. Ideálně by mělo jít o~formát, který půjde importovat jak do systému \emph{Clockify}, tak do systému \emph{Toggl Track}. Systém \emph{Deputy} cílí na trochu jinou cílovou skupinu, napojení na něj by proto nebylo tolik relevantní, jak již bylo popsáno v~sekci \ref{deputy}.
+
+Všechny zmíněné systémy také poskytovaly veřejné API pro napojení na jejich struktury. Zde už se nepůjde spolehnout na nějaké obecné řešení, které bude pasovat na více systémů, ale bude se potřeba na každý systém napojit zvlášť. V~rámci implementace by mohla být vytvořena integrace alespoň s~jedním systémem, a zároveň by implementace mohla být připravena pro rozšíření o~napojení na další systémy.
+
+Rozhraní pro integraci s~dalšími systémy bylo navrženo následovně. V~pořadí druhá, tedy prostřední, karta v~navigační liště bude sloužit pro vytváření integrací. Aby aplikace mohla v~budoucnu podporovat různé typy integrací a zároveň aby si uživatel mohl svá nastavení integrací ukládat, bude hlavní obrazovku integrací představovat seznam již vytvořených integrací, který lze nahlédnout na obrázku \ref{fig:integration-list}.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{integrations.png}
+		\caption{Seznam}
+		\label{fig:integration-list}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{new-integration.png}
+		\caption{Nová integrace}
+		\label{fig:new-integration}
+	\end{subfigure}
+	\caption{Integrace}
+	\label{fig:integrations}
+\end{figure}
+
+V~tomto seznamu budou prvky jednotlivých vytvořených integrací, které budou mít přidělenou ikonku podle toho, o~jaký typ integrace se jedná (CSV, \emph{Clockify}, a další). Vpravo nahoře v~navigační liště bude tlačítko pro přidání nové integrace, které otevře dialog s~možnostmi, jaký typ integrace chce uživatel vytvořit, jak lze nahlédnout na obrázku \ref{fig:new-integration}. Tento seznam bude mít definovaný chybový stav, kde se místo seznamu zobrazí popis chyby a tlačítko pro opakování, a prázdný stav, který zobrazí jen informaci o~tom, že si uživatel žádné integrace zatím nevytvořil.
+
+Vytvoření nové integrace, nebo otevření detailu existující integrace, otevře obrazovku pro detail integrace, jak lze vidět na obrázku \ref{fig:clockify-integration}. Obrázek \ref{fig:clockify-integration} reprezentuje detail \emph{Clockify} integrace, u~které je potřeba nastavit název integrace, API klíč pro napojení na \emph{Clockify} účet a případně nějaké další parametry pro exportování dat. Tento detail se bude lišit pro různé typy integrací podle toho, jaké parametry budou pro exportování dat potřeba. Například u~exportu do CSV dat bude potřeba jen název a nic dalšího. Tato obrazovka bude potřebovat definic chybového stavu, který bude opět zobrazovat popis chyby a tlačítko pro opakování. Prázdný stav zde nemá smysl. Obrazovky pro vytvoření nové integrace, nebo pro úpravu existující integrace, se budou lišit akorát v~možnosti odstranění integrace – u~existující integrace se přidá tlačítko, které to umožní.
+
+Kliknutí na tlačítko exportu dat otevře další obrazovku, která lze vidět na obrázku \ref{fig:export-data}. Tato obrazovka bude sloužit pro manuální export dat v~zadaném období. U~některých typů integrací totiž bude dávat smysl nabídnout automatický export dat, například u~\emph{Clockify} integrace, kde je možné každý nově vytvořený záznam rovnou automaticky exportovat do \emph{Clockify} účtu. Ale například u~exportu do CSV souboru taková automatizace nedává smysl, tento typ integrace bude tedy sloužit pouze pro manuální export. Tato obrazovka je poměrně jednoduchá, vyžaduje po uživateli pouze zadání od kdy a do kdy chce časové záznamy exportovat. Pokud zadá validní interval a klikne na tlačítko pro export, aplikace data exportuje. V~případě \emph{Clockify} integrace se pokusí data odeslat na \emph{Clockify} API, v~případě CSV integrace nabídne uživateli výsledný soubor, který si s~ním poté může dělat co chce – uložit do souborů, odeslat e-mailem, otevřít v~jiné aplikaci, atd. U~této obrazovky není potřeba definovat žádné chybové nebo prázdné stavy, protože samotná obrazovka žádná data nepotřebuje.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{clockify-integration.png}
+		\caption{Clockify integrace}
+		\label{fig:clockify-integration}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{export-data.png}
+		\caption{Export dat}
+		\label{fig:export-data}
+	\end{subfigure}
+	\caption{Detail integrace}
+	\label{fig:integration-detail}
+\end{figure}
+
+%---------------------------------------------------------------
+\section{Architektura}
+%---------------------------------------------------------------
+
+V~analýze v~sekcích \ref{app-architecture}, \ref{crossplatform-multiplatform} a \ref{backend} byly popsány různé architektury pro mobilní aplikace, backendová řešení a databáze. Tato sekce se bude věnovat návrhu architektury celé platformy a nástrojů či jiných produktů, které budou potřeba pro realizaci aplikace.
+
+%---------------------------------------------------------------
+\subsection{Architektura platformy}
+%---------------------------------------------------------------
+
+V~první řadě je potřeba se rozhodnout, jakou architekturu bude mít celá platforma, tedy jaký přístup bude zvolen pro vývoj mobilní aplikace, jaké řešení bude zvoleno pro implementaci backendu a jaká bude zvolena implementace databáze. Kombinace těchto řešení lze seřadit na stupnici, která má dva konce:
+\begin{itemize}
+\item Outsourcování co největší části platformy na externí poskytovale (BaaS, DBaaS, atd.). Tento přístup by byl nejjednodušší z~hlediska komplexní a časové náročnosti implementace, ale ze své podstaty by byl nejvíce omezující ve flexibilitě a možnosti budoucích rozšíření. V~případě, že by bylo v~budoucnu rozhodnuto, že se například změní poskytovatel databáze, tak by bylo značně náročnější implementaci pro takovou změnu upravit. Zejména v~případě, kdyby na jednom externím poskytovateli záviselo více částí infrastruktury.
+\item Vlastní implementace všech částí platformy. Toto by vyžadovalo vlastní implementaci nativní aplikace, backendu i~databáze. V~případě, že by bylo v~budoucnu rozhodnuto, že se aplikace rozšíří například o~Android aplikaci, musela by být implementována tato aplikace celá, ale zase by se jen napojila na existující backend. V~tomto ohledu je toto řešení nejvíce flexibilní. Předchozí příklad eventuální změny implementace databáze by byl mnohem jednodušší, pouze by se změnil zdroj dat v~implementaci backendu. Tento přístup by byl ale zásadně náročnější na komplexnost a časovou náročnost implementace. 
+\end{itemize}
+
+Vhodné řešení pro implementaci této aplikace bude pravděpodobně ležet někdy mezi těmito dvěma extrémy. Vzhledem k~tomu, že zadání aplikace vyžaduje implementaci aplikace pouze pro platformu iOS, nabízí se lákavé řešení implementovat pouze tuto nativní aplikaci a veškerý zbytek infrastruktury opravdu delegovat na nějaký BaaS. Z~osobních preferencí a kvůli solidní konkurenceschopnosti řešení a jeho obstání jako práce z~dílny oboru softwarového inženýrství se ale toto řešení zdá jako poněkud méně šťastné. Jako jedním z~vedlejších cílů této práce byla zvolena široká možnost budoucích rozšíření této aplikace. Potenciál, kam dále by se implementace dala rozšířit, je široký – aplikace by mohla být rozšířena o~již zmíněnou Android aplikaci, ale třeba také o~webovou aplikaci, nebo o nějakou administrátorskou variantu. Zmíněné řešení s~delegováním celé infrastruktury mimo nativní aplikaci na BaaS by jednoduché řešení těchto rozšíření moc neumožňovala, protože každé další napojení by muselo být implementováno úplně odděleně a muselo by se nějakým způsobem na BaaS napojit, čímž by navíc vznikla silná závislost na poskytovateli BaaS služby.
+
+Zajímavou technologií, která byla zmíněna v~sekci \ref{crossplatform-multiplatform} je \emph{Kotlin Multiplatform} \cite{kotlin-multiplatform}. Z~osobního pohledu tato technologie činí ideální kompromis mezi maximálním využití funkcí jednotlivých platforem a snahy sdílení co největší části kódu. Tato technologie poskytuje nástroje pro sdílení kódu mezi aplikacemi pro různé platformy – iOS, Android, Web a další. Využití této technologie, přestože se realizace bude věnovat pouze implementaci pro platformu iOS, poskytne mnohem jednodušší možnosti pro budoucí rozšíření o~další platformy. Ve sdíleném kódu bude potřeba jen přidat nové moduly podle cílových platforem a bude možnost využít co největší část sdíleného kódu, který je společný pro všechny platformy. Použití této technologie je také osobní preferencí kvůli sympatiím s~jejím používáním, lehkou znalostí práce s~ní a možnost se s~touto technologií více seznámit napřímo.
+
+Rozhodnutí využít technologie \emph{Kotlin Multiplatform} ovlivní i~rozhodnutí při volbě technologie pro implementaci backendu. Pro jazyk \emph{Kotlin} totiž existuje knihovna \emph{Ktor} \cite{ktor}, která poskytuje silné nástroje pro serverovou komunikaci. Poskytuje nástroje jak pro implementaci backendu, tak pro implementaci klienta a jejich vzájemnou komunikaci. Přestože tato knihovna není tak rozšířená a známá jako například \emph{Spring Boot} nebo \emph{Django}, které byly zmíněny v~sekci \ref{backend}, tak se ale hodí pro přehlednost a jednotu zdrojového kódu platformy, kde by celý backend i~multiplatformní část mohla být napsána v~jednom jazyce, v~jednom projektu, v~jednom společném repozitáři.
+
+Rozhodnutí využít nástroje spojené s~multiplatformním vývojem v~\emph{Kotlinu} by se daly využít i~dále. Ve světě vývoje Android aplikací je poslední dobou častou volbou implementace uživatelského rozhraní pomocí knihovny \emph{Jetpack Compose} \cite{compose-ui}. Společnost \emph{JetBrains}, tvůrce technologie \emph{Kotlin Multiplatform}, vyvíjí technologii \emph{Compose Multiplatform} \cite{compose-multiplatform}, která dále umožňuje dokonce implementaci uživatelského rozhraní ve sdíleném kódu, které si narozdíl od cross-platformních řešení stále drží výhody multi-platformního přístupu, tedy lepšího využití možností dané platformy. Tato technologie je ale ve fázi \emph{Alpha} a není tolik pokročilá. Z~toho důvodu zůstala volba pro implementaci uživatelského rozhraní na nativním moderním přístupu s~pomocí knihovny \emph{SwiftUI} \cite{swiftui}.
+
+Zatím tedy padly následující volby – nativní uživatelské rozhraní s~pomocí jazyka \emph{Swift} a knihovny \emph{SwiftUI}, multi-platformní implementace sdíleného kódu s~pomocí technologie \emph{Kotlin Multiplatform}, backend s~pomocí jazyka \emph{Kotlin} a knihovny \emph{Ktor}. Nyní ještě zbývá volba pro implementaci databáze.
+
+V~tomto směru už bylo rozhodnuto, že využití externího DBaaS poskytovatele bude na místě. Toto řešení zjednoduší implementaci aplikace o~technologii vlastní databáze, ale stále si udrží možnost eventuální volby, kdy by se poskytovatel databáze mohl změnit. Jelikož bude mít platforma vlastní backend, nebude problém technologii databáze změnit z~externího poskytovatele například na technologii \emph{PostgreSQL}, protože už to bude jen otázka změny zdroje a migrace dat, zatímco implementace byznysové logiky a dalšího, která bude na backendu, zůstane stejná.
+
+Jako dobrá volba externího poskytovatele BaaS se jeví \emph{Firebase} \cite{firebase} od firmy \emph{Google}. Jedná se o~rozšířenou technologii používanou mnoha aplikacemi. Tato technologie zároveň umožní obsluhu jiných funkcionalit aplikace, jako například autentizace. Není potřeba mezi implementací databáze a autentizace tvořit nějakou závislost, přijde-li tedy v~budoucnu požadavek poskytovatele autentizace nebo databáze změnit, může tak být učiněno nezávisle na sobě, tedy klidně pouze jedno z~toho, nebo obojí.
+
+Tato volba architektury platformy dodržuje požadavek na velkou míru flexibility a rozšiřovatelnosti, zároveň se snaží zjednodušit náročnost implementace a eliminovat duplikace kódu, bude-li aplikace rozšířena o~další platformy. Schéma této architektury lze nahlédnout na obrázku \ref{fig:architecture}. V~tomto obrázku jsou také znázorněny možnosti případného rozšíření aplikace. Z~této celkové architektury platformy lze poté navrhovat architekturu jednotlivých částí.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{architecture.png}
+	\caption{Architektura platformy}
+	\label{fig:architecture}
+\end{figure}
+
+%---------------------------------------------------------------
+\subsection{Architektura nativní aplikace}
+%---------------------------------------------------------------
+
+Architektura nativní aplikace bude vycházet z~veřejné šablony pro projekt mobilní aplikace pro platformy iOS a Android s~použitím technologie \emph{Kotlin Multiplatform}, nazvané \emph{Matee KMP DevStack} \cite{matee-devstack}. Důvody k~použití této platformy jsou osobní preference a znalost tohoto projektu. Alternativou by bylo například použití generátoru šablon projektů \emph{Kotlin Multiplatform Wizard} \cite{kmp-wizard}, ale \emph{DevStack} společnosti \emph{Matee} obsahuje velkou řadu užitečných nástrojů pro uživatelské rozhraní a další užitečné komponenty.
+
+\emph{Matee DevStack} používá architekturu \emph{Clean Architecture} popsanou v~sekci \ref{app-architecture}. Technologie \emph{Kotlin Multiplatform} do této architektury zapadá tak, že nativní aplikace implementuje celou prezentační vrstvu, a multi-platformní část implementuje co největší možnou část doménové a datové vrstvy. Multi-platformní část je do nativní aplikace přidána jako knihovna, která je závislostí doménové vrstvy. Nativní aplikace má tedy přístup hlavně k~doménovým modelům a \emph{Use Cases}.
+
+Nativní aplikace využívá \emph{modularizaci}, která představuje další vlastnost architektury, ve které je aplikace rozdělená do několika modulů, v~tomto případě podle funkcionalit. Prezentační vrstva aplikace tedy bude disponovat moduly podle funkcí jako \emph{Onboarding} (přihlášení/registrace), \emph{Timer} (časovač, historie záznamů), \emph{Integrations} (nastavení integrací), \emph{Profile} (profil uživatele) a poté například modulem \emph{UIToolkit}, který definuje společné komponenty pro prezentační vrstvu.
+
+Doménová vrstva nativní aplikace bude obsahovat moduly \emph{SharedDomain}, což je modul, který definuje společné atributy domény aplikace, ale zde bude mít hlavní funkci jako poskytovatel sdílené knihovny, která bude výstupem multi-platformní části. Dále bude vrstva obsahovat modul \emph{Utilities}, který definuje užitečné nástroje pro práci s~doménovými či sdílenými funkcemi a objekty.
+
+Datová vrstva obvykle obsahuje implementace repozitářů, v~modulech podle funkcionalit, a \emph{Providers}, také v~modulech podle funkcionalit. Jelikož většinu této vrstvy bude implementovat sdílený kód, bude tato vrstva obsahovat jen ty části, které sdílený kód implementovat nemůže. Což jsou obvykle platformní záležitosti, jako obsluha notifikací, GPS polohy, a další. Mohou to být ale i~další implementace, pro které zkrátka multi-platformní část nemá podporu, jako třeba různé funkce poskytovatele \emph{Firebase}. Tyto části kódu budou fungovat tak, že v~multiplatformní části kódu se budou nacházet rozhraní pro funkcionality, které musí implementovat každá platforma sama. V~multiplatformní části se bude pracovat s~těmito rozhraními, a nativní aplikace bude zodpovědná za to, že rozhraním poskytne implementace. Nativní aplikace tedy bude implementovat pouze tu část, kterou sdílená část implementovat nemůže, a výstupy těchto implementací bude vracet do sdíleného kódu.
+
+Zmíněné moduly jsou v~nativní aplikaci ve skutečnosti balíčky typu \emph{Swift Package}, které jsou spravovány nástrojem \emph{Swift Package Manager} \cite{spm}. Nativní aplikace dále obsahuje aplikační vrstvu, která obsahuje základní části aplikace, jako \emph{AppDelegate}, \emph{Info.plist}, ikonu aplikace, nebo například rodičovský \emph{Flow Controller} aplikace, obvykle \emph{AppFlowController}, ze kterého se vytváří všechny další navigační toky. Architekturu nativní aplikace lze nahlédnout na obrázku \ref{fig:app-architecture}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{app-architecture.png}
+	\caption{Architektura nativní aplikace}
+	\label{fig:app-architecture}
+\end{figure}
 
 
 

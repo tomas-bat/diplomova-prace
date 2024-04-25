@@ -63,7 +63,7 @@ Všechny ze zmíněných produktů poskytují veřejné API pro aplikace, se kte
 Pokud by nová aplikace měla umožňovat budoucí propojení s~jakýmkoli dalším hardwarovým produktem, tak by také měla poskytovat veřejné API, které by takovou komunikaci umožňovalo. Vývoj takových produktů by mohl být předmětem návrhu pro budoucí vylepšení aplikace.
 
 %---------------------------------------------------------------
-\subsection{Softwarové}
+\subsection{Softwarové}\label{software-tracking-triggers}
 %---------------------------------------------------------------
 
 Za softwarové spouštěče měření času lze považovat určité formy integrace a automatizace v~rámci zařízení, na kterém aplikace běží. V~případě aplikace na platformě iOS to mohou být následující možnosti:
@@ -76,7 +76,7 @@ Za softwarové spouštěče měření času lze považovat určité formy integr
 \end{itemize}
 
 %---------------------------------------------------------------
-\section{Existující systémy pro měření a správu odpracovaného času}
+\section{Existující systémy pro měření a správu odpracovaného času}\label{existing-tracking-solutions}
 %---------------------------------------------------------------
 
 Systémů pro měření a správu odpracovaného času existuje mnoho. Existuje dokonce několik různých článků o~tom, které systémy jsou nejlepší a jaké je jejich srovnání \cite{forbes-tracking-apps-article} \cite{zapier-tracking-apps-article}. Následující výběr příkladů je učiněn podle těchto článků, podle osobní preference a podle počtu stažení na iOS platformě. U~každého příkladu jsou také rozebrány možnosti importu dat, od kterých se mohou odvíjet požadavky na export dat z~nové aplikace.
@@ -133,7 +133,7 @@ Toggl Track také pokrývá více platforem: Webovou aplikací, mobilní aplikac
 Toggl Track také nabízí možnost importu dat z~CSV tabulky, ve velmi podobném formátu jako Clockify \cite{toggl-track-import-csv}. A stejně jako Clockify nabízí vlastní otevřené API \cite{toggl-track-api}.
 
 %---------------------------------------------------------------
-\subsection{Deputy}
+\subsection{Deputy}\label{deputy}
 %---------------------------------------------------------------
 
 Deputy je další aplikací, která umožňuje měření a správu odpracovaného času. Jejím hlavním účelem je však plánování směn zaměstnanců. Je uvedena jako jeden z~příkladů proto, aby šlo nahlédnout na problém měření času i~z~jiného úhlu, než striktně měření času primárně za účelem vykazování, fakturování nebo analýzy efektivity. Je také velice rozšířenou aplikací – počty stažení na mobilních telefonech překračují 5 milionů \cite{deputy-app-magic}.
@@ -219,7 +219,7 @@ Vývojové prostředí Xcode je jednotné integrované vývojové prostředí, k
 Pro nativní vývoj iOS aplikací se dříve používal programovací jazyk \emph{Objective-C} \cite{objc} a pro tvorbu uživatelského rozhraní knihovna \emph{UIKit}. V~roce 2014 Apple přidal podporu svého nového programovacího jazyku \emph{Swift} \cite{swift} a v~roce 2019 přidal podporu nové deklarativní knihovny pro tvorbu uživatelského rozhraní \emph{SwiftUI} \cite{swiftui}.
 
 %---------------------------------------------------------------
-\subsection{Architektura aplikací}
+\subsection{Architektura aplikací}\label{app-architecture}
 %---------------------------------------------------------------
 
 Jako u~každého softwarového projektu, architektura je důležitou součástí jeho návrhu. K~architekturám mobilních aplikací existuje mnoho přístupů. Například u~Android aplikací sám Google doporučuje, jaké architektonické vzory by měly být používány a doporučuje architektury pro tyto aplikace \cite{android-app-arch}. Apple přímo žádné architektury pro aplikace cílící na iOS platformu nedoporučuje. 
@@ -298,7 +298,7 @@ Rozšířená architektura, vhodná pro iOS aplikace, která definuje strukturu 
 V~\emph{Clean Architecture} se také pracuje s~\emph{Dependency Injection}, což řeší logiku toho, které konkrétní implementace budou dosazeny jednotlivým rozhraním (\emph{Use Cases, Repositories, Providers}). \cite{ios-clean-arch-mvvm}
 
 %---------------------------------------------------------------
-\section{Cross-platformní a multi-platformní možnosti}
+\section{Cross-platformní a multi-platformní možnosti}\label{crossplatform-multiplatform}
 %---------------------------------------------------------------
 
 V~současném prostředí mobilního vývoje se rozhodnutí ohledně vhodné platformy pro tvorbu aplikací stává klíčovým faktorem pro úspěch projektu. Existuje široká škála přístupů, které vývojáři mohou zvolit, od tradičních nativních řešení až po moderní multi-platformní a cross-platformní frameworky. Tato sekce se zaměřuje na analýzu těchto možností s~ohledem na tvorbu mobilní aplikace pro zaznamenávání odpracovaného času. Zhodnocuje jejich výhody, nevýhody a vhodnost pro konkrétní aplikaci. Tento přístup umožní lépe pochopit pochopit, jakým směrem se vydat při návrhu a implementaci projektu.
@@ -346,7 +346,7 @@ Nevýhody multi-platformního vývoje mohou zahrnovat větší složitost a nár
 Multi-platformní vývoj je vhodný pro projekty, které vyžadují vysokou výkonnost a přístup k nativním funkcím a knihovnám, ale zároveň potřebují sdílet co nejvíce kódu mezi platformami. Ideální je pro rozsáhlejší projekty nebo aplikace, které potřebují plnou integraci s operačním systémem, ale zároveň chtějí minimalizovat duplicitu práce a zjednodušit správu a údržbu kódu. Multi-platformní vývoj je také vhodný pro situace, kdy je důležitá konzistence a shoda funkcí mezi různými verzemi aplikace na různých platformách.
 
 %---------------------------------------------------------------
-\section{Backendová řešení pro mobilní aplikace}
+\section{Backendová řešení pro mobilní aplikace}\label{backend}
 %---------------------------------------------------------------
 
 Backendová část mobilních aplikací hraje klíčovou roli v~poskytování dat, zpracování požadavků a správě uživatelských účtů a obsahu. Tato sekce se zaměřuje na analýzu různých backendových řešení a technologií, které jsou vhodné pro podporu mobilních aplikací. Při výběru správného backendového řešení je důležité pochopit úlohu, kterou backend hraje v~kontextu mobilního prostředí a identifikovat faktory, které ovlivňují výběr a implementaci.
