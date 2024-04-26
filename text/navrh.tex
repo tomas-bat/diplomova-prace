@@ -360,6 +360,64 @@ Zmíněné moduly jsou v~nativní aplikaci ve skutečnosti balíčky typu \emph{
 	\label{fig:app-architecture}
 \end{figure}
 
+%---------------------------------------------------------------
+\subsection{Architektura multi-platformní části}
+%---------------------------------------------------------------
+
+Multi-platformní část je rozdělena do dvou modulů – \emph{commonMain} a \emph{iosMain}. \emph{commonMain} obsahuje sdílený kód všech platforem, a \emph{iosMain} obsahuje kód, který se kompiluje pouze, pokud je cílovou platformou iOS. Toho se využívá speciálními klíčovými slovy v~\emph{Kotlinu} – \texttt{expect} a \texttt{actual}. Funguje to podobně, jako rozhraní – \emph{commonMain} definuje rozhraní funkce/třídy pomocí \texttt{expect}, a platformní modul definuje implementaci pomocí \texttt{actual}. Modul \emph{iosMain} má totiž přístup k~některým platformním API, ke kterým sdílený modul přístup nemá.
+
+Modul \emph{commonMain} poté dodržuje stejnou architekturu, jako nativní aplikace, tedy \emph{Clean Architecture} s~\emph{modularizací} podle funkcionalit aplikace. Jediný rozdíl oproti architektuře používané v~nativní aplikace a popsané v~sekci \ref{app-architecture} je ten, že \emph{Providers} se ve světě \emph{Kotlinu} nazývají \emph{Sources}, ale jejich význam je identický.
+
+Pokud bude v~budoucnu přidána podpora pro další platformy (Android, Web, \dots), bude potřeba v~multi-platformní části přidat konkrétní modul, například \emph{androidMain}. Tyto platformní moduly musí implementovat jen ty části, které jsou specifické pro platformu a \emph{Kotlin/Native} API k~nim má přístup. Dalším specifikem \texttt{expect} a \texttt{actual} je to, že pokud je v~\emph{commonMain} v~nějakém balíčku použito klíčové slovo \emph{expect}, tak v~platformním modulu potom musí být jeho \texttt{actual} implementace ve stejném balíčku. Tedy pokud je například \texttt{expect someFunction(param: String): String} v~balíčku \texttt{com.some.path}, tak implementace potom musí být také v~tomto balíčku. Tím pádem potom musí automaticky platformní moduly reflektovat strukturu aplikace, která je v~\emph{commonMain}.
+
+%---------------------------------------------------------------
+\subsection{Architektura backendu}
+%---------------------------------------------------------------
+
+Architektura backendu byla zvolena tak, aby byla v~souladu s~\emph{Clean Architecture}, která je používána v~nativní aplikaci i~v~multi-platformní části. Datové a doménové vrstvy jsou tedy identické, s~jednou výjimkou, že v~doménové vrstvě nejsou \emph{Use Cases}, ale ve vyšších vrstvách se budou používat \emph{Repositories} napřímo. To zejména proto, že na backendu mají \emph{Use Cases} menší smysl, než v~aplikaci. Ale nic by nebránilo tomu je také používat. Prezentační vrstva zde bude obsahovat \emph{Routes}, tedy \emph{Endpoints}, se kterými bude moct apikace komunikovat. Jednotlivé \emph{Endpoints} budou přímo volat \emph{Repositories}.
+
+%---------------------------------------------------------------
+\subsection{Architektura dat}
+%---------------------------------------------------------------
+
+S~ohledem na typ databáze, která byla pro platformu zvolena, je potřeba stanovit nějaké schéma dat. \emph{Firebase} nabízí dva typy databází – \emph{Cloud Firestore} a \emph{Realtime Database}. Oba typy jsou \emph{NoSQL} databáze, \emph{Cloud Firestore} je dokumentová databáze, která ukládá data jako kolekce dokumentů. \emph{Realtime Database} ukládá data v~jednom velkém JSON stromu. Vzhledem k~tomu, že \emph{Cloud Firestore} disponuje oproti \emph{Realtime Database} řadou výhod a je doporučenou variantou, bude tato databáze zvolena pro potřeby aplikace Trackee. \cite{rtdb-vs-firestore}
+
+Jak již bylo řečeno, bude se jednat o~dokumentovou databázi. Pro potřeby aplikace bude nutné definovat následující objekty:
+\begin{itemize}
+\item\textbf{Klient} – Bude obsahovat informace o~klientovi, v~základní variantě jméno. V~budoucnu může být přidáno více atributů.
+\item\textbf{Projekt} – Bude obsahovat informace o~projektu. Projekt musí patřit k~nějakému klientovi, takže bude muset obsahovat identifikátor klienta, ke kterému patří. Dále bude obsahovat jméno a nepovinně typ projektu. V~budoucnu také může být přidáno více atributů.
+\item\textbf{Typ projektu} – Předdefinovaný seznam hodnot, například \emph{Práce} nebo \emph{Škola}.
+\item\textbf{Uživatel} – Bude obsahovat informace o~uživateli. Identifikátorem uživatele bude \texttt{uid} (User ID), které by mělo být sdíleno s~identifikací v~autentizaci. Dále bude uživatel obsahovat informace o~svém časovači. Poté bude potřeba držet informace o~tom, jaké klienty a projekty má uživatel přiřazené. To by šlo ukládat například pomocí vnořené kolekce, kde bude jednotlivý dokument odpovídat klientovi, a tento dokument bude obsahovat pole hodnot, kterými budou identifikátory projektů, které má od daného klienta přiřazené. A nakonec bude ještě uživatel muset obsahovat data o~svých vytvořených integracích. Ty mohou být uloženy v~další kolekci, kde jednotlivý dokument bude odpovídat integraci.
+\item\textbf{Data časovače} – Informace o~tom, jaký má vybraný projekt, popis, zda časovač běží a případně od kdy běží.
+\item\textbf{Integrace} – Bude obsahovat název, typ a případně další atributy relevantní k~typu integrace.
+\item\textbf{Typ integrace} – Prozatím \emph{CSV} nebo \emph{Clockify}.
+\item\textbf{Časový záznam} – Prvek historie časových záznamů, který bude obsahovat informace zadané v~časovači. Tím je tedy vybraný projekt, popis, čas začátku a čas konce.
+\end{itemize}
+Klient, Projekt, Integrace a Časový záznam budou mít implicitně své identifikátory. U~Uživatele bylo již zmíněno, že jeho identifikátorem bude \texttt{uid}.
+
+Dále je tedy potřeba navrhnout schéma dat. Jelikož se jedná o~dokumentovou databázi, je potřeba ho navrhnout tak, aby nevznikaly zbytečné duplicity a aby byla potřebná data lehce přístupná. Navržené schéma lze nahlédnout na obrázku \ref{fig:data-schema}. 
+
+Schéma je navrženo tak, aby základní objekty byly ukládány ve vlastních top-level kolekcích (\emph{users}, \emph{clients}, \emph{projects} a \emph{entries}). Kolekce \emph{users}, respektive \emph{clients}, obsahují přímo dokumenty jednotlivých uživatelů, respektive klientů, podle jejich identifikátoru. Ale protože \emph{projects} vždy patří k~nějakému klientovi, respektive \emph{entries} k~nějakému uživateli, mají ještě jejich top-level kolekce vnořené kolekce v~dokumentech podle identifikátoru jejich klienta, respektive jejich uživatele. Alternativním přístupem by bylo \emph{projects}, respektive \emph{entries}, ukládat přímo do dokumentů jednotlivých \emph{clients}, respektive \emph{users}, ale tímto způsobem budou dokumenty odlehčeny od obsahování tolika dat a všechny nejpoužívanější objekty domény budou mít své top-level kolekce.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{data-schema.png}
+	\caption{Schéma dat}
+	\label{fig:data-schema}
+\end{figure}
+
+%---------------------------------------------------------------
+\section{Nástroje potřebné pro realizaci}
+%---------------------------------------------------------------
+
+Před začátkem implementace je také potřeba navrhnout nástroje, které budou pro realizaci potřeba.
+
+U~vývoje nativní aplikace není moc široký výběr vývojových nástrojů, jelikož jediné oficiální vývojové prostředí pro platformu iOS je \emph{Xcode}, popsané v~sekci \ref{ios-dev-tools}, které podporuje pouze operační systém \emph{macOS}. Toto vývojové prostředí obsahuje software pro podporu všech potřebných nástrojů, které jsou pro vývoj pro platformu iOS potřeba – kompilace, archivace, simulátory mobilních zařízení, debugger a další.
+
+Pro vývoj multi-platformní části a backendu bude použito populární vývojové prostředí \emph{IntelliJ IDEA} společnosti \emph{JetBrains} \cite{intellij}. Toto IDE bylo zvoleno z~osobních preferencí a jeho dobré podpoře technologie \emph{Kotlin Multiplatform} i~jazyka \emph{Kotlin}.
+
+Dalším užitečným nástrojem během vývoje bude verzovací systém \emph{Git} \cite{git}, který bude spravovat a verzovat zdrojový kód implementace. 
+
 
 
 
