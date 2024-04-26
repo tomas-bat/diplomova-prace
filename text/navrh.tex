@@ -67,7 +67,7 @@ Ikona aplikace také neprocházela nijak složitým procesem návrhu, byl pouze 
 \end{figure}
 
 %---------------------------------------------------------------
-\section{Funkcionality aplikace a jejich uživatelské rozhraní}
+\section{Funkcionality aplikace a jejich uživatelské rozhraní}\label{features}
 %---------------------------------------------------------------
 
 Aplikace bude primárně sloužit pro zaznamenávání odpracovaného času. Je tedy potřeba, aby každý uživatel měl možnost si vytvářet vlastní záznamy a další data, která budou propojena pouze s~ním, a ke kterým bude mít přístup pouze on. Toto obvyklý případ užití mobilní aplikace, který ze své podstaty vyžaduje nějakou formu vytvoření uživatelského účtu, se kterým budou data propojena, a jeho autentizace. Nejobvyklejším způsobem autentizace je autentizace pomocí e-mailu a hesla. Tento způsob je i~poměrně jednoduchý z~hlediska implementace a spousta poskytovatelů BaaS (Backend as a Service, vizte \ref{baas}) tento způsob autentizace implementuje. 
@@ -305,7 +305,7 @@ Kliknutí na tlačítko exportu dat otevře další obrazovku, která lze vidět
 V~analýze v~sekcích \ref{app-architecture}, \ref{crossplatform-multiplatform} a \ref{backend} byly popsány různé architektury pro mobilní aplikace, backendová řešení a databáze. Tato sekce se bude věnovat návrhu architektury celé platformy a nástrojů či jiných produktů, které budou potřeba pro realizaci aplikace.
 
 %---------------------------------------------------------------
-\subsection{Architektura platformy}
+\subsection{Architektura platformy}\label{platform-architecture}
 %---------------------------------------------------------------
 
 V~první řadě je potřeba se rozhodnout, jakou architekturu bude mít celá platforma, tedy jaký přístup bude zvolen pro vývoj mobilní aplikace, jaké řešení bude zvoleno pro implementaci backendu a jaká bude zvolena implementace databáze. Kombinace těchto řešení lze seřadit na stupnici, která má dva konce:
@@ -407,7 +407,7 @@ Schéma je navrženo tak, aby základní objekty byly ukládány ve vlastních t
 \end{figure}
 
 %---------------------------------------------------------------
-\section{Nástroje potřebné pro realizaci}
+\section{Nástroje potřebné pro realizaci}\label{dev-tools}
 %---------------------------------------------------------------
 
 Před začátkem implementace je také potřeba navrhnout nástroje, které budou pro realizaci potřeba.

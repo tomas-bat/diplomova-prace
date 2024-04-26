@@ -1,0 +1,222 @@
+Tato kapitola se zabývá samotnou realizací platformy pro měření odpracovaného času. Popisuje nástroje použité během vývoje, strukturu zdrojového kódu a nakonec implementaci jednotlivých navržených funkcionalit aplikace.
+
+%---------------------------------------------------------------
+\section{Nástroje pro vývoj}
+%---------------------------------------------------------------
+
+Jak bylo navrženo v~sekci \ref{dev-tools}, pro nativní aplikaci bylo použito vývojové prostředí \emph{Xcode}. Verze tohoto IDE, na kterém byla implementace vyvíjena, byla 15.2. S~touto verzí IDE se pojí verze programovacího jazyku \emph{Swift} 5.9.2. Aplikace byla vyvíjena na operačním systému \emph{macOS Sonoma} (14.4). Nativní aplikace bude definovat minimální iOS verzi cílové platformy na verzi 17.0, jelikož tato verze umožňuje použití nejnovějších nástrojů platformy iOS. Podle dat z~února 2024 už tuto nejnovější verzi operačního systému používalo 66\% ze všech aktivních uživatelů mobilních telefonů iPhone. Mezi zařízeními představených v~předchozích čtyřech letech je to dokonce 76\% \cite{ios-17-adoption}.
+
+Vývojové prostředí pro multi-platformní část a backend také dodržuje návrh ze sekce \ref{dev-tools}, bylo tedy použito \emph{IntelliJ IDEA}, verze 2024.1. Pro jazyk \emph{Kotlin} byla použita verze 1.9.10. 
+
+\emph{Git} repozitář byl zálohován nástrojem \emph{GitHub} \cite{github}. Během vývoje nebyly použity žádné větve ani další nástroje pro týmovou spolupráci v~nástroji \emph{Git}, jelikož nikdo další na projektu nespolupracoval. Veškerý vývoj tedy probíhal přímo v~hlavní větvi \emph{main}.
+
+%---------------------------------------------------------------
+\subsection{Firebase}
+%---------------------------------------------------------------
+
+V~nástroji \emph{Firebase}, který byl vybrán v~návrhu v~sekci \ref{platform-architecture}, byl vytvořen projekt pro aplikaci Trackee. Byly vytvořeny tři prostředí – Alpha, Beta a Produkce. V~projektu zatím byly nastaveny funkce pro autentizaci a \emph{Firestore} databázi. 
+
+\emph{Firebase} autentizace podporuje různé formy autentizace, jako e-mail s~heslem, ale třeba také přihlášení přes Google, přes Apple, přes Facebook a podobně. Rozšíření možností přihlášení by mohlo být podnětem pro budoucí vývoj aplikace, v~této fázi je zatím implementováno pouze přihlášení přeš e-mail a heslo. 
+
+Při tvorbě \emph{Firestore} databáze \emph{Firebase} nabízí výběr, kde se má instance databáze nacházet (západní Evropa nebo Severní Amerika). Byla vybrána nejbližší možnost, tedy západní Evropa.
+
+%---------------------------------------------------------------
+\subsection{Nasazení backendu}
+%---------------------------------------------------------------
+
+Během vývoje byla aplikace backendu spouštěna a testována na lokálním stroji. V~místních sítích se tedy stačilo připojovat pomocí IP adresy počítače, na kterém aplikace backendu běžela, přes protokol HTTP, například: \texttt{http://192.168.88.70:8080}
+
+Pro umožnění používání aplikace kdekoli, kdykoli a bez potřeby na lokálním stroji neustále ručně spouštět aplikaci backendu, bylo vhodné vybrat nějaké řešení, které by umožnilo nasazení aplikace backendu. K~tomu existuje řada externích poskytovatelů. Pro potřeby tohoto projektu byl zvolen nástroj \emph{Railway} \cite{railway}, jelikož zdarma nabízí počáteční kredit v~hodnotě pěti amerických dolarů, což by mělo na nějakou dobu vystačit pro potřeby vývoje aplikace. Tomuto nástroji pouze stačí propojení s~\emph{GitHub} repozitářem, nastavení skriptu pro spuštění a je hotovo. Nástroj poté při každé aktualizaci repozitáře sestaví projekt, spustí backend a nasadí ho na URL adrese \texttt{https://trackee-app-production.up.railway.app}. 
+
+\emph{Railway} také podporuje automatické uspávání aplikace, které může snížit využívání kreditu v~době, kdy aplikace není využívána \cite{railway-app-sleeping}. Pokud se tedy aplikace nějakou dobu nepoužívá, je potřeba počítat s~několika sekundovou prodlevou při prvním požadavku.
+
+Jednou nevýhodou nástroje \emph{Railway} ale je, že v~bezplatné variantě nabízí umístění stroje, na kterém běží instance, pouze ve státě Oregon ve Spojených státech amerických. Jelikož je to v~podstatě na druhé straně Země, vzniká tím poměrně znatelná prodleva mezi klientem a serverem. A v~kombinaci s~tím, že při nastavení nástroje \emph{Firebase} bylo zvoleno umístění instance v~Evropě (a toto umístění není možné po nastavení nástroje změnit), vznikají tím hlavně prodlevy při komunikaci s~databází, protože nyní musí backend každý požadavek na čtení nebo zápis dat posílat zhruba 8 tisíc kilometrů daleko. Rozdíl mezi používáním instance backendu běžící pomocí nástroje \emph{Railway} a používáním lokální instance je znatelný – například přihlášení a načtení hlavní obrazovky včetně plné počáteční stránky historie záznamů (10 záznamů) trvá 5-7 sekund, zatímco při použití lokální instance toto trvá 2-3 sekundy.
+
+%---------------------------------------------------------------
+\section{Architektura a struktura projektu}
+%---------------------------------------------------------------
+
+Jako šablona celého projektu sloužil \emph{DevStack} společnosti \emph{Matee} \cite{matee-devstack}, ze kterého byla odstraněna většina implementovaných funkcionalit a jejich balíčků, kromě těch, které se hodilo znovu využít (onboarding, profil, \dots). Ze šablony byly také ponechány nástroje na síťovou komunikaci (síťový klient pomocí knihovny \emph{Ktor} \cite{ktor}), interoperabilitu a další. V~šabloně také byly ponechány některé nástroje, které zatím projektem nejsou využívány, ale v~budoucnu při dalším rozvoji aplikace by se mohly hodit, jako nástroje pro práci s~lokálním úložištěm \emph{SQLdelight}, \emph{UserDefaults} nebo \emph{Keychain}, nebo \emph{Providers} pro obsluhu GPS, obsluhu notifikací, a další. Jelikož Aplikace Trackee neimplementuje Android klienta, je celý jeho modul ze šablony odstraněn.
+
+Aplikace implementuje tři prostředí – Alpha, Beta a Produkce. Zvykem bývá, že Alpha má vlastní instanci databáze a serveru, která slouží pouze pro testování a ladění, například při nasazování nových verzí backendu, a podobně. Beta na tom je pak obvykle podobně, ale buď duplikuje data z~produkčního prostředí (ale přímo ho nemůže ovlivňovat), nebo je na produkční prostředí přímo napojena, ale nabízí nějaké přidané ladící možnosti. Produkční prostředí pak poskytuje databázi a server, které jsou využívány reálnými uživateli, kde je priorita orientována spíše na rychlost, než na možnosti ladění. Během vývoje aplikace Trackee nebylo potřeba využívat více instancí databáze nebo serveru, protože na projektu nepracuje více lidí, nevznikají konflikty a není zatím využíván reálnými uživateli. Prostředí se tedy liší jenom v~drobnostech, jako například v~tom, že Alpha a Beta nabízí rozšířené možnosti zachycování a přepisování požadavků na backend, nebo poskytuje detailnější popisy chybových hlášek, které mohou obsahovat více technických informací. 
+
+Multi-platformní část a backend používají automatizační sestavovací nástroj \emph{Gradle} \cite{gradle}, což je populární nástroj pro flexibilní konfiguraci a automatizaci sestavování softwarových projektů. Nativní iOS aplikace používá pro sestavení nástroj \emph{xcodebuild}, který je součástí \emph{Xcode} IDE. Multi-platformní knihovna je do nativní iOS aplikace propagována jako knihovna typu \emph{xcframework}, což je \emph{multiplatformní binární framework} \cite{xcframework}. \emph{Gradle} zkompiluje multi-platformní kód do této \emph{xcframework} reprezentace a zkopíruje ji do iOS projektu.
+
+Všechny části implementace (nativní aplikace, multi-platformní část a backend) jsou součástí jednoho repozitáře (\emph{monorepo}), který má následující strukturu:
+\begin{itemize}
+\item\texttt{backend} – modul obsahující projekt backendu
+\item\texttt{build-logic} – společný modul ostatních modulů, obsahující pluginy a nástroje pro sestavení multi-platformní knihovny
+\item\texttt{gradle} - složka pro soubory nástroje \emph{Gradle}
+\item\texttt{ios} – složka obsahující projekt nativní iOS aplikace
+\item\texttt{other} – nástroje projektu
+\item\texttt{shared} – modul obsahující sdílený kód pro technologii \emph{Kotlin Multiplatform}
+\item\texttt{twine} – složka obsahující lokalizační soubor
+\end{itemize}
+Jednotlivé části implementace poté dodržují architekturu navrženou v~sekci \ref{platform-architecture}.
+
+%---------------------------------------------------------------
+\subsection{Lokalizace}
+%---------------------------------------------------------------
+
+Aplikace byla implementována a lokalizována pro tři jazyky – čeština, slovenština a angličtina. Texty pro veškeré lokalizace (tlačítka, popisky, instrukce, \dots) jsou uloženy v~souboru \texttt{strings.txt} ve složce \texttt{twine}, který je připraven ve formátu pro nástroj \emph{Twine} \cite{twine}, který tento soubor zpracovává a tvoří z~něj lokalizační soubory pro cílové platformy (pro iOS jsou to soubory \texttt{Localizable.strings}). Nastavení tohoto nástroje pro tyto jazyky je již v~šabloně \emph{DevStack} připraveno.
+
+%---------------------------------------------------------------
+\subsection{Automatické generování kódu}
+%---------------------------------------------------------------
+
+Šablona také používá několik pomocných nástrojů pro automatické generování kódu. Jedním takovým nástrojem je \emph{SwiftGen} \cite{swiftgen}, který zde slouží k~několika účelům:
+\begin{itemize}
+\item Generování struktur pro lokalizaci: \emph{SwiftGen} podle šablon generuje statické struktury z~lokalizačních souborů \texttt{Localizable.strings} pro jednodušší použití v~kódu, které zamezí použití špatných klíčů lokalizací.
+\item Generování struktur pro obrázky: \emph{SwiftGen} je v~šabloně nastaven takovým způsobem, aby ze zdrojů \texttt{Images.xcassets} generoval statické struktury, které umožní jednodušší referencování obrázků ze zdrojového kódu.
+\item Generování struktur pro barvy: Funguje stejným způsobem, jako obrázky.
+\end{itemize}
+Nástroj \emph{SwiftGen} je v~šabloně přidán jako \emph{plugin} modulu \emph{UIToolkit} v~prezentační vrstvě.
+
+Nativní iOS aplikace také v~šabloně využívá makra \emph{swift-spyable} \cite{swift-spyable} \emph pro generování \emph{Use Case Mocks}, tedy statických náhrad pro \emph{Use Cases} používaných pro testování. Toto je ale používáno jen pro nativní \emph{Use Cases}, které aplikace Trackee neobsahuje. Pro sdílené \emph{Use Cases} je využíváno vlastních rodičovských tříd \texttt{UseCaseResultMock}, \texttt{UseCaseResultNoParamsMock}, atd.
+
+%---------------------------------------------------------------
+\subsection{Dependency Injection}
+%---------------------------------------------------------------
+
+Pro \emph{Dependency Injection} v~nativní aplikaci je využíváno knihovny \emph{Factory} \cite{factory}, v~multi-platformní části a na backendu knihovny \emph{Koin} \cite{koin}. V~aplikaci Trackee jsou sice všechny \emph{Use Cases} a \emph{Repositories} v~multi-platformní části, ale \emph{Dependency Injection} v~prezentační vrstvě nativní aplikace získává implementace sdílených \emph{Use Cases} knihovnou \emph{Factory}, aby bylo dosazování sjednocené s~případnými nativními \emph{Use Cases}. \emph{Dependency Injection} v~nativní aplikaci tedy funguje tak, že v~modulu \emph{DependencyInjection} v~aplikační vrstvě se registrují implementace všech závislostí, včetně sdílených \emph{Use Cases}, které ale poskytuje knihovna \emph{Koin}.
+
+%---------------------------------------------------------------
+\section{Implementace jednotlivých funkcionalit}
+%---------------------------------------------------------------
+
+Tato sekce se věnuje implementaci jednotlivých funkcionalit navržených v~sekci \ref{features}. Implementaci každé funkcionality rozebírá z~hlediska její realizace v~backendové části, v~multi-platformní části a v~nativní aplikaci.
+
+%---------------------------------------------------------------
+\subsection{Přihlášení a registrace}
+%---------------------------------------------------------------
+
+Přihlášení a registrace je základní funkcionalitou, kterou aplikace potřebuje, aby mohla držet informace o~konkrétním uživateli. V~návrhu platformy (obrázek \ref{fig:architecture}) byla autentizace navržena tak, že bude probíhat přes backend. Ale vzhledem k~tomu, že \emph{Firebase} autentizace nabízí více možností autentizace, jako přihlášení přes Apple, Google, a podobně, tak byl v~implementaci zvolen přístup, že autentizace bude probíhat na straně klienta, a ne backendu, protože jí celou obstará \emph{Firebase} autentizace. Bylo by sice možné provádět autentizace přes e-mail a heslo tak, že by klient poslal danou kombinaci e-mailu a hesla na backend, který by uživatele přes \emph{Firebase} přihlásil, klientovi vrátil jeho \emph{access token}\footnote{\emph{Access token} je v~autentizační terminologii řetězec znaků, se kterým klient posílá požadavky na server, aby prokázal svou identitu. \cite{access-token}}, který by ho poté dále používal při následujících požadavcích. V~případě rozšíření o~další formy přihlášení, jako je přihlášení přes Apple, by v~tomto přístupu musel \emph{Firebase} provést autentizaci u~klienta, získat mezistavový \emph{token} pro daného poskytovatele přihlášení, poslat ho na backend, který by ho poté ověřil s~autentizací \emph{Firebase}, získal \emph{access token}, a poslal ho klientovi. Vzhledem k~tomu, že takto by se autentizační API muselo volat jak u~klienta, tak na backendu, byl zvolen přístup, že celý tento proces se bude dít u~klienta pomocí knihovny pro \emph{Firebase} autentizaci, a na backend se bude ve všech možnostech přihlášení posílat jen \emph{access token}. V~případě, že by v~budoucnu padlo rozhodnutí tuto metodiku změnit a implementovat autentizační procesy pouze na backendu, musela by se tedy implementovat metodika popsaná výše.
+
+%---------------------------------------------------------------
+\subsubsection{Backend}
+%---------------------------------------------------------------
+
+Jak již bylo popsáno, backendová část nebude implementovat celý autentizační proces, ale jen bude ověřovat platnost \emph{access tokenu}. To bylo naimplementováno pomocí kofigurace bezpečnosti knihovny \emph{Ktor}. Pro všechny \emph{Routes}, tedy \emph{Endpoints}, které jsou definovány vnořeně ve funkci \texttt{authenticate}, se bude ověřovat, zda požadavek ve hlavičce obsahuje \emph{Bearer token} (\emph{access token}), ověří se přes \emph{Firebase} autentizaci pomocí funkce \texttt{verifyIdTokenAsync}, poté se získá uživatel pomocí \texttt{uid} a dále budou moct \emph{Routes} pracovat přímo s~informacemi o~přihlášeném uživateli. Průběh verifikace \emph{access tokenu} lze vidět v~ukázce kódu \ref{code:access-token-verification}. V~ukázce kódu \ref{code:ktor-security-config} lze poté vidět, jak bude backend získávat objekt úspěšně ověřeného uživatele. Pokud je uživatel úspěšně ověřen, ale nemá záznam v~databázi, bude mu tento záznam automaticky vytvořen – toto se bude dít při registraci uživatele.
+
+\begin{listing}
+\caption{Průběh verifikace \emph{access tokenu}}\label{code:access-token-verification}
+\begin{minted}{Kotlin}
+class FirebaseAuthProvider(config: Config) : AuthenticationProvider(config) {
+
+    // ...
+    
+    override suspend fun onAuthenticate(context: AuthenticationContext) {
+        val authHeader = context.call.request.parseAuthorizationHeader() 
+            as? HttpAuthHeader.Single ?: throw AuthException.Unauthorized
+
+        val token = try {
+            firebase.verifyIdTokenAsync(authHeader.blob).await()
+        } catch (e: FirebaseAuthException) {
+            throw AuthException.InvalidToken(e)
+        }
+
+        val user = firebase.getUserAsync(token.uid).await()
+
+        context.principal(FirebasePrincipal(user))
+
+        val principal = context.mapPrincipal(user)
+        if (principal != null) context.principal(principal)
+    }
+    
+    // ...
+}
+
+fun AuthenticationConfig.firebase(
+    name: String? = null,
+    configure: FirebaseAuthProvider.Config.() -> Unit
+) {
+    val provider = FirebaseAuthProvider.Config(name).apply(configure).build()
+    register(provider)
+}
+\end{minted}
+\end{listing}
+
+\begin{listing}
+\caption{Konfigurace bezpečnosti knihovny \emph{Ktor}}\label{code:ktor-security-config}
+\begin{minted}{Kotlin}
+fun Application.configureSecurity() {
+    
+    // ...
+    
+    authentication {
+        firebase {
+            firebase = firebaseAuth
+            mapPrincipal { userRecord ->
+                userRecord.uid
+
+                val principal = try {
+                    val user = userRepository.readUserByUid(userRecord.uid)
+                    UserPrincipal(user)
+                } catch(e: UserException.UserNotFound) {
+                    val user = userRepository.createUser(userRecord.uid)
+                    UserPrincipal(user)
+                }
+
+                principal
+            }
+        }
+    }
+}
+\end{minted}
+\end{listing}
+
+%---------------------------------------------------------------
+\subsubsection{Nativní aplikace}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Multi-platformní část}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsection{Časovač}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Nativní aplikace}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Multi-platformní část}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Backend}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsection{Profil uživatele}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Nativní aplikace}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Multi-platformní část}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Backend}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsection{Integrace}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Nativní aplikace}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Multi-platformní část}
+%---------------------------------------------------------------
+
+%---------------------------------------------------------------
+\subsubsection{Backend}
+%---------------------------------------------------------------
