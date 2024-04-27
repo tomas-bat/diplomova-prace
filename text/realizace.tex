@@ -165,28 +165,307 @@ fun Application.configureSecurity() {
 \end{minted}
 \end{listing}
 
-%---------------------------------------------------------------
-\subsubsection{Nativní aplikace}
-%---------------------------------------------------------------
+Žádné \emph{Routes} pro funkcionalitu přihlášení a registrace být definovány nemusí, jelikož tento proces bude probíhat přes \emph{Firebase} autentizaci. V~ukázce kódu \ref{code:ktor-security-config} je ale vidět, že po úspěšném ověření \emph{access tokenu} se aplikace pokusí získat objekt uživatele z~databáze, případně nového uživatele vytvořit. Tyto funkce poskytuje \texttt{UserRepository}, která bude dále definovat řadu dalších funkcích souvisejících v~práci s~daty, které se týkají uživatele. Definice rozhraní tohoto repozitáře je součástí doménové vrstvy, implementaci poté definuje datová vrstva. Implementace repozitáře poté bude potřebovat pro přístup k~datům \emph{Source}, v~tomto případě \texttt{UserSource}. Implementace tohoto \emph{Source} už poté přímo poskytuje komunikaci s~\emph{Firestore} databází.
+
+V~ukázce kódu \ref{code:be-create-user} je vidět implementace toho, jak se v~databázi vytváří nový uživatel. Lze nahlédnout, že tato metoda vrací objekt úspěšně vytvořeného uživatele typu \texttt{FirestoreUser}. Jako parametr funkce ale bere typ \texttt{User}. \texttt{User} je totiž doménový objekt reprezentující uživatele, v~databázi se používá databázový model nazvaný \texttt{FirestoreUser}, a mezi těmito objekty existují převáděcí funkce (\texttt{toFirestore()}). Další backendovou reprezentací uživatele je pak ještě \texttt{UserDto}, která se zase používá při komunikaci s~klientem.
+
+\begin{listing}
+\caption{Vytvoření nového uživatele v~\texttt{UserSourceImpl}}\label{code:be-create-user}
+\begin{minted}{Kotlin}
+internal class UserSourceImpl : UserSource {
+
+    private val db = GoogleFirestoreClient.getFirestore()
+    
+    // ...
+    
+    override suspend fun createUser(user: User): FirestoreUser {
+        db
+            .collection(SourceConstants.Firestore.Collection.USERS)
+            .document(user.uid)
+            .set(user.toFirestore())
+            .await()
+
+        return db
+            .collection(SourceConstants.Firestore.Collection.USERS)
+            .document(user.uid)
+            .get()
+            .await()
+            .toObject(FirestoreUser::class.java) 
+                ?: throw UserException.UserNotFound(user.uid)
+    }
+    
+    // ...
+}
+\end{minted}
+\end{listing}
 
 %---------------------------------------------------------------
 \subsubsection{Multi-platformní část}
 %---------------------------------------------------------------
+
+Pro potřeby přihlášení a registrace poskytuje multi-platformní knihovna následující \emph{Use Cases}:
+\begin{itemize}
+\item\texttt{LoginWithCredentialsUseCase} – Poskytuje přihlášení pomocí e-mailu a hesla. Tuto funkcionalitu ale implemetuje \emph{Firebase} autentizace na straně nativní aplikace, multi-platformní kód tedy musí provolat sdílený \texttt{AuthProvider}, který implementuje nativní aplikace pomocí \emph{Firebase} knihovny.
+\item\texttt{RegisterUseCase} – Registruje uživatele přes \emph{Firebase} autentizaci, stejným způsobem jako přihlášení.
+\item\texttt{LogoutUseCase} – Odhlásí uživatele pomocí \emph{Firebase} autentizace. Tento \emph{Use Case} sice bude potřeba až v~profilu uživatele, ale je součástí \emph{auth} modulu multi-platformní části, je zde tedy zmíněn.
+\item\texttt{IsLoggedInUseCase} – Zjistí, zda je uživatel do aplikace přihlášený, nebo ne. Tento \emph{Use Case} se zavolá při čistém spuštění aplikace, aby zjistila, zda má ukázat přihlašovací obrazovku, nebo uživateli rovnou ukázat časovač. Funguje tak, že \emph{Firebase} autentizace zeptá, zda má uložený \emph{access token}.
+\end{itemize}
+
+API \emph{Firebase} knihovny je potřeba provolávat pomocí sdíleného \texttt{AuthProvider} zpět do nativní aplikace, protože \emph{Firebase} oficiálně nenabízí SDK pro \emph{Kotlin Multiplatform}, ale pouze SDK pro nativní aplikace (\emph{firebase-ios-sdk} \cite{firebase-ios-sdk} a \emph{firebase-android-sdk} \cite{firebase-android-sdk}). Existuje sice \emph{firebase-kotlin-sdk}, která podporuje \emph{Kotlin Multiplatform}, ale nejedná se o~oficiální SDK a nemá 100\% pokrytí celého \emph{Firebase} API.
+
+Žádné z~těchto \emph{Use Cases} neprovolávají \emph{Endpoints} na backendu, ovlivňují ale to, jak budou ostatní požadavky vypadat, konkrétně obsah parametru pro autorizaci v~hlavičce požadavků.
+
+%---------------------------------------------------------------
+\subsubsection{Nativní aplikace}
+%---------------------------------------------------------------
+
+Implementace přihlášení a registrace dodržuje vzhledový návrh ze sekce \ref{feature-onboarding}. Realizace viditelná na skutečném zařízení lze vidět na obrázku \ref{fig:onboarding-impl}, kde lze i~vidět jak se rozhraní přizpůsobí vysunuté klávesnici. Na obrázku \ref{fig:login-error-impl} je také vidět, jakým způsobem ze zobrazí \emph{Toast}\footnote{\emph{Toast} je UI komponentou z~\emph{DevStack} šablony sloužící pro dočasné zobrazovaní informací nebo chybových hlášek na obrazovce.} s~chybovou hláškou.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{login-error-impl.png}
+		\caption{Chyba při přihlášení}
+		\label{fig:login-error-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{register-impl.png}
+		\caption{Registrace}
+	\end{subfigure}
+	\caption{Realizace přihlášení a registrace}
+	\label{fig:onboarding-impl}
+\end{figure}
 
 %---------------------------------------------------------------
 \subsection{Časovač}
 %---------------------------------------------------------------
 
+Tato funkcionalita pokrývá veškeré operace s~ovládáním časovače, získáváním historie časových záznamů a vytváření nových záznamů. Jedná se o~hlavní funkci aplikace.
+
 %---------------------------------------------------------------
-\subsubsection{Nativní aplikace}
+\subsubsection{Backend}
 %---------------------------------------------------------------
+
+Backednová část platformy bude muset obsluhovat veškerá data, která se týkají časovače a časových záznamů. Backend je ale rozdělený podle funkcionalit jiným způsobem, než nativní aplikace a multi-platformní část, které jsou rozděleny podle funkcionalit z~hlediska uživatele. Moduly backendu jsou rozděleny podle toho, čeho se data v~modulu týkají, tedy například klienti, projekty, integrace a uživatel. Jelikož pro data časovače budou potřeba data uživatele, u~kterého se ukládá aktuální nastavení časovače a historie časových záznamů, ale také data projektů a klientů, bude implementace funkcionality časovače zasahovat do více modulů. Největší část funkcionality časovače bude obsluhovat modul uživatele. 
+
+Obrazovka časovače bude potřebovat následující data – souhrn odpracovaných hodin v~aktuální den a týden, historii časových záznamů, aktuální nastavení časovače a přehled projektů, bude-li si uživatel chtít vybrat projekt, který časovači přidělí.
+
+V~první řadě je tedy potřeba implementovat získávání historie časových záznamů, protože to bude potřeba i~pro výpočet odpracovaných hodin v~aktuálním dnu a týdnu. V~návrhu v~sekci \ref{feature-timer} bylo popsáno, že načítání historie časových záznamů by mělo podporovat stránkování, jelikož může teoreticky obsahovat velké množství záznamů, a pokud by se mělo velké množství načítat celé najednou, mohlo by to trvat dlouho a mohlo by se jednat o~velké množství dat, která by ale uživatel nejspíš ani všechna vůbec nepotřeboval. \texttt{UserRepository} tedy definuje mimo jiné funkce pro získávání záznamů, které lze nahlédnout v~ukázce kódu \ref{code:be-read-entries-interface}. Tyto funkce potřebují parametr \texttt{uid} identifikující uživatele, pro kterého mají být záznamy čteny, a dále přijímají nepovinné parametry pro specifikaci toho, od kdy a do kdy mají být záznamy čteny, a kolik maximálně záznamů se ve stránce má nacházet. Pokud bude mít některý z~těchto nepovinných parametrů hodnotu \texttt{null}, nebude žádné omezení na záznamy klást. Rozdíl mezi funkcemi, které vrací stránky objektu \texttt{TimerEntry} a stránky objektu \text{TimerEntryPreview} je ten, že objekt \texttt{TimerEntryPreview} obsahuje navíc celé zdrojové objekty klienta a projektu, který k~záznamu patří, zatímco \texttt{TimerEntry} obsahuje pouze jejich identifikátory. V~obrazovce pro zobrazení historie záznamů budou tyto zdrojové objekty potřebovat, protože při jejich vizualizaci (při jejich \emph{preview}) bude potřeba zobrazit jméno klienta a projektu.
+
+\begin{listing}
+\caption{Funkce pro získávání časových záznamů v~\texttt{UserRepository}}\label{code:be-read-entries-interface}
+\begin{minted}{Kotlin}
+interface UserRepository {
+
+    // ...
+    
+    suspend fun readEntries(
+        uid: String,
+        startAfter: Instant?,
+        limit: Int?,
+        endAt: Instant?
+    ): Page<TimerEntry>
+    
+    // ...
+    
+    suspend fun readEntryPreviews(
+        uid: String,
+        startAfter: Instant?,
+        limit: Int?,
+        endAt: Instant?
+    ): Page<TimerEntryPreview>
+    
+    // ...
+}
+\end{minted}
+\end{listing}
+
+V~ukázce kódu \ref{code:be-read-entries-source} lze poté vidět, jakým způsobem aplikace získává záznamy přímo z~\emph{Firestore} databáze. Omezení ve smyslu od kdy do kdy záznamy číst a kolik maximálně jich přečíst se implementuje pomocí funkcí \texttt{startAfter(start)}, \texttt{endAt(end)} a \texttt{limit(limit)}, které přímo nabízí \emph{Firestore} API. \texttt{UserRepositoryImpl} používá tuto \emph{Source} funkci i~pro načtení \emph{preview} objektů, objekty klienta a projektu si pak pomocí identifikátoru načte sama a připojí je.
+
+\begin{listing}
+\caption{Funkce pro získávání časových záznamů v~\texttt{UserSourceImpl}}\label{code:be-read-entries-source}
+\begin{minted}{Kotlin}
+internal class UserSourceImpl : UserSource {
+
+    // ...
+    
+    override suspend fun readEntries(
+        uid: String,
+        startAfter: Instant?,
+        limit: Int?,
+        endAt: Instant?
+    ): Page<FirestoreTimerEntry> {
+        val entriesCollection = db
+            .collection(SourceConstants.Firestore.Collection.ENTRIES)
+            .document(uid)
+            .collection(SourceConstants.Firestore.Collection.ENTRIES)
+            .orderBy(
+                SourceConstants.Firestore.FieldName.STARTED_AT, 
+                Query.Direction.DESCENDING
+            )
+
+        val snapshot = entriesCollection
+            .startAfter(startAfter?.toTimestamp() ?: Timestamp.now())
+            .endAt(endAt?.toTimestamp() ?: Timestamp.MIN_VALUE)
+            .limit(limit ?: Int.MAX_VALUE)
+            .get()
+            .await()
+
+        val data = snapshot.documents.map { it.toObject(FirestoreTimerEntry::class.java) }
+
+        val remainingCount = entriesCollection
+            .startAfter(data.lastOrNull()?.startedAt ?: Timestamp.MIN_VALUE)
+            .count()
+            .get()
+            .await()
+            .count
+
+        return Page(
+            data = data,
+            isLast = remainingCount == 0.toLong()
+        )
+    }
+    
+    // ...
+}
+\end{minted}
+\end{listing}
+
+Při načítání historie záznamů na obrazovce časovače pak bude potřeba použít parametry \texttt{startAfter}, abychom definovali datum a čas, od kterého další záznamy načítat, pokud načítáme další stránky, a \texttt{limit}, který určí velikost stránky. Při načítání všech záznamů v~nějakém období se pak využije parametrů \texttt{startAfter} a \texttt{endAt}, například když bude potřeba zjistit souhrn odpracovaných hodin v~aktuální den nebo týden. Při výpočtu tohoto souhrnu bude tedy \texttt{UserRepositoryImpl} sčítat doby trvání všech záznamů v~daném období.
+
+Pro obsluhu časovače pak \texttt{UserRepository} poskytuje funkce pro načtení dat časovače a pro jejich aktualizaci. Při výběru projektu bude uživatel potřebovat vidět všechny své projekty a názvy jejich klientu, pro což bude sloužit opět \emph{preview} objekt \texttt{ProjectPreview}. \texttt{ClientRepository} tedy nabízí funkce pro získání klienta podle identifikátoru, a \texttt{UserRepository} nabízí funkce pro získání projektu podle identifikátoru klienta a projektu, ale také funkci pro získání všech projektů daného uživatele.
+
+Pro komunikaci s~klientem se také využívá vlastních struktur pro reprezentaci chyb. Například modul \texttt{user} používá výjimky ze skupiny \texttt{UserExceptions}, která dědí z~třídy \texttt{BaseException}. V~případě, že některé volání vrátí výjimku s~tímto rodičem, tak ji komunikace umí zakódovat do DTO reprezentace, která je známá pro klienta. Ten může potom rozlišovat mezi různými známými chybami. V~případě, že se nejedná o~známou chybu, zakóduje ji komunikace jako obecnou chybu s~HTTP status kódem 500. Implementace tohoto chování lze nahlédnout ve výpisu kódu \ref{code:be-error-handling}.
+
+\begin{listing}
+\caption{Obsluha chyb na backendu}\label{code:be-error-handling}
+\begin{minted}{Kotlin}
+fun Application.configureRouting(isDebug: Boolean) {
+    install(StatusPages) {
+        exception<BaseException> { call, baseException ->
+            call.respond(
+                status = baseException.code,
+                message = baseException.toDto(isDebug)
+            )
+        }
+
+        exception<Throwable> { call, cause ->
+            call.respond(
+                status = HttpStatusCode.InternalServerError,
+                message = ErrorDto(
+                    type = "InternalError",
+                    message = "Internal Server Error",
+                    debugMessage = if (isDebug) cause.message else null
+                )
+            )
+        }
+    }
+    
+    // ...
+}
+\end{minted}
+\end{listing}
 
 %---------------------------------------------------------------
 \subsubsection{Multi-platformní část}
 %---------------------------------------------------------------
 
+Multi-platformní část aplikace už rozděluje své moduly podle funkcionalit z~hlediska uživatele, modul \texttt{timer} bude tedy poskytovat všechny \emph{Use Cases} pro potřeby časovače:
+\begin{itemize}
+\item\texttt{AddTimerEntryUseCase} – Vytvoří nový časový záznam podle parametrů.
+\item\texttt{DeleteTimerEntryUseCase} – Smaže časový záznam podle identifikátoru.
+\item\texttt{GetProjectsUseCase} – Získá \emph{preview} objekty všech projektů, které má uživatel přiřazeny.
+\item\texttt{GetTimerDataPreviewUseCase} – Získá \emph{preview} objekt pro aktuální nastavení časovače. Čistá data o~aktuálním stavu časovače totiž opět obsahují jen identifikátory klienta a projektu, ale při vizualizaci dat jsou potřeba jejich názvy.
+\item\texttt{GetTimerEntriesUseCase} – Získává stránky \emph{preview} objektů časových záznamů, umí tedy pracovat se všemi parametry pro omezení stránky. Zároveň časové záznamy seskupuje do seznamu objektů typu \texttt{TimerEntryGroup}, což je skupina, která obsahuje datum, seznam všech záznamů patřící k~tomuto datu a součet odpracovaných hodin všech těchto záznamů. Toho se využije při vizualizaci v~nativní aplikaci, kde se nad každou skupinou ukáže datum a časový souhrn pro daný den.
+\item\texttt{GetTimerSummariesUseCase} – Získá souhrny časových záznamů pro aktuální den a týden.
+\item\texttt{UpdateTimerDataUseCase} – Aktualizuje aktuální nastavení časovače.
+\end{itemize}
+
+Všechny tyto \emph{Use Cases} automaticky počítají s~tím, že pracují s~daty aktuálně přihlášeného uživatele, žádné parametry pro jeho identifikaci tedy nepotřebují.
+
+Jednotlivé \emph{Use Cases} už komunikují s~backendem, a to v~nejnižší \emph{infrastructure} vrstvě, která požadavky posílá pomocí knihovny \emph{Ktor}. Příklad toho, jak probíhá komunikace, lze nahlédnout v~ukázce kódu \ref{code:kmp-read-entries-source-impl}.
+
+\begin{listing}
+\caption{Funkce pro získávání časových záznamů v~\texttt{RemoteTimerSource}}\label{code:kmp-read-entries-source-impl}
+\begin{minted}{Kotlin}
+internal class RemoteTimerSource(
+    private val client: HttpClient
+) : TimerSource {
+    override suspend fun readEntries(
+        startAfter: String?,
+        limit: Int?,
+        endAt: String?
+    ): Result<PageDto<TimerEntryDto>> =
+        runCatchingCommonNetworkExceptions {
+            val res = client.get("user/entries") {
+                url {
+                    startAfter?.let { parameters.append("startAfter", it) }
+                    limit?.let { parameters.append("limit", it.toString()) }
+                    endAt?.let { parameters.append("endAt", it) }
+                }
+            }
+            res.body<PageDto<TimerEntryDto>>()
+        }
+        
+    // ...
+}
+\end{minted}
+\end{listing}
+
+Multi-platformní část pracuje s~objekty v~DTO reprezentaci, kterou definuje backend. Poté si je také převádí pomocí vlastních funkcí do vlastních doménových reprezentací.
+
+Také lze ve výpisu kódu \ref{code:kmp-read-entries-source-impl} nahlédnout, že celé API volání je obaleno do pomocné funkce \texttt{runCatchingCommonNetworkExceptions}, jejíž implementace lze nahlédnout ve výpisu \ref{code:kmp-run-catching-common-network-exceptions}. Tato funkce odchytává všechny výjimky, které při komunikaci s~backendem mohou vzniknout, a převádí je do vlastních reprezentací, se kterými poté umí pracovat nativní aplikace.
+
+\begin{listing}
+\caption{Odchytávání výjimek při komunikaci s~backendem}\label{code:kmp-run-catching-common-network-exceptions}
+\begin{minted}{Kotlin}
+internal suspend inline fun <R : Any> runCatchingCommonNetworkExceptions(
+    block: () -> R
+): Result<R> =
+    try {
+        Result.Success(block())
+    } catch (e: ResponseException) {
+        val body = e.response.body<ErrorDto>()
+
+        when (body.type) {
+            "Unauthorized" -> Result.Error(
+                BackendError.NotAuthorized(e.response.toString(), e),
+            )
+
+            "ProjectNotAssignedToUser" -> Result.Error(
+                BackendError.ProjectNotAssignedToUser(e.message, e)
+            )
+
+            "MissingProject" -> Result.Error(
+                BackendError.MissingProject(e.message, e)
+            )
+
+            "ProjectNotFound" -> Result.Error(
+                BackendError.ProjectNotFound(e.message, e)
+            )
+
+            "ClientNotFound" -> Result.Error(
+                BackendError.ClientNotFound(e.message, e)
+            )
+
+            else -> Result.Error(
+                ErrorResult(
+                    message = body.message,
+                    throwable = e
+                )
+            )
+        }
+    } catch (e: Throwable) {
+        Result.Error(handlePlatformError(e))
+    }
+\end{minted}
+\end{listing}
+
 %---------------------------------------------------------------
-\subsubsection{Backend}
+\subsubsection{Nativní aplikace}
 %---------------------------------------------------------------
 
 %---------------------------------------------------------------

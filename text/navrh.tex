@@ -73,7 +73,7 @@ Ikona aplikace také neprocházela nijak složitým procesem návrhu, byl pouze 
 Aplikace bude primárně sloužit pro zaznamenávání odpracovaného času. Je tedy potřeba, aby každý uživatel měl možnost si vytvářet vlastní záznamy a další data, která budou propojena pouze s~ním, a ke kterým bude mít přístup pouze on. Toto obvyklý případ užití mobilní aplikace, který ze své podstaty vyžaduje nějakou formu vytvoření uživatelského účtu, se kterým budou data propojena, a jeho autentizace. Nejobvyklejším způsobem autentizace je autentizace pomocí e-mailu a hesla. Tento způsob je i~poměrně jednoduchý z~hlediska implementace a spousta poskytovatelů BaaS (Backend as a Service, vizte \ref{baas}) tento způsob autentizace implementuje. 
 
 %---------------------------------------------------------------
-\subsection{Přihlášení a registrace}
+\subsection{Přihlášení a registrace}\label{feature-onboarding}
 %---------------------------------------------------------------
 
 Přihlašovací obrazovka bude obsahovat pouze nadpis, pole pro vyplnění e-mailu, hesla, primární tlačítko pro přihlášení a sekundární tlačítko pro registraci. Obrazovka pro registraci, která se otevře po kliku na tlačítko pro registraci, poté bude od uživatele potřebovat také jen e-mail a heslo, které je ale zvykem napsat dvakrát, aby se snížila šance, že se v~něm vyskytl překlep. Obrazovky přihlášení a registrace lze nahlédnout v~obrázku \ref{fig:onboarding}. Úspěšné přihlášení a registrace uživatele přesměruje na hlavní obrazovku aplikace.
@@ -97,7 +97,7 @@ Přihlašovací obrazovka bude obsahovat pouze nadpis, pole pro vyplnění e-mai
 \end{figure}
 
 %---------------------------------------------------------------
-\subsection{Lišta karet a časovač}
+\subsection{Lišta karet a časovač}\label{feature-timer}
 %---------------------------------------------------------------
 
 Navigace mezi hlavními obrazovkami aplikace bude řešena pomocí lišty karet, jelikož se jedná o~častý a doporučený způsob, jak navigovat mezi vzájemně exkluzivními částmi obsahu \cite{apple-guidelines-tabbars}. Hlavní obrazovkou bude přehled, na kterém bude uživatel moct ovládat časovač, a kde uvidí historii svých časových záznamů, seřazenou od nejnovějších po nejstarší. Jelikož pro uživatele je nejjednodušší dosáhnout na ovládací prvky, které jsou ve spodní části displeje, bude ovládání časovače umístěno ve spodní části obrazovky, a časové záznamy se budou řadit nad ním. Návrh této obrazovky lze nahlédnout na obrázku \ref{fig:timer}.
