@@ -468,6 +468,121 @@ internal suspend inline fun <R : Any> runCatchingCommonNetworkExceptions(
 \subsubsection{Nativní aplikace}
 %---------------------------------------------------------------
 
+Realizace časovače dodržuje vzhled navržený v~sekci \ref{feature-timer}. Na obrázku \ref{fig:timer-empty-impl} lze nahlédnout obrazovka časovače, jak bude vypadat, pokud uživatel zatím nemá žádná data, jako například nově registrovaný uživatel. Na obrázku \ref{fig:fetch-more-impl} lze zase nahlédnout, jak vypadá tlačítko pro načtení dalších záznamů, pokud se uživatel posune v~načtených datech úplně nahoru. Na obrázku \ref{fig:description-edit-impl} lze nahlédnout stav, kdy si uživatel chce změnit popisek časovače, a na obrázku \ref{fig:time-selection-impl} zase obrazovka pro ruční vybrání času, pokud chce uživatel přidat záznam manuálně. Na obrázku \ref{fig:timer-control-impl} lze poté vidět výběr z~projektů a možnost v~nich vyhledávat.
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{timer-empty-impl.png}
+		\caption{Prázdná data}
+		\label{fig:timer-empty-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{fetch-more-impl.png}
+		\caption{Načtení další stránky}
+		\label{fig:fetch-more-impl}
+	\end{subfigure}
+	\caption{Realizace časovače}
+	\label{fig:timer-impl}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{description-edit-impl.png}
+		\caption{Úprava popisu}
+		\label{fig:description-edit-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{time-selection-impl.png}
+		\caption{Manuální výběr času}
+		\label{fig:time-selection-impl}
+	\end{subfigure}
+	\caption{Realizace ovládání časovače}
+	\label{fig:timer-control-impl}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{project-selection-impl.png}
+		\caption{Vybraný projekt}
+		\label{fig:selected-project-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{project-select-search-impl.png}
+		\caption{Vyhledávání}
+		\label{fig:project-select-search-impl}
+	\end{subfigure}
+	\caption{Realizace výběru projektu}
+	\label{fig:timer-control-impl}
+\end{figure}
+
+Jeden problém, který musí nativní aplikace řešit, je situace, když má zobrazit nově načtenou navazující stránku časových záznamů. Můžou nastat dvě situace – buď nová stránka bude obsahovat data skupiny, která má prázdný průnik s~poslední skupinou již načtených dat (tedy již načtená data neobsahují data nějakého dne, který by neměl plně načtené všechny záznamy), nebo bude tento průnik neprázdný (tedy nová data obsahují data, která se musí spojit s~daty nějakého dne, který je již z~části načtený). Nově načtenou stránku tedy nelze vždy obyčejně připojit za již načtená data, ale musí probíhat kontrola, zda se nějaká skupina z~již načtených dat nemá spojit s~nějakou skupinou nových dat. Multi-platformní část také musí poskytovat data o~tom, zda je jednotlivá skupina již plně načtená. Jediný případ, kdy o~tomto faktu může výstup multi-platformního \emph{Use Case} lhát, je ten, pokud se jedná o~poslední skupinu v~načtených datech, jejíž konec ale přesně končí v~místě, kde končí i~záznamy dalšího dne, což ale \emph{Use Case} nemá jak zjistit. Tento případ musí ručně detekovat nativní aplikace při načtení nové stránky a opravit skupinu, u~které to mohlo nastat, tak, že jí označí za plně načtenou. Implementace této logiky lze nahlédnout ve výpisu kódu \ref{code:view-mode-entry-group-overlap}.
+
+\begin{listing}
+\caption{Obsluha nově načtené navazující stránky záznamů}\label{code:view-mode-entry-group-overlap}
+\begin{minted}{Swift}
+// ...
+
+let fetchedGroups: [TimerEntryGroup] = try await getTimerEntriesUseCase.execute(
+    params: params
+)
+
+var newGroups: [TimerEntryGroup] = []
+
+// Handle overlapping group
+if let firstOfCurrent = currentGroups.first,
+   let lastOfNew = fetchedGroups.last,
+   firstOfCurrent.date == lastOfNew.date {
+    newGroups.append(contentsOf: fetchedGroups.dropLast())
+    
+    var interval: KotlinLong? {
+        if lastOfNew.interval == nil 
+            && firstOfCurrent.interval == nil 
+        { return nil }
+        
+        let lastOfNewInterval = lastOfNew.interval?.int ?? 0
+        let firstOfCurrentInterval = firstOfCurrent.interval?.int ?? 0
+        
+        return KotlinLong(
+            value: (lastOfNewInterval + firstOfCurrentInterval).int64
+        )
+    }
+    
+    newGroups.append(TimerEntryGroup(
+        date: firstOfCurrent.date,
+        interval: interval,
+        entries: lastOfNew.entries + firstOfCurrent.entries,
+        isFullyLoaded: lastOfNew.isFullyLoaded
+    ))
+    
+    newGroups.append(contentsOf: currentGroups.dropFirst())
+} else {
+    newGroups.append(contentsOf: fetchedGroups)
+    if let firstOfCurrent = currentGroups.first, !firstOfCurrent.isFullyLoaded {
+        firstOfCurrent.isFullyLoaded = true
+    }
+    newGroups.append(contentsOf: currentGroups)
+}
+
+state.listData = .data(newGroups)
+
+// ...
+\end{minted}
+\end{listing}
+
+Veškerá ostatní logika spočívá v~přímočarém používání \emph{Use Cases} podle toho, co je úmyslem uživatele. \emph{View Model} této obrazovky si mimo to musí pamatovat ručně zadaný konec záznamu, jelikož ten není součástí aktuálního nastavení časovače, nebo také musí každou sekundu aktualizovat čas, který se ukazuje na běžících stopkách, ale také tento čas přičítat k~souhrnům aktuálního dne a týdne.
+
 %---------------------------------------------------------------
 \subsection{Profil uživatele}
 %---------------------------------------------------------------
