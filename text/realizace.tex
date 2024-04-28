@@ -84,10 +84,12 @@ Pro \emph{Dependency Injection} v~nativní aplikaci je využíváno knihovny \em
 \section{Implementace jednotlivých funkcionalit}
 %---------------------------------------------------------------
 
-Tato sekce se věnuje implementaci jednotlivých funkcionalit navržených v~sekci \ref{features}. Implementaci každé funkcionality rozebírá z~hlediska její realizace v~backendové části, v~multi-platformní části a v~nativní aplikaci.
+Tato sekce se věnuje implementaci jednotlivých funkcionalit navržených v~sekci \ref{features}. Implementaci každé funkcionality rozebírá z~hlediska její realizace v~backendové části, v~multi-platformní části a v~nativní aplikaci. 
+
+U~jednotlivých funkcionalit mohou být uvedeny ukázky výpisů kódu, většinou tak, aby pro každou funkcionalitu byl ukázán příklad zdrojového kódu z~jiné části aplikace. Cílem je poskytnout pár příkladů pro představu toho, jakým stylem je zdrojový kód implementován, a ne zbytečně ukazovat výpisy kódů pro věci, které jsou velmi podobné implementaci, která již byla ukázána v~jiné části. Pro důkladnější studium kódu samozřejmě slouží zdrojový kód sám, který je přílohou této práce. Text této práce slouží mimo jiné jako jeho dokumentace, která v~něm má usnadnit orientaci.
 
 %---------------------------------------------------------------
-\subsection{Přihlášení a registrace}
+\subsection{Přihlášení a registrace}\label{onboarding-impl}
 %---------------------------------------------------------------
 
 Přihlášení a registrace je základní funkcionalitou, kterou aplikace potřebuje, aby mohla držet informace o~konkrétním uživateli. V~návrhu platformy (obrázek \ref{fig:architecture}) byla autentizace navržena tak, že bude probíhat přes backend. Ale vzhledem k~tomu, že \emph{Firebase} autentizace nabízí více možností autentizace, jako přihlášení přes Apple, Google, a podobně, tak byl v~implementaci zvolen přístup, že autentizace bude probíhat na straně klienta, a ne backendu, protože jí celou obstará \emph{Firebase} autentizace. Bylo by sice možné provádět autentizace přes e-mail a heslo tak, že by klient poslal danou kombinaci e-mailu a hesla na backend, který by uživatele přes \emph{Firebase} přihlásil, klientovi vrátil jeho \emph{access token}\footnote{\emph{Access token} je v~autentizační terminologii řetězec znaků, se kterým klient posílá požadavky na server, aby prokázal svou identitu. \cite{access-token}}, který by ho poté dále používal při následujících požadavcích. V~případě rozšíření o~další formy přihlášení, jako je přihlášení přes Apple, by v~tomto přístupu musel \emph{Firebase} provést autentizaci u~klienta, získat mezistavový \emph{token} pro daného poskytovatele přihlášení, poslat ho na backend, který by ho poté ověřil s~autentizací \emph{Firebase}, získal \emph{access token}, a poslal ho klientovi. Vzhledem k~tomu, že takto by se autentizační API muselo volat jak u~klienta, tak na backendu, byl zvolen přístup, že celý tento proces se bude dít u~klienta pomocí knihovny pro \emph{Firebase} autentizaci, a na backend se bude ve všech možnostech přihlášení posílat jen \emph{access token}. V~případě, že by v~budoucnu padlo rozhodnutí tuto metodiku změnit a implementovat autentizační procesy pouze na backendu, musela by se tedy implementovat metodika popsaná výše.
@@ -524,7 +526,7 @@ Realizace časovače dodržuje vzhled navržený v~sekci \ref{feature-timer}. Na
 		\label{fig:project-select-search-impl}
 	\end{subfigure}
 	\caption{Realizace výběru projektu}
-	\label{fig:timer-control-impl}
+	\label{fig:project-selection-impl}
 \end{figure}
 
 Jeden problém, který musí nativní aplikace řešit, je situace, když má zobrazit nově načtenou navazující stránku časových záznamů. Můžou nastat dvě situace – buď nová stránka bude obsahovat data skupiny, která má prázdný průnik s~poslední skupinou již načtených dat (tedy již načtená data neobsahují data nějakého dne, který by neměl plně načtené všechny záznamy), nebo bude tento průnik neprázdný (tedy nová data obsahují data, která se musí spojit s~daty nějakého dne, který je již z~části načtený). Nově načtenou stránku tedy nelze vždy obyčejně připojit za již načtená data, ale musí probíhat kontrola, zda se nějaká skupina z~již načtených dat nemá spojit s~nějakou skupinou nových dat. Multi-platformní část také musí poskytovat data o~tom, zda je jednotlivá skupina již plně načtená. Jediný případ, kdy o~tomto faktu může výstup multi-platformního \emph{Use Case} lhát, je ten, pokud se jedná o~poslední skupinu v~načtených datech, jejíž konec ale přesně končí v~místě, kde končí i~záznamy dalšího dne, což ale \emph{Use Case} nemá jak zjistit. Tento případ musí ručně detekovat nativní aplikace při načtení nové stránky a opravit skupinu, u~které to mohlo nastat, tak, že jí označí za plně načtenou. Implementace této logiky lze nahlédnout ve výpisu kódu \ref{code:view-mode-entry-group-overlap}.
@@ -587,30 +589,368 @@ Veškerá ostatní logika spočívá v~přímočarém používání \emph{Use Ca
 \subsection{Profil uživatele}
 %---------------------------------------------------------------
 
+Tato funkcionalita pokrývá operace, které může uživatel dělat se svým profilem, se svými klienty a se svými projekty. 
+
 %---------------------------------------------------------------
-\subsubsection{Nativní aplikace}
+\subsubsection{Backend}
 %---------------------------------------------------------------
+
+Obsluhu požadavků týkajících se projektů bude řešit modul pro projekty, požadavky týkající se klientů bude řešit modul pro klienty a požadavky týkající se profilu bude řešit modul pro uživatele.
+
+Co se týče funkcí, co může uživatel dělat se svým profilem, tak se na obrazovce profilu může buď odhlásit, nebo si svůj účet smazat.
+
+Odhlášení je čistě autentizační záležitost, probíhá tedy pouze na straně klienta, kde je součástí modulu \texttt{auth}, jak bylo popsáno v~sekci \ref{onboarding-impl}.
+
+Smazání účtu už je ale z~hlediska dat zajímavější záležitost. Během mazání účtu bude potřeba smazat všechna data, která jsou s~uživatelem propojená, tedy všechny jeho záznamy a integrace. V~první řadě bude tedy potřeba smazat každý dokument v~kolekci \texttt{/entries/\{uid\}/entries}, protože pro smazání kolekce je potřeba smazat každý dokument, nelze smazat celou kolekci najednou. Poté se bude moct smazat dokument \texttt{/entries/\{uid\}}. Poté se budou muset smazat všechny integrace, tedy všechny dokumenty v~kolekci \texttt{/users/\{uid\}/integrations}, poté všechny informace o~tom, jaké klienty a projekty má uživatel přiřazené, tedy dokumenty v~kolekci \texttt{/users/\{uid\}/clients} a ve finále se může smazat dokument uživatele, tedy \texttt{/users/\{uid\}}. Tím budou smazána všechna data související s~uživatelem ve \emph{Firestore} databázi. Poté je ještě potřeba smazat uživatele z~\emph{Firebase} autentizace, aby se na něj už nešlo přihlásit. Celou tuto logiku implementuje funkce \texttt{deleteUser(uid: String)} v~\texttt{UserSourceImpl}.
+
+Další, co bude backend muset implementovat, jsou všechny CRUD (Create, Read, Update, Delete) operace pro klienty a projekty. Za to mají odpovědnost příslušné \texttt{ProjectRepository}, \texttt{ClientRepository} a jejich \emph{Sources}. Specifikem projektů je, že pro jejich jednoznačnou identifikaci nestačí pouze identifikátor projektu, ale je potřeba i~identifikátor klienta, ke kterému patří. Také je potřeba implementovat funkce pro přečtení všech klientů pro konkrétního uživatele a přečtení všech projektů daného uživatele. Poté je také potřeba poskytnout API pro přiřazení klienta nebo projektu k~uživateli, samotné vytvoření je totiž pouze zařadí do kolekcí, ale nepřiřadí je k~žádnému uživateli. Implementace \emph{Route}, která obsluhuje přiřazení projektu k~uživateli, lze nahlédnout ve výpisu kódu \ref{code:be-route-assign-project}. Toto přiřazení řeší speciální \emph{PUT endpoint}, který nepřijímá žádné tělo požadavku.
+
+\begin{listing}
+\caption{\emph{Route} pro přiřazení klienta k~uživateli}\label{code:be-route-assign-project}
+\begin{minted}{Kotlin}
+fun Routing.userRoute() {
+
+    // ...
+    
+    authenticate {
+    
+        // ...
+        
+        route("/user") {
+        
+            // ...
+            
+            route("/projects") {
+            
+                // ...
+                
+                put("/add") {
+                    val user = call.requireUserPrincipal().user
+                    val clientId: String by call.request.queryParameters
+                    val projectId: String by call.request.queryParameters
+
+                    userRepository.assignProjectToUser(user.uid, clientId, projectId)
+
+                    call.respond(HttpStatusCode.OK)
+                }
+            }
+            
+            // ...
+            
+        }
+    }
+}
+\end{minted}
+\end{listing}
+
+Úprava a mazání projektů a klientů je také poměrně komplexní záležitost, jelikož je spolu s~nimi potřeba upravit nebo smazat řadu dat, které s~nimi souvisí. Například, pokud se u~upravovaného projektu změní klient, ke kterému patří, bude potřeba změnit všechny časové záznamy, které tento projekt obsahují, aby měli identifikátor nového klienta, dále je potřeba u~všech uživatelů, kteří měli tento projekt přiřazený, toto přiřazení přesunout z~dokumentu původního klienta do dokumentu nového klienta, je potřeba samotný projekt přesunout do kolekce nového klienta, a ověřit aktuální data časovače u~všech uživatelů, protože tam tento projekt se starým klientem může být. Podobně složité může být například mazání klienta. Spolu s~ním je totiž potřeba smazat u~všech uživatelů případná přiřazení tohoto klienta a jeho projektů, smazat všechny projekty, které ke klientovi patří, smazání všech časových záznamů všech uživatelů, kteří mají tohoto klienta přiřazeného, a až poté smazat klienta. Všechnu tuto logiku definují implementace jednotlivých \emph{Sources}, tedy \texttt{ProjectSourceImpl} a \texttt{ClientSourceImpl}.
 
 %---------------------------------------------------------------
 \subsubsection{Multi-platformní část}
 %---------------------------------------------------------------
 
+Multi-platformní část aplikace poskytuje \emph{Use Cases} pro všechny funkce popsané výše, tedy:
+\begin{itemize}
+\item\texttt{AddAndAssignClientUseCase} – Přiřadí klienta k~přihlášenému uživateli.
+\item\texttt{AddAndAssignProjectUseCase} – Přiřadí projekt k~přihlášenému uživateli.
+\item\texttt{DeleteUserUseCase} – Smaže uživatele podle identifikátoru.
+\item\texttt{GetClientsUseCase} – Získá všechny klienty přiřazené k~přihlášenému uživateli.
+\item\texttt{GetClientUseCase} – Získá klienta podle jeho identifikátoru.
+\item\texttt{GetProjectPreviewUseCase} – Získá \emph{preview} objekt pro projekt podle jeho identifikátoru.
+\item\texttt{GetUserEmailUseCase} – Získá e-mail přihlášeného uživatele, který se pak zobrazuje v~obrazovce profilu. Tuto informaci nezískává z~backendu, ale pomocí \emph{Firebase} autentizace. E-mail uživatele není ve \emph{Firestore} databázi vůbec uložen, jedná se pouze o~autentizační nástroj.
+\item\texttt{RemoveClientUseCase} – Smaže klienta podle identifikátoru.
+\item\texttt{RemoveProjectUseCase} – Smaže projekt podle identifikátoru.
+\item\texttt{UpdateClientUseCase} – Aktualizuje klienta.
+\item\texttt{UpdateProjectUseCase} – Aktualizuje projekt.
+\end{itemize}
+
 %---------------------------------------------------------------
-\subsubsection{Backend}
+\subsubsection{Nativní aplikace}
 %---------------------------------------------------------------
+
+Realizace profilu v~iOS aplikaci dodržuje návrh ze sekce \ref{feature-profile}. Na obrázku \ref{fig:profile-impl} lze nahlédnout přehled profilu a dialog, který se zobrazí při pokusu o~smazání účtu. Na obrázku \ref{fig:clients-impl} lze poté vidět seznam klientů, které má uživatel přiřazené, a možnost v~nich vyhledávat. Dále lze na obrázku \ref{fig:client-projet-detail-impl} vidět detaily klienta a projektu, obrázek \ref{fig:project-detail-impl} navíc ukazuje stav detailu během ukládání změn, během kterého s~prvky nelze interagovat. Poslední obrázek \ref{fig:project-list-client-selection-impl} poté ukazuje seznam projektů a výběr klienta k~projektu.
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{profile-impl.png}
+		\caption{Přehled}
+		\label{fig:profile-overview-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{profile-delete-impl.png}
+		\caption{Dialog pro smazání účtu}
+		\label{fig:profile-delete-impl}
+	\end{subfigure}
+	\caption{Realizace profilu}
+	\label{fig:profile-impl}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{client-list-impl.png}
+		\caption{Seznam}
+		\label{fig:client-list-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{client-search-impl.png}
+		\caption{Vyhledávání}
+		\label{fig:client-search-impl}
+	\end{subfigure}
+	\caption{Realizace klientů}
+	\label{fig:clients-impl}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{client-detail-impl.png}
+		\caption{Detail klienta}
+		\label{fig:client-detail-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{project-detail-impl.png}
+		\caption{Detail projektu během ukládání}
+		\label{fig:project-detail-impl}
+	\end{subfigure}
+	\caption{Detail klienta a projektu}
+	\label{fig:client-projet-detail-impl}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{project-list-impl.png}
+		\caption{Seznam projektů}
+		\label{fig:project-list-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{client-selection-impl.png}
+		\caption{Výběr klienta k~projektu}
+		\label{fig:client-selection-impl}
+	\end{subfigure}
+	\caption{Seznam projektů a výběr klienta k~projektu}
+	\label{fig:project-list-client-selection-impl}
+\end{figure}
 
 %---------------------------------------------------------------
 \subsection{Integrace}
 %---------------------------------------------------------------
 
+Tato funkcionalita pokrývá možnosti, jak může uživatel napojovat aplikaci na navržené spouštěče měření času (import) a jak propojit aplikaci s~existujícími systémy (export), jak bylo navrženo v~sekci \ref{feature-integration}.
+
 %---------------------------------------------------------------
-\subsubsection{Nativní aplikace}
+\subsubsection{Backend}
 %---------------------------------------------------------------
+
+Aplikace uživateli umožňuje si nastavené integrace vytvářet, ukládat, upravovat a mazat. Backend bude tedy muset opět implementovat všechny CRUD operace a získání všech integrací daného uživatele, tentokrát pro objekty integrací. Toto je odpovědností \texttt{IntegrationRepository} a jejího \emph{Source}. Narozdíl od uživatelů, klientů nebo projektů, nejsou integrace propojeny s~jinými typy objektů napříč celou databází, jejich úprava je tedy poměrně jednoduchá a týká se jen vlastních objektů.
+
+Co se týče exportu do CSV souboru, tak celou tuto logiku implementuje backend, který CSV soubor vytvoří a klientovi ho pošle hotový. Ve výpisu kódu \ref{code:be-route-csv} lze nahlédnout implementace \emph{Route} pro export do CSV souboru, kde lze vidět, že nejprve získá všechny záznamy v~zadaném období, ty uloží do dočasného lokálního souboru, který pošle klientovi, a poté dočasný soubor smaže.
+
+\begin{listing}
+\caption{\emph{Route} pro export do CSV souboru}\label{code:be-route-csv}
+\begin{minted}{Kotlin}
+fun Routing.integrationRoute() {
+
+    // ...
+    
+    authenticate {
+        route("/integrations") {
+        
+            // ...
+            
+            route("/csv") {
+                get {
+                    val user = call.requireUserPrincipal().user
+                    val from = call.request.queryParameters["from"]
+                    val to = call.request.queryParameters["to"]
+
+                    val entries = userRepository.readEntryPreviews(
+                        uid = user.uid,
+                        startAfter = to?.toInstant(),
+                        limit = null,
+                        endAt = from?.toInstant()
+                    ).data
+                    val csv = repository.readCsv(entries.reversed())
+
+                    call.respondFile(csv)
+
+                    repository.deleteTempCsvFile(csv.name)
+                }
+            }
+        }
+    }
+}       
+\end{minted}
+\end{listing}
+
+Napojení aplikace na spouštěče měření (import), které byly pro aplikaci Trackee navrženy, je záležitostí klienta, jelikož se jedná o~systémovou aplikaci \emph{Zkratky}. Bude pouze potřeba poskytnout dodatečné API, které umožní samotné zapnutí časovače, jeho zrušení a jeho vypnutí spolu s~vytvořením nového časového záznamu. Tyto funkce totiž pro potřeby funkcionality časovače implementuje klientská aplikace ručně, která aktualizuje aktuální nastavení časovače, čímž reálně ovlivňuje to, zda časovač běží, od kdy běží, a podobně. Při tvorbě nového záznamu také volá pouze API pro ruční vytvoření nového záznamu, protože všechna potřebná data zná. Při použití zkratek se jedná pouze o~jednoduchý požadavek, který ale nemá žádné informace o~aktuálním nastavení časovače, takže pro tyto potřeby bude tato logika na backendu. Alternativou by bylo, aby vyvolané \emph{Zkratky} přímo interagovaly s~rozhraním aplikace, ale to by nedávalo moc smysl, protože v~tomto případě je tím rozhraním právě aplikace \emph{Zkratky}.
 
 %---------------------------------------------------------------
 \subsubsection{Multi-platformní část}
 %---------------------------------------------------------------
 
+Multi-platformní část pokrývá funkcionalitu integrací ve dvou modulech – \texttt{integration} a \texttt{intent}. Modul \texttt{integration} pokrývá všechny funkce, které aplikace nabízí v~kartě \emph{Integrace} (návrh z~obrázku \ref{fig:integration-list}), a modul \texttt{intent} nabízí funkce pro \emph{Intents}, což jsou obsluhy jednotlivých zkratek aplikace \emph{Zkratky}, jak bylo popsáno v~sekci \ref{feature-integration-import}.
+
+Modul \texttt{integration} poskytuje tyto \emph{Use Cases}:
+\begin{itemize}
+\item\texttt{AddIntegrationUseCase} – Přidá novou integraci.
+\item\texttt{DeleteIntegrationUseCase} – Smaže integraci podle jejího identifikátoru.
+\item\texttt{ExportToCsvUseCase} – Exportuje data ve zvoleném období do CSV souboru.
+\item\texttt{GetIntegrationsUseCase} - Získá všechny integrace přihlášeného uživatele.
+\item\texttt{GetIntegrationUseCase} – Získá integraci podle jejího identifikátoru.
+\item\texttt{UpdateIntegrationUseCase} – Aktualizuje integraci.
+\end{itemize}
+Modul \texttt{intent} poté poskytuje následující \emph{Use Cases}:
+\begin{itemize}
+\item\texttt{CancelTimerUseCase} – Zruší běžící časovač, zahodí tedy jeho data. Pokud časovač neběží, neudělá nic.
+\item\texttt{StartTimerUseCase} – Spustí časovač, tedy aktualizuje jeho data tak, že bude ve stavu \texttt{active} a bude měřit od momentu, kdy byl \emph{Use Case} zavolán. Pokud časovač už běží, neudělá nic (tedy počátek měření zůstane nezměněn).
+\item\texttt{StopTimerUseCase} – Zastaví časovač a vytvoří z~jeho dat nový časový záznam. Pokud například chybí zadání vybraného projektu, tak \emph{Use Case} vrátí chybu. Pokud časovač neběží, neudělá nic.
+\end{itemize}
+U~těchto \emph{Use Cases} je důležité, aby v~případě, že se je daný \emph{Intent} snaží dostat do stavu, ve kterém již jsou, opravdu neudělal nic, tedy například v~případě opakovaného zapnutí nebyl měněn čas zapnutí podle nového volání. Je tak potřeba proto, protože operace zkratek jsou navrženy tak, aby byly idempotentní\footnote{Operace je idempotentní, pokud jejím opakovaným použitím na nějaký vstup vznikne stejný výstup, jako vznikne jediným použitím dané operace. \cite{idempotence}}. Tyto zkratky totiž pravděpodobně budou součástí nějakých automatizací, které můžou například zapínat časovač podle polohy. Pokud by opakované spuštění zkratky přepisovalo data podlé nových informací, tak by byla původní data smazána a uživatel by o~ně přišel. Podnětem pro budoucí vylepšení aplikace může být například to, aby se v~případě, že uživatel zavolá zkratku pro spuštění časovače s~novými daty, když už časovač běží, časovač automaticky zastavil, uložil nový časový záznam z~dosud běžících dat, a poté se znovu zapnul pro nová data.
+
 %---------------------------------------------------------------
-\subsubsection{Backend}
+\subsubsection{Nativní aplikace}
 %---------------------------------------------------------------
+
+Uživatelské rozhraní iOS aplikace dodržuje návrh ze sekce \ref{feature-integration}. Na obrázku \ref{fig:integrations-empty-impl} lze vidět karta integrací ve stavu, když uživatel nemá vytvořené žádné integrace. Na obrázku \ref{fig:new-integration-impl} lze poté vidět rozhraní pro tvorbu nové CSV integrace. Export CSV dat a jejich vizualizace v~aplikaci \emph{Numbers} lze nahlédnout na obrázku \ref{fig:export-csv-impl}. Pro tvorbu zkratek bude sloužit systémová aplikace \emph{Zkratky}, jejíž hlavní stránka lze vidět na obrázku \ref{fig:shortcuts-impl}, rozhraní pro tvorbu nové zkratky lze pak vidět na obrázku \ref{fig:new-shortcut-impl}. Na obrázku \ref{fig:new-trackee-shortcut} lze poté vidět nabídka možností zkratek pro aplikaace Trackee a možnost nastavení parametrů zkratky. A nakonec je na obrázku \ref{fig:automations-impl} vidět možnost tvorby automatizací pro operace s~časovačem.
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{integrations-empty-impl.png}
+		\caption{Prázdný seznam}
+		\label{fig:integrations-empty-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{new-integration-impl.png}
+		\caption{Nová integrace}
+		\label{fig:new-integration-impl}
+	\end{subfigure}
+	\caption{Realizace integrací}
+	\label{fig:integrations-impl}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{export-csv-sheet-impl.png}
+		\caption{Dialog pro exportovaný CSV soubor}
+		\label{fig:export-csv-sheet-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{export-csv-numbers-impl.png}
+		\caption{Exportovaný CSV soubor v~aplikaci \emph{Numbers}}
+		\label{fig:export-csv-numbers-impl}
+	\end{subfigure}
+	\caption{Realizace exportu do CSV}
+	\label{fig:export-csv-impl}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{shortcuts-impl.png}
+		\caption{Přehled zkratek}
+		\label{fig:shortcuts-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{new-shortcut-impl.png}
+		\caption{Tvorba nové zkratky}
+		\label{fig:new-shortcut-impl}
+	\end{subfigure}
+	\caption{Systémová aplikace \emph{Zkratky}}
+	\label{fig:system-shortcuts-impl}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{new-shortcut-trackee-impl.png}
+		\caption{Možnosti zkratek aplikace Trackee}
+		\label{fig:new-shortcut-trackee-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{new-shortcut-params-impl.png}
+		\caption{Parametry zkratky}
+		\label{fig:new-shortcut-params-impl}
+	\end{subfigure}
+	\caption{Tvorba nové zkratky pro Trackee}
+	\label{fig:new-trackee-shortcut}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{new-automation-impl.png}
+		\caption{Tvorba nové automatizace}
+		\label{fig:new-automation-impl}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=6cm]{automations-list-impl.png}
+		\caption{Seznam automatizací}
+		\label{fig:automations-list-impl}
+	\end{subfigure}
+	\caption{Automatizace}
+	\label{fig:automations-impl}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

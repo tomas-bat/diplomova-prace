@@ -142,7 +142,7 @@ Vzhledem k~tomu, že v~historii se může časem nacházet mnoho záznamů, měl
 U~obrazovky pro výběr projektu bude také explicitní chybový stav, který ukáže popis chyby včetně tlačítka pro opakování. Na této obrazovce už ale bude potřeba definovat i~prázdný stav, aby se zobrazila nějaká instrukce, že uživatel nemá vytvořené žádné projekty a musí si je vytvořit na místě k~tomu určeném (bude navrženo dále). Prázdná data lze ale ještě rozdělit do dvou kategorií – prázdná data kvůli tomu, že uživatel žádné projekty nemá, nebo prázdná data kvůli tomu, že jeho vyhledávání neodpovídá žádný projekt. Pro tyto dva stavy je potřeba použít rozdílné texty pro uživatele.
 
 %---------------------------------------------------------------
-\subsection{Profil uživatele}
+\subsection{Profil uživatele}\label{feature-profile}
 %---------------------------------------------------------------
 
 Poslední kartou v~navigační liště aplikace bude karta s~Profilem. Uživatel zde bude mít základní přehled a akce týkající se jeho účtu, jak lze nahlédnout na obrázku \ref{fig:profile-overview}. Uživatel se odsud dostane do seznamu klientů a seznamu profilů, dále si může pomocí tlačítka svůj účet smazat, nebo se odhlásit, což ho vrátí zpět na přihlašovací obrazovku \ref{fig:login}. Mazání účtu je nevratná akce, která vymaže spoustu dat spojených s~uživatelem, je tedy potřeba alespoň ukázat ověřující dialog, který lze nahlédnout na obrázku \ref{fig:profile-delete}. 
@@ -221,13 +221,13 @@ Chybové a prázdné stavy budou fungovat stejným způsobem, jako u~klientů.
 \end{figure}
 
 %---------------------------------------------------------------
-\subsection{Integrace}
+\subsection{Integrace}\label{feature-integration}
 %---------------------------------------------------------------
 
 Jedním z~cílů práce je stanovit požadavky pro integraci spouštěčů měření času, dále požadavky na integraci aplikace s~existujícími systémy pro měření času, a tyto požadavky v~aplikaci implementovat. Tyto dva typy integrací lze rozdělit do skupin \emph{import} (integrace se spouštěči) a \emph{export} (integrace s~existujícími systémy).
 
 %---------------------------------------------------------------
-\subsubsection{Import}
+\subsubsection{Import}\label{feature-integration-import}
 %---------------------------------------------------------------
 
 V~sekci \ref{tracking-triggers} byly popsány teoretické možnosti, s~jakými spouštěči by aplikace šla propojit.
