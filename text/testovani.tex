@@ -103,13 +103,13 @@ Jednotkové testy \emph{View Modelů} testují byznysovou prezentační vrstvy. 
 \section{Uživatelské testování}
 %---------------------------------------------------------------
 
-Pro účely uživatelského testování byl navržen scénář, podle kterého se testeři mají řídit.
+Pro účely uživatelského testování byl navržen scénář, podle kterého se testeři mají řídit. Proces testování je rozdělen do několika scénářů, které by měly pokrývat většinu funkcionalit aplikace, kterých uživatel může využít. Povinnými účastníky během testování budou moderátor a uživatel. Moderátor bude uživateli dávat instrukce a dokumentovat, jak uživatel s~mobilním telefonem interaguje. Uživatel se bude snažit instrukce plnit a bude při tom nahlas popisovat své akce s~telefonem (co vidí, na co se chystá kliknout, co očekává, že se stane, atd.), aby usnadnil následnou analýzu celé situace. 
+
+Uživatelského testování se zúčastnilo 5 testerů. Záznamy z~testování lze nahlédnout v~\cite{ui-testing-playlist}.
 
 %---------------------------------------------------------------
 \subsection{Scénář}
 %---------------------------------------------------------------
-
-Proces testování je rozdělen do několika scénářů, které by měly pokrývat většinu funkcionalit aplikace, kterých uživatel může využít. Povinnými účastníky během testování budou moderátor a uživatel. Moderátor bude uživateli dávat instrukce a dokumentovat, jak uživatel s~mobilním telefonem interaguje. Uživatel se bude snažit instrukce plnit a bude při tom nahlas popisovat své akce s~telefonem (co vidí, na co se chystá kliknout, co očekává, že se stane, atd.), aby usnadnil následnou analýzu celé situace.
 
 \begin{description}
 \item[Tvorba uživatelského účtu:] Každý nový uživatel mobilní aplikace Trackee si bude muset nejprve vytvořit svůj uživatelský účet. V~tomto scénáři bude uživatel instruován k~tomu, aby aplikaci poprvé spustil, vytvořil si nový uživatelský účet pomocí předepsaného e-mailu a hesla a následně se do aplikace pod tímto účtem přihlásil. 
@@ -125,5 +125,5 @@ Proces testování je rozdělen do několika scénářů, které by měly pokrý
 \item[Export historie do CSV souboru:] Uživatel bude instruován, aby vytvořil integraci pro exportování do CSV souboru a exportoval data do tabulky pro předepsané časové období. Dále bude instruován, aby tuto tabulku otevřel ve vhodné aplikaci, kde si ji může prohlédnout (např. \emph{Numbers}).
 \item[Odstranění klienta:] Budeme předpokládat, že si uživatel v~exportované tabulce všimne, že tam má záznamy patřící předepsanému klientovi, které tam mít nechce. Bude tedy instruován, aby klienta smazal a znovu vyexportoval CSV soubor, ve kterém zkontroluje, že žádné záznamy patřící k~tomuto klientovi nejsou.
 \item[Tvorba automatizace pro spuštění časovače:] Uživatel dostane instrukci, aby pomocí aplikace \emph{Zkratky} vytvořil novou automatizaci, která zapne časovač s~předepsanými parametry, pokud se uživatel objeví na předepsané poloze. Bude také instruován, aby tuto automatizaci zkusil ručně spustit a v~aplikaci zkontroloval, že časovač opravu běží.
-\item[Tvorba automatizace pro vypnutí časovače:] Uživatel bude požádán, aby vytvořil automatizaci, která se ho zeptá, zda nechce zastavit běžící časovač, pokud opustí předepsanou polohu. Zde bude také instruován, aby automatizaci zkusil ručně spustit.
+\item[Tvorba automatizace pro vypnutí časovače (odstraněno):] Uživatel bude požádán, aby vytvořil automatizaci, která se ho zeptá, zda nechce zastavit běžící časovač, pokud opustí předepsanou polohu. Zde bude také instruován, aby automatizaci zkusil ručně spustit. Tento scénář byl po několika testech ze seznamu odstraněn, protože bylo zhodnoceno, že je příliš podobný předchozímu scénáři a zároveň přímo netestuje rozhraní samotné aplikace.
 \end{description}

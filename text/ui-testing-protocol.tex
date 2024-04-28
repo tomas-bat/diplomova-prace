@@ -1,0 +1,126 @@
+\chapter{Protokol z~uživatelského testování}\label{appendix:ui-testing-protocol}
+
+\begin{tabular}{rl}
+iOS & Uživatel platformy iOS\\
+Android & Uživatel platformy Android\\
+Clockify & Uživatel aplikace Clockify\\[0.5cm]
+
+\textbf{Zvýrazněný text} & Důležitý poznatek testu\\
+(!) & Kritický poznatek testu\\[0.5cm]
+\end{tabular}
+
+%---------------------------------------------------------------
+\section[Tester F. W.]{Tester F. W. (27 let, Android, Clockify)}
+%---------------------------------------------------------------
+
+\begin{description}
+\item[Tvorba uživatelského účtu:] Klikl na tlačítko Registrovat a pokusil se do pole e-mailu zadat nevalidní e-mail ve zvědavosti, zda to aplikace správně detekuje. Poté se také zkusil zadat různá hesla, aby zjistil, zda to aplikace verifikuje, a zjistil, že ano. Chtěl druhé heslo upravit a \textbf{vyjádřil zmatení nad tím, že ve stavu, kdy má heslo zobrazené, nevidí kurzor}. Heslo opravil, ale aplikace po snaze se registrovat \textbf{ukázala neznámou chybu} (!). Uživatel předpokládal, že je to kvůli nevalidnímu formátu e-mailu, tak ho upravil, ale \textbf{aplikace stále ukazovala neznámou chybu} (!). Také zmínil, že mu vadí, že \textbf{klávesnice při zadávání e-mailu nenabízí v~primárním rozmístění kláves tečku}. Tak zkusil celý proces znovu s~jiným heslem a registrace už se podařila, a uživatel předpokládal, že \textbf{měl asi příliš krátké heslo}. Poté si začal prohlížet aplikaci a zmínil, že by mu \textbf{zde dával smysl nějaký onboarding, aby věděl, že si musí vytvořit projekt}. Při prohlížení karty integrací zmínil, že \textbf{CSV mu nepřijde jako typ integrace}, ale že tomu rozumí.
+\item[Vytvoření nového klienta:] Během prohlížení aplikace už se dostal na kartu profilu, takže poté rovnou intuitivně klikl na tlačítko Klienti. Ihned poté si všiml tlačítka + a klikl na něj, poté zadal název klienta. Poté klikl na tlačítko Uložit a zmínil, že by mu \textbf{dávalo větší smysl například Vytvořit}. Poté stejným způsobem vytvořil druhého klienta. Kliknout na tlačítko Uložit se mu ale \textbf{podařilo až na 3. pokus}.
+\item[Vytvoření nového projektu:] Rovnou se vrátil na profil a klikl na tlačítko Projekty a poté na tlačítko +. Zadal předepsané parametry a při výběru klienta zmínil, že \textbf{při kliknutí na klienta se aplikace rovnou vrátí o~obrazovku zpět}, že to nebude muset dělat dalším kliknutím na Uložit. Při vybírání typu projektu zmínil, že neví, kde se tento seznam typů vzal, že ho nevytvářel, takže je to asi výchozí. Opět se mu \textbf{nedařilo kliknout na tlačítko + a musel to dělat vícekrát}. Druhý projekt už vytvořil bez problémů, pouze zmínil údiv nad autokorekcí systému iOS.
+\item[Spuštění časovače:] Přesunul se na kartu časovače a intuitivně klikl na tlačítko pro spuštění. Ihned poté klikl na výběr projektu, vybral projekt a zmínil, že \textbf{je otravné, že opět musí klikat na tlačítko Uložit}. Popis zadal bez problému.
+\item[Změna začátku časovače:] Intuitivně rovnou klikl na stopky časovače a správně posunul čas začátku. Poté si ještě vyzkoušel, co se stane, když nastaví čas začátku v~budoucnu, a aplikace mu správně vrátila chybu, že to nejde.
+\item[Zastavení časovače:] Intuitivně klikl na tlačítko pro stopnutí a viděl, že se záznam uložil. Také zmínil, že mu nastavení z~minulého měření zůstalo v~časovači.
+\item[Manuální přidání časového záznamu:] Intuitivně klikl na tlačítko +, ale \textbf{zmátlo ho, jak na to rozhraní ovladače reagovalo}, že se mu tam objevil nějaký náhodný čas. Chvíli to zkoumal a zmínil, že mu to přijde \textbf{neintuitivní} a že by \textbf{spíše čekal, že se mu objeví nějaký dialog}. Po chvíli pochopil, že jde o~nějakou formu přepínání, a dodal, že je to asi o~zvyku. Poté ale už správně zadal čas začátku a konce a zmínil, že informace o~tom, jak dlouhý bude výsledný interval, je poměrně schovaná. Poté přemýšlel, jak záznam uloží, a klikl na tlačítko + a viděl, že se záznam uložil správně. Poté si všiml, že zapomněl změnit projekt a popis podle zadání, a \textbf{snažil se záznam upravit}, ale všiml si, že to asi nepůjde. Moderátor ho ujistil, že znova vytvářet záznam kvůli tomu nemusí. Zopakoval, že dialog by mu dával větší smysl, protože mu přesně nedošlo, co se děje.
+\item[Úprava projektu:] Klikl na kartu profilu a byl chvíli zmaten, že zůstala zanořena v~projektech. Klikl na správný projekt, změnil jeho název, přešel na časovač, ale tam se nic nezměnilo, protože u~záznamu zapomněl přiřadit správný projekt. 
+\item[Odhlášení a přihlášení na testovací účet:] Šel na kartu profilu, odhlásil se a zadal údaje testovacího účtu. Po přihlášení si všiml, že záznamů už je více.
+\item[Odstranění časového záznamu:] Nejprve záznam nemohl najít, protože \textbf{čekal, že popis (doslovně ale řekl title) bude nahoře, ne pod projektem a klientem}. Chvíli zkoumal, jak záznam smazat, několikrát se na něj pokusil kliknout, a poté intuitivně zkusil swipe-to-delete gesto, u~kterého ho \textbf{překvapilo, že není žádný potvrzující dialog}.
+\item[Export historie do CSV souboru:] Zmínil, že mu přijde \textbf{zvláštní mít export v~integracích}, ale přešel to. Novou integraci vytvořil a data exportoval bez problémů. Moderátor poté poradil, jak soubor otevřít v~Numbers, jelikož tento dialog už není součástí aplikace.
+\item[Odstranění klienta:] Při návratu do aplikace zmínil, že \textbf{by čekal, že se aplikace po exportu vrátí o~obrazovku zpět}. Smazání provedl bez problémů, pouze zmínil, že \textbf{pro kliknutí na tlačítko musí kliknout na jeho text}. Druhý export byl také bez problémů.
+\item[Tvorba automatizace pro spuštění časovače:] Moderátor testerovi radil, jak zkratky a automatizace tvořit, jelikož se nejedná o~rozhraní aplikace. Nejprve zapomněl na nastavení parametrů časovače, moderátor mu to musel připomenout.
+\item[Tvorba automatizace pro vypnutí časovače:] Upravil existující automatizaci a změnil zapnutí časovače na vypnutí.
+\item[Shrnutí:] Zopakoval přednost popisů před názvem projektu a klienta, a také přepínání ovladače časovače. Také zopakoval, že by se mu hodil onboarding, ale jinak že mu používání aplikace dává smysl. Poté ještě zopakoval absenci potvrzení při mazání záznamu a poukázal na chybnou animaci při mazání. Zmínil, že mu přijde, že souhrn odpracovaných hodin mu přijde schovaný, a že by dnešek čekal vedle nadpisu skupiny, jako je to u~ostatních dnů. Pak ho ještě napadlo, že integrace by možná nečekal v~navigační liště, že to uživatelé asi nebudou používat příliš často, že to jen nastaví a pak to bude fungovat. Při zhodnocení, zda by aplikaci používal, tak zmínil, že asi ne, že mu aplikace přijde pomalá, nemůže upravovat záznamy, že v~této formě by jí asi nepoužíval, protože je zkrátka zvyklý na jinou aplikaci.
+\end{description}
+
+%---------------------------------------------------------------
+\section[Tester D. K.]{Tester D. K. (24 let, iOS, Clockify)}
+%---------------------------------------------------------------
+
+\begin{description}
+\item[Tvorba uživatelského účtu:] Proběhlo bez problému, vše našel intuitivně.
+\item[Vytvoření nového klienta:] \textbf{Nejprve klikl na + na ovladači časovače}, kde zjistil, že to dělá něco jiného. Poté \textbf{klikl na výběr projektu}, kde přečetl instrukci, že si musí vytvořit projekt. Moderátor ho upozornil, že přeskočil instrukci pro vytvoření klienta, poté omylem klikl na odhlášení a musel se znovu přihlásit. Vytvoření klienta poté proběhlo bez problémů.
+\item[Vytvoření nového projektu:] Proběhlo bez problémů, vše našel intuitivně.
+\item[Spuštění časovače:] Vybral projekt, poté spustil časovač a poté přidal popis.
+\item[Změna začátku časovače:] Proběhlo bez problémů, vše našel intuitivně.
+\item[Zastavení časovače:] Proběhlo bez problémů.
+\item[Manuální přidání časového záznamu:] Proběhlo bez problémů, vše našel intuitivně.
+\item[Úprava projektu:] \textbf{Nejprve zkusil klikat na záznam} a když zjistil, že to nic nedělá, upravil projekt standardně v~profilu.
+\item[Odhlášení a přihlášení na testovací účet:] Při přihlášení začal zadávat vlastní údaje, moderátor ho upozornil, aby zadal předepsané údaje. Zbytek proběhl bez problémů.
+\item[Odstranění časového záznamu:] V~testovacích datech chyběl předepsaný záznam pro smazání, což bylo chybou moderátora, že data špatně připravil. Instruoval proto testera, aby smazal jiný záznam. \textbf{Nejprve zkusil na záznam kliknout} – nic se nestalo. \textbf{Poté na něm zkusil podržet prst} – nic se nestalo. Hned poté zkusil swipe-to-delete a záznam smazal. Měl u~toho pocit, že se animace trochu zasekává, ale přešel to a pokračoval.
+\item[Export historie do CSV souboru:] Proběhlo bez problémů, vše našel intuitivně.
+\item[Odstranění klienta:] Proběhlo bez problémů, vše našel intuitivně.
+\item[Tvorba automatizace pro spuštění časovače:] Moderátor testerovi poradil, jak aplikaci Zkratky používat. Po spuštění zkratky zmínil, že \textbf{by čekal, že se aplikace automaticky scrollne dolů, nebo nějakým jiným způsobem naznačí, že se něco stalo}.
+\item[Shrnutí:] Zopakoval, že by přidal nějakou indikaci, že se po spuštění zkratky něco stalo. Také zmínil, že by na hlavní obrazovku přidal tlačítko pro přidání profilu nebo klienta, pokud žádné nemá, nebo rovnou celý onboarding.
+\end{description}
+
+
+
+
+\begin{description}
+\item[Tvorba uživatelského účtu:] 
+\item[Vytvoření nového klienta:] 
+\item[Vytvoření nového projektu:]
+\item[Spuštění časovače:] 
+\item[Změna začátku časovače:]
+\item[Zastavení časovače:]
+\item[Manuální přidání časového záznamu:]
+\item[Úprava projektu:]
+\item[Odhlášení a přihlášení na testovací účet:]
+\item[Odstranění časového záznamu:]
+\item[Export historie do CSV souboru:]
+\item[Odstranění klienta:]
+\item[Tvorba automatizace pro spuštění časovače:]
+\item[Shrnutí:]
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
