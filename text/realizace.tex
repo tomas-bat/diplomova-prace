@@ -923,6 +923,58 @@ Uživatelské rozhraní iOS aplikace dodržuje návrh ze sekce \ref{feature-inte
 	\label{fig:automations-impl}
 \end{figure}
 
+V~sekci \ref{feature-integration-import} bylo také zmíněno, že pro podporu interakce s~aplikací pomocí systémových zkratek je potřeba implementovat takzvané \emph{App Intents}. Tyto \emph{intents} představují nějaký úmysl uživatele, který může pomocí zkratky spustit. \cite{ios-app-intents}
+
+Struktury pro reprezentaci \emph{App Intents} je potřeba definovat v~hlavním \emph{targetu} aplikace, nelze je definovat v~žádném balíčku, protože by pak nebyly detekovány systémem, aby se zobrazily v~aplikaci \emph{Zkratky}. Jednotlivé \emph{intents} musí implementovat protokol (rozhraní) \texttt{AppIntent}, který vyžaduje, aby \emph{intent} obsahoval minimálně název, popis a funkci \texttt{perform()}, která se zavolá při pokusu o~provedení \emph{intentu}. \texttt{AppIntent} také vyžaduje, aby byly texty definovány jako \texttt{LocalizedStringResource}, nelze tedy použít lokalizaci definovanou v~balíčku \emph{UIToolkit}. Pro potřeby \emph{App Intents} slouží ve složce iOS projektu složka \texttt{Intents}, kde jsou definovány \emph{intenty} a jejich entity podle funkcionalit aplikace, a také \emph{Resources}, tedy \texttt{Localizable.strings} soubor, který bude obsahovat texty a jejich lokalizace pro všechny \emph{App Intents}.
+
+Ve výpisu kódu \ref{code:start-timer-intent} lze nahlédnout implementace \emph{intentu} pro zapnutí časovače. Implementace obsahuje referenci na typ \texttt{StartTimerUseCase}, který poskytuje \emph{Dependency Injection} stejným způsobem, jako ve \emph{View Models}. Dále iplementace obsahuje definici názvu, popisu a parametrů, které daný \emph{intent} může přijímat. A nakonec implementace obsahuje definici funkce \texttt{perform()}, která se spustí při spuštění \emph{intentu}.
+
+\begin{listing}
+\caption{\emph{App Intent} pro zapnutí časovače}\label{code:start-timer-intent}
+\begin{minted}{Swift}
+struct StartTimerIntent: AppIntent {
+    
+    // MARK: - Dependencies
+    
+    @Injected(\.startTimerUseCase) private var startTimerUseCase
+    
+    // MARK: - Required
+    
+    static var title = LocalizedStringResource("start_timer_intent_title")
+    
+    static var description = IntentDescription("start_timer_intent_description")
+    
+    // MARK: - Parameters
+    
+    @Parameter(title: "start_timer_intent_parameter_description")
+    var description: String?
+    
+    @Parameter(title: "start_timer_intent_parameter_project")
+    var project: ProjectPreviewEntity?
+    
+    // MARK: - Perform
+    
+    func perform() async throws -> some IntentResult {
+        let params = StartTimerUseCaseParams(
+            body: StartTimerBody(
+                clientId: project?.clientId,
+                projectId: project?.projectId,
+                description: description
+            )
+        )
+        try await startTimerUseCase.execute(params: params)
+        return .result()
+    }
+}       
+\end{minted}
+\end{listing}
+
+Aby mohl nějaký objekt být parametrem \emph{App Intentu}, musí splňovat požadavky protokolu \texttt{AppEntity}. Tento protokol vyžaduje po objektech, které ho implementují, aby obsahovali proměnnou \texttt{displayRepresentation} typu \texttt{DisplayRepresentation}, která definuje, jak se daný parametr zobrazí uživateli, tedy nějaký název, případně podnázev a obrázek. Také po objektech vyžaduje, aby implementovali statickou proměnnou \texttt{defaultQuery}, což je další objekt, který musí implementovat protokol \texttt{EntityQuery}. Tento protokol slouží pro objekty, které definují, odkud se mají brát všechny možnosti pro výběr konkrétní instance parametru, k~čemuž slouží funkce \texttt{suggestedEntities()} a \texttt{entities(for identifiers: [String])}.
+
+Pro potřeby \emph{intentu} \texttt{StartTimerIntent} je potřeba entita \texttt{ProjectPreviewEntity}, která představuje objekt projektu, který si uživatel může nastavit jako parametr \emph{intentu}. Tento objekt v~podstatě reflektuje \texttt{ProjectPreview}, který se do této reprezentace umí převést. Obsahuje tedy název, název klienta a případně typ projektu pro určení obrázku. Identifikátor tohoto objektu má strukturu \texttt{<clientID>-<projectID>}, protože je potřeba, aby měl pouze jeden identifikátor. Implementace \texttt{ProjectPreviewEntityQuery} poté získává objekty projektů přímo přes \texttt{GetProjectsUseCase} a \texttt{GetProjectPreviewUseCase}. Ostatní \emph{intenty} žádné parametry nepotřebují.
+
+Propagace chyb do aplikace \emph{Zkratky} funguje automaticky, protože když nějaký \emph{Use Case} vrátí chybu, tak vrátí strukturu \texttt{KMPError}, která sama umí poskytnout lokalizovanou chybovou hlášku, která se zobrazuje jak v~aplikaci, tak v~aplikaci \emph{Zkratky}.
+
 
 
 
