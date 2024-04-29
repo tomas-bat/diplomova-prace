@@ -9,13 +9,27 @@
 \setcounter{page}{1}
 \markboth{Úvod}{Úvod}
 
-TODO
+Zaznamenávání a správa odpracovaného času je problematikou, která může sloužit velkému množství uživatelů různých odvětví zaměstnání. Ať už se jedná o~sledování pracovních hodin za účelem fakturace, za účelem sledování docházky, nebo za účelem analýzy produktivity, jedná se o~službu, kterou vyžaduje a používá velké množství zaměstnanců a zaměstnavatelů.
+
+Vzhledem k~tomu, že je poptávka po službě zprostředkovávající měření a správu odpracovaného času poměrně vysoká, existuje řada řešení, které se tuto službu snaží s~různými přístupy a funkcionalitami nabízet. Mohou proto nastávat situace, kdy budou uživatelé potřebovat nějakou formu integračního prvku, který bude moct propojovat více řešení a přístupů, jak odpracovaný čas měřit a jak ho analyzovat. 
+
+Tato práce nabízí implementaci vlastního řešení aplikace pro měření a správu odpracovaného času a jako přidanou hodnotu analyzuje možnosti integrace se spouštěči měření času (fyzické ovladače, automatizace, \dots), možnosti integrace s~existujícími systémy pro správu odpracovaného času, poté navrhuje, jaké typy integrací implementovat, a v~realizované aplikaci tyto integrace nabízí.
+
+Podkladem pro funkcionality realizované aplikace je analýza existujících řešení a přístupů pro měření správu času, analýza možností pro integraci a návrh používání aplikace z~výstupů analýzy.
+
+Implementace aplikace zhotovená v~rámci této práce nemá šanci se vyrovnat existujícím aplikacím řešícím problematiku měření a správy času, které mají mnohem větší časové a finanční rozpočty a stojí za nimi roky vývoje velkých týmů. Má ale šanci poskytnout základ aplikace, která mimo samotnou možnost měření a správy odpracovaného času dokáže nabídnout i~nějaké vhodné formy integrace se spouštěči měření a těmito zmíněnými existujícími aplikacemi. Na tomto základu poté může být navázáno dalším úsilím, které funkcionality a možnosti integrace aplikace rozšíří. 
+
+Mimo poskytnutí základu integrační aplikace pro měření a správu odpracovaného času má také tato práce potenciál nabídnout seznámení s~aktuálními moderními přístupy vývoje mobilních aplikací a s~nástroji k~tomu potřebnými.
 
 %---------------------------------------------------------------
 \chapter{Cíl práce}
 %---------------------------------------------------------------
 
-TODO
+Hlavním cílem diplomové práce je analýza, návrh a implementace mobilní aplikace pro systém iOS (frontend i backend) pro zaznamenávání odpracovaného času, která umožňuje integraci s~různými spouštěči akcí a propojení s~dalšími systémy pro zaznamenávání a spravování odpracovaného času. V~rámci návrhu je cílem navrhnout vhodné technické řešení pro implementaci aplikace, funkcionality aplikace a jejich uživatelské rozhraní a tohoto návrhu se poté při realizaci aplikace držet. Následně je cílem práce realizované řešení vhodně otestovat a provést uživatelské testování. 
+
+Vedlejším cílem realizovaného řešení je flexibilita a rozšiřovatelnost technické implementace aplikace. Jelikož základ integrační aplikace pro měření a správu odpracovaného času, který tato práce realizuje, má široké možnosti budoucího rozšíření, ať už o~aplikace pro další platformy (Android, Web, \dots), tak o~další funkcionality (propojení s~mnohými dalšími řešeními), tak je přinejmenším vhodné, aby na tyto rozšíření byla co nejlepším způsobem připravena.
+
+Výsledky diplomové práce budou přínosné pro potenciální budoucí uživatele nové realizované platformy, ale také pro čtenáře, kteří se chtějí seznámit s~technickým přístupem řešení, které bylo v~této práci zvoleno, proč bylo zvoleno, jaké byly alternativy a jaké je poté v~závěru zhodnocení tohoto přístupu. Vývoj mobilních aplikací je~stále rostoucím průmyslem, který je stále ve fázi objevování nových přístupů a řešení, a tato práce má potenciál do něj přispět zkušenostmi, které byly při její realizaci získány.
 
 %---------------------------------------------------------------
 \chapter{Analýza}

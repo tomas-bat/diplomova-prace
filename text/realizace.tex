@@ -42,6 +42,8 @@ Aplikace implementuje tři prostředí – Alpha, Beta a Produkce. Zvykem bývá
 
 Multi-platformní část a backend používají automatizační sestavovací nástroj \emph{Gradle} \cite{gradle}, což je populární nástroj pro flexibilní konfiguraci a automatizaci sestavování softwarových projektů. Nativní iOS aplikace používá pro sestavení nástroj \emph{xcodebuild}, který je součástí \emph{Xcode} IDE. Multi-platformní knihovna je do nativní iOS aplikace propagována jako knihovna typu \emph{xcframework}, což je \emph{multiplatformní binární framework} \cite{xcframework}. \emph{Gradle} zkompiluje multi-platformní kód do této \emph{xcframework} reprezentace a zkopíruje ji do iOS projektu.
 
+Návrh API pro backendovou část 
+
 Všechny části implementace (nativní aplikace, multi-platformní část a backend) jsou součástí jednoho repozitáře (\emph{monorepo}), který má následující strukturu:
 \begin{itemize}
 \item\texttt{backend} – modul obsahující projekt backendu
