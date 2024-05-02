@@ -1,7 +1,7 @@
 Tato kapitola se zabývá samotnou realizací platformy pro měření odpracovaného času. Popisuje nástroje použité během vývoje, strukturu zdrojového kódu a nakonec implementaci jednotlivých navržených funkcionalit aplikace.
 
 %---------------------------------------------------------------
-\section{Nástroje pro vývoj}
+\section{Nástroje pro vývoj}\label{development-tools}
 %---------------------------------------------------------------
 
 Jak bylo navrženo v~sekci \ref{dev-tools}, pro nativní aplikaci bylo použito vývojové prostředí \emph{Xcode}. Verze tohoto IDE, na kterém byla implementace vyvíjena, byla 15.2. S~touto verzí IDE se pojí verze programovacího jazyku \emph{Swift} 5.9.2. Aplikace byla vyvíjena na operačním systému \emph{macOS Sonoma} (14.4). Nativní aplikace bude definovat minimální iOS verzi cílové platformy na verzi 17.0, jelikož tato verze umožňuje použití nejnovějších nástrojů platformy iOS. Podle dat z~února 2024 už tuto nejnovější verzi operačního systému používalo 66\% ze všech aktivních uživatelů mobilních telefonů iPhone. Mezi zařízeními představených v~předchozích čtyřech letech je to dokonce 76\% \cite{ios-17-adoption}.
@@ -33,7 +33,21 @@ Pro umožnění používání aplikace kdekoli, kdykoli a bez potřeby na lokál
 Jednou nevýhodou nástroje \emph{Railway} ale je, že v~bezplatné variantě nabízí umístění stroje, na kterém běží instance, pouze ve státě Oregon ve Spojených státech amerických. Jelikož je to v~podstatě na druhé straně Země, vzniká tím poměrně znatelná prodleva mezi klientem a serverem. A v~kombinaci s~tím, že při nastavení nástroje \emph{Firebase} bylo zvoleno umístění instance v~Evropě (a toto umístění není možné po nastavení nástroje změnit), vznikají tím hlavně prodlevy při komunikaci s~databází, protože nyní musí backend každý požadavek na čtení nebo zápis dat posílat zhruba 8 tisíc kilometrů daleko. Rozdíl mezi používáním instance backendu běžící pomocí nástroje \emph{Railway} a používáním lokální instance je znatelný – například přihlášení a načtení hlavní obrazovky včetně plné počáteční stránky historie záznamů (10 záznamů) trvá 5-7 sekund, zatímco při použití lokální instance toto trvá 2-3 sekundy.
 
 %---------------------------------------------------------------
-\section{Architektura a struktura projektu}
+\subsection{Nasazení aplikace a Testflight}\label{testflight}
+%---------------------------------------------------------------
+
+Vývojové prostředí \emph{Xcode} umožňuje nahrání vyvíjené aplikace do připojeného mobilního zařízení. Dané zařízení ale musí být fyzicky připojeno k~počítači, na kterém IDE běží, musí být ve vývojářském režimu a musí být napojené na vývojářský účet, pod který aplikace spadá. Jedná se tedy o~poměrně komplikované řešení, je-li účelem instalace aplikace mezi další uživatele, například mezi testery.
+
+Nástrojem, jak řešit nasazení aplikace mezi širší počet uživatelů, ale nikoli zatím jako finální aplikaci mířenou na reálné uživatele, je \emph{Testflight} \cite{testflight}. Tento nástroj je určen pro beta testování vyvíjených aplikací. Umožňuje nahrávání archivovaných (sestavených) aplikací pomocí nástroje \emph{App Store Connect} \cite{app-store-connect} a jejich následnou distribuci mezi vybrané uživatele, kteří si tuto aplikaci nainstalují. Jsou dva způsoby, jak lze aplikace přes \emph{Testflight} distribuovat:
+\begin{itemize}
+\item\textbf{Interní testování} – vývojář pozve jednotlivé uživatele pomocí jejich e-mailové adresy k~testování aplikace a ti si ji mohou stáhnout. Tito vývojáři musí mít účet \emph{Apple ID} a musí být přidání mezi interní vývojáře aplikace.
+\item\textbf{Veřejné testování} – vývojář může do testování přizvat kohokoli, dokonce stačí jenom takzvaný \emph{public link}, přes který si uživatelé mohou aplikaci nainstalovat. Aby aplikace mohla být testována pomocí veřejného testování, musí být schválena firmou \emph{Apple} v~rámci procesu \emph{App Review}, který aplikace podstupují i~tehdy, pokud chtějí zamířit mezi reálné uživatele do obchodu \emph{App Store}.
+\end{itemize}
+
+Aplikace Trackee umožňuje oba typy testování, již prošla schvalovacím procesem \emph{App Review} a může si ji tak nainstalovat kdokoli, kdo bude pozvaný přes e-mailovou adresu, nebo pomocí \emph{public linku}: \texttt{https://testflight.apple.com/join/cTRdRkBc}
+
+%---------------------------------------------------------------
+\section{Architektura a struktura projektu}\label{project-structure}
 %---------------------------------------------------------------
 
 Jako šablona celého projektu sloužil \emph{DevStack} společnosti \emph{Matee} \cite{matee-devstack}, ze kterého byla odstraněna většina implementovaných funkcionalit a jejich balíčků, kromě těch, které se hodilo znovu využít (onboarding, profil, \dots). Ze šablony byly také ponechány nástroje na síťovou komunikaci (síťový klient pomocí knihovny \emph{Ktor} \cite{ktor}), interoperabilitu a další. V~šabloně také byly ponechány některé nástroje, které zatím projektem nejsou využívány, ale v~budoucnu při dalším rozvoji aplikace by se mohly hodit, jako nástroje pro práci s~lokálním úložištěm \emph{SQLdelight}, \emph{UserDefaults} nebo \emph{Keychain}, nebo \emph{Providers} pro obsluhu GPS, obsluhu notifikací, a další. Jelikož Aplikace Trackee neimplementuje Android klienta, je celý jeho modul ze šablony odstraněn.

@@ -55,7 +55,11 @@ Výsledky diplomové práce budou přínosné pro potenciální budoucí uživat
 
 \input{text/testovani.tex}
 
-%\input{text/lipsum.tex}
+%---------------------------------------------------------------
+\chapter{Prostředí pro budoucí podporu a provoz aplikace}
+%---------------------------------------------------------------
+
+\input{text/future-dev.tex}
 
 %---------------------------------------------------------------
 \chapter*{Závěr}
@@ -67,21 +71,15 @@ Hlavním cílem práce bylo analyzovat, navrhnout a implementovat mobilní aplik
 
 V~rámci analýzy se podařilo poskytnout přehled o~tom, co je problematika měření a správy odpracovaného času, jaké jsou možnosti propojení s~různými spouštěči akcí, jaké jsou možnosti integrace s~existujícími systémy, které řeší stejnou problematiku, a o~tom, jaká jsou specifika vývoje pro mobilní platformu iOS. Návrh implementace poté navrhl technická řešení a přístupy pro realizaci, funkcionality aplikace a jejich uživatelské rozhraní, čehož se poté držela realizace aplikace. Výsledkem poté byla plně funkční mobilní aplikace, která umožňuje některé formy integrace se spouštěči a s~dalšími systémy.
 
-TODO: Splnění funkcionalit, v jaké míře
+Realizovaná aplikace implementuje funkcionality aplikace pro měření a správu odpracovaného času – umožňuje měření času pomocí časovače nebo pomocí manuálního zadání a udržuje historii časových záznamů, ke kterým může přidělovat projekt a popis. Z~hlediska integrace aplikace implementuje základní funkce, jako propojení se systémovými zkratkami, které mají teoreticky neomezené možnosti pro tvorbu automatizací, nebo možnost exportu historie záznamů do CSV souboru, což umožňuje import historie do mnoha existujících systémů.
 
-TODO: Uživatelské testování, jak se povedlo, jak bylo přínosné
+Vedlejším cílem práce byla flexibilita a rozšiřovatelnost technické implementace aplikace. Během návrhu a realizace celé platformy byl kladen důraz na její přehlednost a rozšiřovatelnost, která je díky použití technologií jako \emph{Kotlin Multiplatform}, nebo díky implementaci vlastního backendu, dobře připravena na rozšíření nejen o~další cílové platformy (Android, Web a další), ale i~na rozšíření o~další funkcionality, jako možnosti integrace s~dalšími systémy.
 
-TODO: Vedlejší cíl a jeho splnění
+Velkým přínosem pro budoucí vývoj aplikace jsou také výsledky uživatelského testování, kterého se zúčastnilo 5 testerů. Většina testerů měla větší zkušenost s~používáním mobilních aplikací pro měření a správu odpracovaného času, a poskytli tak relevantní zkušenost cílového uživatele s~používáním aplikace. Z~testování vzešla řada poznatků, které byly popsány, analyzovány a ze kterých vznikla doporučení, jak by kvůli nim měla být aplikace upravena.
 
+Na závěr aplikace navrhuje prostředí pro budoucí provoz a podporu aplikace, které navrhuje řadu možností pro budoucí vylepšení a rozšíření, úpravy rozhraní a další. Dále také popisuje, jakým způsobem by bylo možné aplikaci finálně nasadit mezi reálné uživatele, nebo jakým způsobem aplikaci rozšířit o~podporu pro další platformy.
 
-%---------------------------------------------------------------
-\section*{Návrh budoucích vylepšení}
-%---------------------------------------------------------------
-\addcontentsline{toc}{section}{Návrh budoucích vylepšení}
-
-TODO: Zmínit výsledky zhodnocení user testingu, z něj plynoucí návrhy
-
-TODO: Zmínit další vhodné návrhy na rozšíření a vylepšení, zopakovat podněty k~vylepšení zmíněné v~textu práce, hlavně lokalni cachce
+Práce také může poskytnout určitou formu inspirace nebo seznámení pro čtenáře, kteří se zajímají o~různé přístupy k~možnostem vývoje mobilních aplikací, nebo o~konkrétní technologie, kterých tato práce v~rámci realizace využila.
 
 
 
