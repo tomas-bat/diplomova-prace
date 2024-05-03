@@ -61,6 +61,15 @@ Ostatní nástroje, které jsou aplikací využívány, pak žádnou další kon
 
 Návrh architektury platformy (sekce \ref{platform-architecture}) počítal s~možnostmi budoucího rozšíření podpory pro další platformy, jako je Android aplikace, webová aplikace a další. Toto rozšíření může být implementováno s~pomocí technologie \emph{Kotlin Multiplatform}, kterou klientská aplikace používá. Stačí přidat moduly pro nové platformy a jejich aplikace implementovat podobným stylem, jako nativní iOS aplikaci. Detailnější popis struktury celého projektu v~rámci \emph{monorepa} je v~realizaci v~sekci \ref{project-structure}.
 
+%---------------------------------------------------------------
+\section{Analytika}
+%---------------------------------------------------------------
+
+U~různých softwarových aplikací může být užitečné nějakým způsobem zaznamenávat a analyzovat chování uživatelů v~aplikaci. Lze zaznamenávat, na co jak často klikají, jak používají různé interakční prvky, a podobně. Tato data poté mohou být vhodným způsobem analyzována pro zhodnocení účinností jednotlivých prvků rozhraní, testování, co funguje lépe, a další. Je však potřeba si dávat pozor na to, aby takové sbírání dat podléhalo všem zákonům a regulacím o~sbírání uživatelských dat. 
+
+Jelikož je v~aplikaci již používána technologie \emph{Firebase}, lze pro tyto účely použít nástroj \emph{Firebase Analytics} \cite{firebase-analytics}, který slouží pro zaznamenávání a analýzu různých akcí (klikání na některé prvky, interakce, \dots), a nástroj \emph{Firebase Crashlytics} \cite{firebase-crashlytics}, který slouží pro analýzu chyb a pádů aplikace.
+
+
 
 
 
