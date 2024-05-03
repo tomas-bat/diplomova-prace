@@ -550,20 +550,21 @@ Jeden problém, který musí nativní aplikace řešit, je situace, když má zo
 \begin{listing}
 \caption{Obsluha nově načtené navazující stránky záznamů}\label{code:view-mode-entry-group-overlap}
 \begin{minted}{Swift}
-// ...
-
+// Fetch more groups
 let fetchedGroups: [TimerEntryGroup] = try await getTimerEntriesUseCase.execute(
     params: params
 )
 
 var newGroups: [TimerEntryGroup] = []
 
-// Handle overlapping group
+// If there is an overlapping group
 if let firstOfCurrent = currentGroups.first,
    let lastOfNew = fetchedGroups.last,
    firstOfCurrent.date == lastOfNew.date {
+    // Append already fetched groups without the last one
     newGroups.append(contentsOf: fetchedGroups.dropLast())
     
+    // Calculate total interval of the overlapping group
     var interval: KotlinLong? {
         if lastOfNew.interval == nil 
             && firstOfCurrent.interval == nil 
@@ -577,6 +578,7 @@ if let firstOfCurrent = currentGroups.first,
         )
     }
     
+    // Append union of the overlapping group
     newGroups.append(TimerEntryGroup(
         date: firstOfCurrent.date,
         interval: interval,
@@ -584,18 +586,21 @@ if let firstOfCurrent = currentGroups.first,
         isFullyLoaded: lastOfNew.isFullyLoaded
     ))
     
+    // Append the fetched groups without the first one
     newGroups.append(contentsOf: currentGroups.dropFirst())
 } else {
+    // No overlapping groups, just append
     newGroups.append(contentsOf: fetchedGroups)
+    
+    // Fix the `isFullyLoaded` flag if necessary
     if let firstOfCurrent = currentGroups.first, !firstOfCurrent.isFullyLoaded {
         firstOfCurrent.isFullyLoaded = true
     }
     newGroups.append(contentsOf: currentGroups)
 }
 
+// Display the updated data
 state.listData = .data(newGroups)
-
-// ...
 \end{minted}
 \end{listing}
 
