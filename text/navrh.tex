@@ -76,6 +76,12 @@ Aplikace bude primárně sloužit pro zaznamenávání odpracovaného času. Je 
 \subsection{Přihlášení a registrace}\label{feature-onboarding}
 %---------------------------------------------------------------
 
+Tato funkcionalita bude sloužit pro následující případy užití:
+\begin{itemize}
+\item\textbf{Přihlášení} – Uživatel se přihlásí pomocí e-mailu a hesla.
+\item\textbf{Registrace} – Uživatel si vytvoří účet pomocí e-mailu a hesla.
+\end{itemize}
+
 Přihlašovací obrazovka bude obsahovat pouze nadpis, pole pro vyplnění e-mailu, hesla, primární tlačítko pro přihlášení a sekundární tlačítko pro registraci. Obrazovka pro registraci, která se otevře po kliku na tlačítko pro registraci, poté bude od uživatele potřebovat také jen e-mail a heslo, které je ale zvykem napsat dvakrát, aby se snížila šance, že se v~něm vyskytl překlep. Obrazovky přihlášení a registrace lze nahlédnout v~obrázku \ref{fig:onboarding}. Úspěšné přihlášení a registrace uživatele přesměruje na hlavní obrazovku aplikace.
 
 \begin{figure}[h]
@@ -99,6 +105,18 @@ Přihlašovací obrazovka bude obsahovat pouze nadpis, pole pro vyplnění e-mai
 %---------------------------------------------------------------
 \subsection{Lišta karet a časovač}\label{feature-timer}
 %---------------------------------------------------------------
+
+Funkcionalita časovače bude sloužit pro následující případy užití:
+\begin{itemize}
+\item\textbf{Zapnutí časovače} – Uživatel spustí časovač a začne tak měřit odpracovaný čas.
+\item\textbf{Výběr projektu} – Uživatel přiřadí projekt k~záznamu, který chce měřit nebo vytvořit.
+\item\textbf{Zadání popisu} – Uživatel zadá popis k~záznamu, který chce měřit nebo vytvořit.
+\item\textbf{Zastavení časovače a uložení záznamu} – Uživatel zastaví časovač a uloží tím záznam, který do zastavení měřil.
+\item\textbf{Manuální přidání záznamu} – Uživatel vytvoří nový záznam podle zadání času začátku a konce.
+\item\textbf{Odstranění záznamu} – Uživatel odstraní časový záznam z~historie. 
+\item\textbf{Zobrazení historie záznamů} – Uživatel si prohlédne libovolné záznamy z~historie.
+\item\textbf{Zobrazení shrnutí odpracovaných hodin} – Uživatel si zobrazí souhrn odpracovaných hodin daného dne nebo současného týdne.
+\end{itemize}
 
 Navigace mezi hlavními obrazovkami aplikace bude řešena pomocí lišty karet, jelikož se jedná o~častý a doporučený způsob, jak navigovat mezi vzájemně exkluzivními částmi obsahu \cite{apple-guidelines-tabbars}. Hlavní obrazovkou bude přehled, na kterém bude uživatel moct ovládat časovač, a kde uvidí historii svých časových záznamů, seřazenou od nejnovějších po nejstarší. Jelikož pro uživatele je nejjednodušší dosáhnout na ovládací prvky, které jsou ve spodní části displeje, bude ovládání časovače umístěno ve spodní části obrazovky, a časové záznamy se budou řadit nad ním. Návrh této obrazovky lze nahlédnout na obrázku \ref{fig:timer}.
 
@@ -144,6 +162,19 @@ U~obrazovky pro výběr projektu bude také explicitní chybový stav, který uk
 %---------------------------------------------------------------
 \subsection{Profil uživatele}\label{feature-profile}
 %---------------------------------------------------------------
+
+Profil uživatele bude sloužit pro následující případy užití:
+\begin{itemize}
+\item\textbf{Zobrazení e-mailové adresy přihlášeného uživatele} – Uživatel si zobrazí e-mailovou adresu účtu, na kterém je přihlášen.
+\item\textbf{Odhlášení} – Uživatel se odhlásí ze svého účtu.
+\item\textbf{Odstranění účtu} – Uživatel smaže svůj účet.
+\item\textbf{Zobrazení projektů} – Uživatel si zobrazí projekty, které má přiřazené.
+\item\textbf{Zobrazení klientů} – Uživatel si zobrazí klienty, které má přiřazené.
+\item\textbf{Tvorba nebo úprava projektu} – Uživatel si vytvoří projekt nebo upraví existující přiřazený projekt.
+\item\textbf{Tvorba nebo úprava klienta} – Uživatel si vytvoří klienta nebo upraví existujícího přiřazeného klienta.
+\item\textbf{Odstranění projektu} – Uživatel odstraní projekt, s~ním i~všechny časové záznamy, které pod projekt spadají.
+\item\textbf{Odstranění klienta} – Uživatel odstraní klienta, s~ním i~všechny projekty a časové záznamy, které pod klienta spadají.
+\end{itemize}
 
 Poslední kartou v~navigační liště aplikace bude karta s~Profilem. Uživatel zde bude mít základní přehled a akce týkající se jeho účtu, jak lze nahlédnout na obrázku \ref{fig:profile-overview}. Uživatel se odsud dostane do seznamu klientů a seznamu profilů, dále si může pomocí tlačítka svůj účet smazat, nebo se odhlásit, což ho vrátí zpět na přihlašovací obrazovku \ref{fig:login}. Mazání účtu je nevratná akce, která vymaže spoustu dat spojených s~uživatelem, je tedy potřeba alespoň ukázat ověřující dialog, který lze nahlédnout na obrázku \ref{fig:profile-delete}. 
 
@@ -240,7 +271,19 @@ Dalším typem spouštěčů byly softwarové spouštěče, tedy nějaké formy 
 
 Aplikace se mohou na toto API napojit pomocí definic takzvaných \emph{App Intents}. Apple v~jejich dokumentaci \cite{ios-app-intents} poskytuje podrobné informace k~tomu, jak tyto \emph{App Intents} definovat, jak pro ně vytvářet parametry, a další. Tyto struktury reprezentují nějakou akci aplikace, kterou uživatel může spustit. Nejpoužívanější (podle očekávání) automatizovatelné funkce aplikace budou zapínání časovače, vypínaní časovače a případně rušení časovače. Bylo by tedy vhodné pro tyto tři funkce vytvořit \emph{App Intents}, které uživatelům umožní vytvářet zkratky a automatizace pro jejich spuštění. V~případě zapínání časovače se také naskytuje možnost použití dvou nepovinných parametrů, a to projekt a popis, který bude uživatel chtít k~záznamu přiřadit.
 
-Implementace integrace se systémovými zkratkami umožní širokou a potenciálně velmi rozšiřovatelnou míru integrace, protože se jedná o~společné systémové API, na které lze napojit jakoukoli aplikaci, a spousta aplikací nějakou formu napojení na zkratky implementuje. U~systémových aplikací to dokonce platí pro všechny – pokrytí automatizovatelných funkcí je zde velmi široké.
+Implementace integrace se systémovými zkratkami umožní rozsáhlou a potenciálně velmi rozšiřovatelnou míru integrace, protože se jedná o~společné systémové API, na které lze napojit jakoukoli aplikaci, a spousta aplikací nějakou formu napojení na zkratky implementuje. U~systémových aplikací to dokonce platí pro všechny – pokrytí automatizovatelných funkcí je zde velmi široké.
+
+Integrace pro import tedy budou sloužit pro následující případy užití:
+\begin{itemize}
+\item\textbf{Tvorba, úprava nebo odstranění zkratky} – Uživatel si vytvoří, upraví nebo odstraní existující zkratku, která může obsahovat následující akce:
+  \begin{itemize}
+  \item\textbf{Spuštění časovače} se zadanými parametry.
+  \item\textbf{Zastavení časovače} a uložení měřeného záznamu.
+  \item\textbf{Zrušení časovače} a zahození měřeného záznamu.
+  \end{itemize}
+\item\textbf{Tvorba, úprava nebo odstranění automatizace} – Uživatel si vytvoří, upraví nebo odstraní existující automatizaci, která může spouštět vytvořené zkratky.
+\item\textbf{Manuální spuštění zkratky} – Uživatel manuálně spustí zkratku, například pomocí hlasového asistenta \emph{Siri}, pomocí \emph{Spotlight} vyhledávání, nebo přímo v~aplikaci \emph{Zkratky}. 
+\end{itemize}
 
 %---------------------------------------------------------------
 \subsubsection{Export}
@@ -251,6 +294,13 @@ V~sekci \ref{existing-tracking-solutions} byly popsány populární systémy \em
 Možnost exportu z~aplikace do CSV souboru by tedy byla silným nástrojem, pomocí kterého by se záznamy z~aplikace mohly nejen importovat do těchto systémů, ale byla by uživatelům poskytnuta volná možnost, co s~exportovanými daty dělat. V~různých programech by si je mohli dle svého uvážení analyzovat, vizualizovat, a další. Možnost exportu dat do CSV souboru by tedy v~aplikaci neměla chybět. Ideálně by mělo jít o~formát, který půjde importovat jak do systému \emph{Clockify}, tak do systému \emph{Toggl Track}. Systém \emph{Deputy} cílí na trochu jinou cílovou skupinu, napojení na něj by proto nebylo tolik relevantní, jak již bylo popsáno v~sekci \ref{deputy}.
 
 Všechny zmíněné systémy také poskytovaly veřejné API pro napojení na jejich struktury. Zde už se nepůjde spolehnout na nějaké obecné řešení, které bude pasovat na více systémů, ale bude se potřeba na každý systém napojit zvlášť. V~rámci implementace by mohla být vytvořena integrace alespoň s~jedním systémem, a zároveň by implementace mohla být připravena pro rozšíření o~napojení na další systémy.
+
+Integrace pro export tedy budou sloužit pro následující případy užití:
+\begin{itemize}
+\item\textbf{Zobrazení existujících integrací} – Uživatel si zobrazí vytvořené integrace.
+\item\textbf{Tvorba, úprava nebo odstranění integrace} – Uživatel si vytvoří, upraví nebo odstraní integraci.
+\item\textbf{Export dat pomocí integrace} – Uživatel pomocí konkrétní integrace exportuje data v~zadaném rozsahu.
+\end{itemize}
 
 Rozhraní pro integraci s~dalšími systémy bylo navrženo následovně. V~pořadí druhá, tedy prostřední, karta v~navigační liště bude sloužit pro vytváření integrací. Aby aplikace mohla v~budoucnu podporovat různé typy integrací a zároveň aby si uživatel mohl svá nastavení integrací ukládat, bude hlavní obrazovku integrací představovat seznam již vytvořených integrací, který lze nahlédnout na obrázku \ref{fig:integration-list}.
 
