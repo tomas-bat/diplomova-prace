@@ -1,4 +1,4 @@
-Tato kapitola rozebírá, k~čemu slouží zaznamenávání odpracovaného času. Poté popisuje možnosti, které umožňují měření času spouštět a~také se věnuje příkladům řešení, která již pro zaznamenávání odpracovaného času existují, a~jaké jsou možnosti propojení s~těmito řešeními. V~dalších sekcích se poté obecně zaměřuje na vývoj aplikací pro mobilní platformu iOS včetně možností multi-platformního a~cross-platformního vývoje.
+Tato kapitola rozebírá, k~čemu slouží zaznamenávání odpracovaného času. Poté popisuje možnosti, jak měření času spouštět a~také se věnuje příkladům řešení, která již pro zaznamenávání odpracovaného času existují, a~jaké jsou možnosti propojení s~těmito řešeními. V~dalších sekcích se poté obecně zaměřuje na vývoj aplikací pro mobilní platformu iOS včetně možností multi-platformního a~cross-platformního vývoje.
 
 %---------------------------------------------------------------
 \section{Zaznamenávání odpracovaného času}
@@ -6,8 +6,8 @@ Tato kapitola rozebírá, k~čemu slouží zaznamenávání odpracovaného času
 
 Zaznamenávání odpracovaného času může být potřeba z~několika různých důvodů, buď z~pohledu jednotlivce, nebo z~pohledu spolupráce v~nějakém týmu. Mezi tyto důvody může patřit například:
 \begin{itemize}
-\item\textbf{Sledování pracovních hodin:} Pomáhá zaměstnancům a~podnikům sledovat, kolik času strávili na různých úkolech, projektů a~aktivitách během pracovní doby. To může být užitečné pro sledování produktivity, hodnocení efektivity práce a~plánování rozpočtu času.
-\item\textbf{Fakturace a~účtování:} Pro profesionály a~firmy, které účtují za své služby na základě odpracovaného času, umožňuje zaznamenávání snadné sledování času stráveného na jednotlivých projektech a~klientech pro účely fakturace.
+\item\textbf{Sledování pracovních hodin:} Pomáhá zaměstnancům a~podnikům sledovat, kolik času strávili na jednotlivých úkolech, projektech a~aktivitách během pracovní doby. To může být užitečné pro sledování produktivity, hodnocení efektivity práce a~plánování rozpočtu času.
+\item\textbf{Fakturace a~účtování:} Pro profesionály a~firmy, které účtují za své služby na základě odpracovaného času, umožňuje zaznamenávání snadné sledování času stráveného na určitých projektech a~klientech pro účely fakturace.
 \item\textbf{Analýza produktivity:} Poskytuje data a~statistiky o~tom, jaký čas je věnován různým úkolům a~projektům. To umožňuje identifikovat trendy v~pracovních návycích, optimalizovat časové plánování a~zlepšit efektivitu práce.
 \item\textbf{Správa projektů:} Pomáhá organizovat časové údaje spojené s~různými projekty a~úkoly, což usnadňuje plánování, delegování a~monitorování pokroku.
 \item\textbf{Transparentnost a~komunikace:} Pro týmy umožňuje transparentně sdílet informace o~čase stráveném na různých aktivitách, což podporuje spolupráci a~komunikaci v~rámci týmu.
@@ -26,15 +26,15 @@ Celkově zaznamenávání slouží k~lepšímu řízení času, sledování prod
 \section{Spouštěče měření času}\label{tracking-triggers}
 %---------------------------------------------------------------
 
-Jedním z~cílů této práce je prozkoumat různá řešení pro spouštěče měření času. Nejjednodušším spouštěčem je samozřejmě ruční zapnutí nějaké formy časovače v~samotné aplikaci, která pro měření času slouží. To ale umí kdejaké již existující řešení a~přidanou hodnotou této práce by měly být nějaké možnosti, jak spouštění uživateli ulehčit. Tyto možnosti se dají rozdělit do dvou kategorií – fyzické a~softwarové.
+Jedním z~cílů této práce je prozkoumat různá řešení pro spouštěče měření času. Nejjednodušším spouštěčem je samozřejmě ruční zapnutí nějaké formy časovače v~samotné aplikaci, která pro měření času slouží. To ale umí kdejaké již existující řešení a~přidanou hodnotou této práce by měly být možnosti, jak spouštění uživateli ulehčit. Tyto možnosti se dají rozdělit do dvou kategorií – fyzické a~softwarové.
 
 %---------------------------------------------------------------
 \subsection{Fyzické}
 %---------------------------------------------------------------
 
-Za fyzické spouštěče měření času lze považovat jakoukoli formu fyzického ovladače, kterou může uživatel nějak ovládat a~tím spouštět časovač měření času.
+Za fyzické spouštěče měření času lze považovat jakoukoli formu fyzického ovladače, kterou může uživatel ovládat a~tím spouštět časovač měření času.
 
-Častým typem fyzického spouštěče je nějaká forma takzvaného platónského tělesa (krychle, osmistěn, dvanáctistěn, atd.), které může uživatel otáčet. Podle toho, na kterou stranu ho položí, tak se spustí časovač s~danými parametry. Různé strany tělesa mohou sloužit například pro identifikování toho, na kterém projektu uživatel zrovna pracuje.
+Častým typem fyzického spouštěče je nějaká forma takzvaného platónského tělesa (krychle, osmistěn, dvanáctistěn, atd.), které může uživatel otáčet. Podle toho, na kterou stranu ho položí, se spustí časovač s~danými parametry. Různé strany tělesa mohou sloužit například pro identifikování toho, na kterém projektu uživatel zrovna pracuje.
 
 Mezi fyzické spouštěče patří například tyto produkty:
 \begin{itemize}
@@ -69,11 +69,11 @@ Pokud by nová aplikace měla umožňovat budoucí propojení s~jakýmkoli dalš
 
 Za softwarové spouštěče měření času lze považovat určité formy integrace a~automatizace v~rámci zařízení, na kterém aplikace běží. V~případě aplikace na platformě iOS to mohou být následující možnosti:
 \begin{itemize}
-\item\textbf{Automatizace podle polohy:} Aplikace by mohla reagovat na polohu uživatele a~spouštět nebo vypínat časovač na základně informace, kde se uživatel nachází. Uživatel by si mohl například nastavit určitá místa, kde by chtěl, aby se automaticky spustil časovač. Mohl by se zapnout přímo s~konkrétními přednastavenými parametry (projekt, klient, \dots), nebo by se jen mohlo ukázat upozornění, aby si uživatel časovač zapnul sám, s~parametry, které zadá. Podobně by aplikace mohla reagovat i~na opuštění nějakého místa – například pokud uživatel opustí místo, které má označeno jako práci, tak by dostal upozornění, zda si nechce vypnout časovač.
+\item\textbf{Automatizace podle polohy:} Aplikace by mohla reagovat na polohu uživatele a~spouštět nebo vypínat časovač na základě informace, kde se uživatel nachází. Uživatel by si mohl například nastavit určitá místa, kde by chtěl, aby se automaticky spustil časovač. Mohl by se zapnout přímo s~konkrétními přednastavenými parametry (projekt, klient, \dots), nebo by se jen mohlo ukázat upozornění, aby si uživatel časovač zapnul sám, s~parametry, které zadá. Podobně by aplikace mohla reagovat i~na opuštění nějakého místa – například pokud uživatel opustí místo, které má označeno jako práci, tak by dostal upozornění, zda si nechce vypnout časovač.
 \item\textbf{Automatizace podle času:} Jednoduchá forma automatizace by mohla fungovat na základě času. V~přednastavených časech by se mohl zapnout nebo vypnout časovač s~danými parametry, nebo by aplikace mohla uživatele jen upozornit.
 \item\textbf{Automatizace podle kalendáře:} Užitečná by také mohla být integrace s~kalendářem uživatele. Podle naplánovaných událostí by se časovač mohl automaticky zapínat, přepínat, nebo vypínat, s~parametry z~kalendáře. Nebo opět pouze uživatele upozornit, zda si kvůli nějaké události nechce měření času aktualizovat.
 \item\textbf{Automatizace podle režimu soustředění:} Systém iOS umožňuje od verze 15.0 uživatelům používat takzvané \emph{Režimy soustředění} \cite{ios-focus-modes}. Uživatel si může konfigurovat různé režimy a~nastavovat, jaké mu v~tomto režimu budou chodit upozornění, jaké aplikace může používat, kdo mu může volat, apod. Od iOS verze 16 také Apple umožňuje vývojářům přizpůsobovat chování aplikace podle toho, jaký režim soustředění je zapnutý \cite{ios-focus-modes-adjustment}. Toho by se dalo vhodně využít například tak, že by se mohl automaticky spouštět časovač (nebo by uživatel mohl být upozorněn) podle toho, do jakého režimu soustředění se uživatel právě přepnul.
-\item\textbf{Automatizace pomocí zkratek:} Apple nabízí uživatelům s~iOS verze 13.0 nebo novější aplikaci \emph{Zkratky} \cite{ios-shortcuts-app}, která umožňuje tvorbu vlastních automatizujících procesů \cite{ios-shortcuts}. Tento způsob automatizace umožňuje uživatelům i~vývojářům velkou míru přizpůsobitelnosti – zkratky jdou propojovat s~dalšími aplikacemi, s~hlasovým asistentem a~s~mnoha různými akcemi. Všechny předchozí způsoby automatizace jdou také nějakým způsobem vytvořit pomocí zkratek. \cite{ios-shortcuts-developer}
+\item\textbf{Automatizace pomocí zkratek:} Apple nabízí uživatelům s~iOS verze 13.0 nebo novější aplikaci \emph{Zkratky} \cite{ios-shortcuts-app}, která umožňuje tvorbu vlastních automatizujících procesů \cite{ios-shortcuts}. Tento způsob automatizace umožňuje uživatelům i~vývojářům velkou míru přizpůsobitelnosti – zkratky lze propojovat s~dalšími aplikacemi, s~hlasovým asistentem a~s~mnoha různými akcemi. Všechny předchozí způsoby automatizace lze také nějakým způsobem vytvořit pomocí zkratek. \cite{ios-shortcuts-developer}
 \end{itemize}
 
 %---------------------------------------------------------------
@@ -109,9 +109,9 @@ Clockify nabízí dobře zdokumentované API pro své služby \cite{clockify-api
 
 Mezi nevýhody systému Clockify Forbes uvádí, že projekty nejdou označit jako dokončené, a~že shrnující reporty mohou být zpočátku matoucí. Celkově Clockify ale vnímá jako nejlepší řešení pro pokrytí celé škály funkcionalit.
 
-Na obrázku \ref{fig:clockify-timer} je vidět hlavní obrazovka ve webové verzi aplikace – časovač. Uživatel si zde může časovat ručně zapnout a~vypnout, přidělit projekt, přidat značky, označit vykazovatelnost a~přidat popisek. Také má možnost přidat odpracovaný čas ručně, tedy ne pomocí časovače. K~tomu stačí jen napsat čas začátku a~konce. Pod ovládacím panelem časovače potom uživatel vidí seznam svých již zadaných časových záznamů, které zde může jakkoli upravovat.
+Na obrázku \ref{fig:clockify-timer} je vidět hlavní obrazovka ve webové verzi aplikace – časovač. Uživatel si zde může časovač ručně zapnout a~vypnout, přidělit projekt, přidat značky, označit vykazovatelnost a~přidat popisek. Také má možnost přidat odpracovaný čas ručně, tedy ne pomocí časovače. K~tomu stačí jen napsat čas začátku a~konce. Pod ovládacím panelem časovače potom uživatel vidí seznam svých již zadaných časových záznamů, které zde může libovolně upravovat.
 
-Dále je na obrázku \ref{fig:clockify-report} vidět obrazovka určená pro reporty. Uživatel si zde může vybrat časový úsek, pro který chce report vypracovat, a~může si nastavit filtry, podle kterých chce časové vstupy filtrovat (tým, klient, projekt, úkol, značka, stav a~popisek). Po aplikování filtru poté uživatel uvidí report své práce vyhovující zadaným parametrům, který si může exportovat ve formátech PDF, CSV a~Excel.
+Dále je na obrázku \ref{fig:clockify-report} vidět obrazovka určená pro reporty. Uživatel si zde může vybrat časový úsek, pro který chce report vypracovat, a~může si nastavit filtry, podle kterých chce časové vstupy filtrovat (tým, klient, projekt, úkol, značka, stav a~popisek). Po aplikování filtru uživatel následně uvidí report své práce vyhovující zadaným parametrům, který si může exportovat ve formátech PDF, CSV a~Excel.
 
 %---------------------------------------------------------------
 \subsection{Toggl Track}
@@ -149,19 +149,19 @@ Deputy nabízí aplikaci pro měření odpracovaného času pro mobilní platfor
 	\caption{Aplikace Deputy \cite{deputy-time-tracking-app}}
 \end{figure}
 
-Stejně jako předchozí systémy, Deputy nabízí možnost importu dat z~CSV tabulky \cite{deputy-import-csv}. Vzhledem k~trochu jinému byznysovému modelu této aplikace ale tyto data musí narozdíl od předchozích systémů obsahovat dodatečná data, jako místo, pauzy na oběd, a~další. a~ani u~této aplikace nechybí otevřené API \cite{deputy-api}.
+Stejně jako předchozí systémy, Deputy nabízí možnost importu dat z~CSV tabulky \cite{deputy-import-csv}. Vzhledem k~trochu jinému byznysovému modelu této aplikace ale tyto data musí na rozdíl od předchozích systémů obsahovat dodatečná data, jako místo, pauzy na oběd, a~další. a~ani u~této aplikace nechybí otevřené API \cite{deputy-api}.
 
 %---------------------------------------------------------------
 \section{Vývoj mobilních aplikací pro systém iOS}
 %---------------------------------------------------------------
 
-Tato sekce se věnuje několika klíčovým tématům souvisejícím s~vývojem aplikací pro zařízení s~operačním systémem iOS. Tyto témata shrnuje a~poskytuje tím základ pro diskuzi o~vývoji aplikací pro tento systém.
+Tato sekce se věnuje několika klíčovým tématům souvisejícím s~vývojem aplikací pro zařízení s~operačním systémem iOS. Tato témata shrnuje a~poskytuje tím základ pro diskuzi o~vývoji aplikací pro tento systém.
 
 %---------------------------------------------------------------
 \subsection{Historie a~vývoj iOS platformy}
 %---------------------------------------------------------------
 
-Historie operačního systému iOS začala v~roce 2007, kdy byl představen a~začal se prodávat první mobilní telefon od společnosti Apple, kterým byl iPhone. V~tomto telefonu byl od výroby nainstalován operační systém, který ještě v~tu dobu nenesl název \emph{iOS}, ale \emph{iPhone OS}. Název \emph{iOS} se začal používat až později od verze systému 4. Přestože z~dnešního pohledu chybělo v~systému mnoho funkcí, se kterými si dnes mobilní telefony spojujeme, jako možnost instalace aplikací třetích stran, tak to byl v~tu dobu velký posun. Věci jako \emph{Multitouch screen}, vizuální znázornění hlasové schránky, nebo integrace s~\emph{iTunes}, byly obrovskou výhodou. Mezi předinstalované aplikace patřil kalendář, fotky, fotoaparát, poznámky, prohlížeč webu \emph{Safari}, e-mailový klient, telefon a~\emph{iPod} (který se později rozdělil na aplikace pro hudbu a~aplikace pro videa).
+Historie operačního systému iOS začala v~roce 2007, kdy byl představen a~začal se prodávat první mobilní telefon od společnosti Apple, kterým byl iPhone. V~tomto telefonu byl od výroby nainstalován operační systém, který ještě v~tu dobu nenesl název \emph{iOS}, ale \emph{iPhone OS}. Název \emph{iOS} se začal používat až později od verze systému 4. Přestože z~dnešního pohledu chybělo v~systému mnoho funkcí, se kterými si dnes mobilní telefony spojujeme (například možnost instalace aplikací třetích stran), tak v~tu dobu to byl velký posun. Věci jako \emph{Multitouch screen}, vizuální znázornění hlasové schránky, nebo integrace s~\emph{iTunes}, byly ohromnou výhodou. Mezi předinstalované aplikace patřil kalendář, fotky, fotoaparát, poznámky, prohlížeč webu \emph{Safari}, e-mailový klient, telefon a~\emph{iPod} (který se později rozdělil na aplikace pro hudbu a~aplikace pro videa).
 
 \begin{figure}[h]
 	\centering
@@ -173,13 +173,13 @@ O~rok později, v~roce 2008, byla představena nová generace mobilního telefon
 
 V~roce 2009 poté s~novým iPhonem 3GS přišla verze iOS (iPhone OS) 3, která přinesla hlavně vylepšení, jako možnost používat kopírování a~vkládání, vyhledávání přes \emph{Spotlight}, podporu MMS a~možnost natáčet videa (do té doby iPhone uměl pouze pořizovat fotky). Také to byla první verze operačního systému, která fungovala i~na nových tabletech od společnosti Apple – na iPadech. První iPad byl představen v~roce 2010.
 
-V~roce 2010 byl představen nový iPhone 4 a~s~ním verze operačního systému 4. Od této verze se začal používat název \emph{iOS}, který nahradil do té doby používaný \emph{iPhone OS}. Toto nové pojmenování mělo sjednocovat názvosloví pro více zařízení – iPhone, iPad a~iPod. iPhone 4 byl poměrně velkou změnou, protože disponoval novým hranatým designem a~iOS 4 přineslo novinky, které tento operační systém pomalu začaly rýsovat do dnešní podoby. Mezi novinky patřil \emph{FaceTime}, \emph{multitasking}, \emph{iBooks}, organizování aplikací do složek, osobní hotspot nebo sdílení dat pomocí \emph{AirPlay} a~\emph{AirPrint}. Také to byla první verze iOS, která nepodporovala všechny dosud vydané iPhony, protože nebyla kompatibilní s~prvním iPhonem.
+V~roce 2010 byl představen nový iPhone 4 a~s~ním verze operačního systému 4. Od této verze se začal používat název \emph{iOS}, který nahradil do té doby používaný \emph{iPhone OS}. Toto nové pojmenování mělo sjednocovat názvosloví pro více zařízení – iPhone, iPad a~iPod. iPhone 4 byl poměrně velkou změnou, protože disponoval novým hranatým designem, a~systém iOS 4 přinesl novinky, které tento operační systém pomalu začaly rýsovat do dnešní podoby. Mezi novinky patřil \emph{FaceTime}, \emph{multitasking}, \emph{iBooks}, organizování aplikací do složek, osobní hotspot nebo sdílení dat pomocí \emph{AirPlay} a~\emph{AirPrint}. Také to byla první verze iOS, která nepodporovala všechny dosud vydané iPhony, protože nebyla kompatibilní s~prvním iPhonem.
 
 O~rok později, s~iPhonem 4S, byl představen iOS verze 5. Apple v~ní reagoval na rostoucí trend bezdrátovosti a~\emph{cloud computing} představením několika nových funkcí a~platforem. Mezi ně patřil třeba iCloud nebo synchronizace s~iTunes přes Wi-Fi. Také vznikla platforma \emph{iMessage} a~začalo se používat oznamovací centrum.
 
 Dalším modelem byl iPhone 5, který poprvé změnil velikost displeje a~zvětšil ji z~3,5 palce na 4. S~tímto modelem přišla verze iOS 6, kterou doprovázelo mnoho problémů. V~této verzi Apple představil hlasového asistenta \emph{Siri}, který i~přes to, že ho později předčila konkurence, byl poměrně zásadní novinkou. Dále Apple v~nové verzi představil nové aplikace pro mapy, na které do té doby používal řešení od firmy Google. Tyto mapy od začátku obsahovaly mnoho chyb a~celkově byly považovány za dost nedokončené, což způsobilo ve firmě mnoho problémů.
 
-V~roce 2013, s~novým modelem iPhone 5S, přišla verze iOS 7. Tato verze zásadním způsobem změnila vzhled uživatelského rozhraní, které se na začátku od uživatelů netěšilo příliš dobrému přijetí, ale po několika vylepšeních a~po tom, co si uživatelé na nový vzhled zvykli, tak problémy ustaly. Mezi nové funkce této verze se řadí sdílení dat s~dalšími uživateli přes \emph{AirDrop}, používání operačního systému v~displejích automobilů přes \emph{CarPlay}, ovládací centrum, nebo nový způsob odemykání zařízení pomocí otisku prstu – \emph{Touch ID}.
+V~roce 2013, s~novým modelem iPhone 5S, přišla verze iOS 7. Tato verze zásadním způsobem změnila vzhled uživatelského rozhraní, které se na začátku od uživatelů netěšilo příliš dobrému přijetí, ale po několika vylepšeních a~po tom, co si uživatelé na nový vzhled zvykli, problémy ustaly. Mezi nové funkce této verze se řadí sdílení dat s~dalšími uživateli přes \emph{AirDrop}, používání operačního systému v~displejích automobilů přes \emph{CarPlay}, ovládací centrum, nebo nový způsob odemykání zařízení pomocí otisku prstu – \emph{Touch ID}.
 
 \begin{figure}[h]
 	\centering
@@ -193,19 +193,19 @@ Rok 2015 přinesl iPhone 6S a~iOS 9. V~této verzi se Apple soustředil hlavně 
 
 Dalším modelem byl v~roce 2016 iPhone 7 s~iOS~10. Opět nepřinesl moc nových funkcí, mimo například možnosti mazat původní nainstalované aplikace.
 
-O~rok později poté s~iPhonem~8 přišel iOS~11. V~této verzi se Apple soustředil převážně na nové funkcionality pro iPad, které se jeho použití snažily přiblížit k~plnohodnotnému počítači. Nově přibyly funkce jako podpora tužky \emph{Apple Pencil}, podpora více otevřených oken a~pracovních ploch nebo prohlížeč souborů. Apple ale na závěr představení představil ještě další nový iPhone – iPhone X. Jednalo se o~další velký redesign, kdy se výrazně zvětšila plocha displeje, zmizelo přední tlačítko a~vzniklo ověření uživatele pomocí obličeje – \emph{Face ID}.
+O~rok později poté s~iPhonem~8 přišel iOS~11. V~této verzi se Apple soustředil převážně na nové funkcionality pro iPad, které se jeho použití snažily přiblížit k~plnohodnotnému počítači. Nově přibyly funkce jako podpora tužky \emph{Apple Pencil}, podpora více otevřených oken a~pracovních ploch nebo prohlížeč souborů. Apple ale na závěr představil ještě další nový iPhone – iPhone X. Jednalo se o~další velký redesign, kdy se výrazně zvětšila plocha displeje, zmizelo přední tlačítko a~vzniklo ověření uživatele pomocí obličeje – \emph{Face ID}.
 
-V~roce 2018 Apple představil iPhone~XS a~levnější variantu XR, se kterými přišel iOS~12, kde se jednalo opět jen o~mírná vylepšení. 
+V~roce 2018 Apple představil iPhone~XS a~levnější variantu XR, se kterými přišel iOS~12, kde se jednalo opět jen o~nepatrná vylepšení. 
 
 S~dalším rokem přišel iPhone~11 a~iOS~13. Tento systém už se rozdělil – pro zařízení iPad nyní vznikl oddělený \emph{iPadOS}. V~iOS~13 Apple představil možnost tmavého režimu pro celý systém, nové možnosti bezpečnosti a~soukromí a~s~tím související možnost přihlášení přes Apple.
 
 V~roce 2020 s~iPhonem~12 a~iOS~14 Apple přidal několik menších změn a~vylepšení, jako \emph{Widgety} na domovské obrazovce.
 
-Podobně to bylo i~v~roce 2021, kdy Apple s~novým iPhonem~13 a~iOS~15 přidával velké množství menších vylepšení, primárně do vlastních aplikací.
+Podobně tomu bylo i~v~roce 2021, kdy Apple s~novým iPhonem~13 a~iOS~15 přidával velké množství menších vylepšení, primárně do vlastních aplikací.
 
-S~rokem 2022 přišel iPhone~14 a~iOS~16, který přinesl sadu vylepšení a~nových funkcí pro zamčenou obrazovku, spolu s~dalšími vylepšeními,
+S~rokem 2022 přišel iPhone~14 a~iOS~16, který přinesl sadu vylepšení a~nových funkcí pro zamčenou obrazovku, spolu s~dalšími vylepšeními.
 
-Poslední velký update iOS přišel v~roce 2023 s~iPhonem~15 a~iOS~17. a~jak už bylo v~posledních letech zvykem, tak tato aktualizace přinášela větší množství menších vylepšení a~aktualizací, které ale už nijak zásadně neměnily systém a~interakci s~ním. \cite{history-of-ios}
+Poslední znatelný update iOS přišel v~roce 2023 s~iPhonem~15 a~iOS~17. a~jak už bylo v~posledních letech zvykem, tak tato aktualizace přinášela větší množství menších vylepšení a~aktualizací, které ale už nijak zásadně neměnily systém a~interakci s~ním. \cite{history-of-ios}
 
 Za těchto 17 let vývoje se operační systém iOS dostal do stavu, kdy ho v~současnou chvíli používá 1,46 miliard aktivních uživatelů. Mobilních telefonů iPhone se od roku 2007 prodalo 2,3 miliard. \cite{iphone-user-statistics}
 
@@ -225,7 +225,7 @@ Pro nativní vývoj iOS aplikací se dříve používal programovací jazyk \emp
 
 Jako u~každého softwarového projektu, architektura je důležitou součástí jeho návrhu. K~architekturám mobilních aplikací existuje mnoho přístupů. Například u~Android aplikací sám Google doporučuje, jaké architektonické vzory by měly být používány a~doporučuje architektury pro tyto aplikace \cite{android-app-arch}. Apple přímo žádné architektury pro aplikace cílící na iOS platformu nedoporučuje. 
 
-Dokumentace pro iOS platformu ale obsahuje mnoho ukázek kódu věnujících se konkrétním tématům (například \cite{swift-ui-tutorial-complex-interfaces}), kde je vždy nějaký náznak architektury připraven. V~těchto ukázkách se vyskytuje architektura \emph{Model-View-Controller} (zkráceně MVC). Narozdíl od tradiční MVC architektury se ta používaná Applem mírně liší, jelikož tradiční MVC architektura není moc dobře aplikovatelná na moderní iOS vývoj. Jak lze vidět na obrázcích \ref{fig:mvc}, v~tradičním MVC by mělo \emph{View} být beze stavu a~měl by ho pouze překreslovat \emph{View Controller}. Toto sice je možné v~iOS aplikaci implementovat, ale nedává to moc smysl, protože všechny tyto 3 entity jsou hluboce provázané, což dramaticky snižuje jejich opětovné použití. Při použití v~iOS aplikaci je \emph{Controller} mediátorem mezi \emph{View} a~\emph{Model}, kteří o~sobě navzájem nic nevědí. Jelikož je ale \emph{View Controller} zpravidla velice provázán s~\emph{View}, tak vzniká potřeba psát masivní \emph{View Controller}. Proto se v~iOS vývoji často referuje na MVC jako na \emph{Massive View Controller}.
+Dokumentace pro iOS platformu ale obsahuje mnoho ukázek kódu věnujících se konkrétním tématům (například \cite{swift-ui-tutorial-complex-interfaces}), kde je vždy nějaký náznak architektury připraven. V~těchto ukázkách se vyskytuje architektura \emph{Model-View-Controller} (zkráceně MVC). Na rozdíl od tradiční MVC architektury se ta používaná Applem mírně liší, jelikož tradiční MVC architektura není moc dobře aplikovatelná na moderní iOS vývoj. Jak lze vidět na obrázcích \ref{fig:mvc}, v~tradičním MVC by mělo \emph{View} být beze stavu a~měl by ho pouze překreslovat \emph{View Controller}. Toto je sice možné v~iOS aplikaci implementovat, ale nedává to moc smysl, protože všechny tyto 3 entity jsou hluboce provázané, což dramaticky snižuje jejich opětovné použití. Při použití v~iOS aplikaci je \emph{Controller} mediátorem mezi \emph{View} a~\emph{Model}, kteří o~sobě navzájem nic nevědí. Jelikož je ale \emph{View Controller} zpravidla velice provázán s~\emph{View}, tak vzniká potřeba psát masivní \emph{View Controller}. Proto se v~iOS vývoji často referuje na MVC jako na \emph{Massive View Controller}.
 
 \begin{figure}[h]
 	\centering
@@ -244,7 +244,7 @@ Dokumentace pro iOS platformu ale obsahuje mnoho ukázek kódu věnujících se 
 	\label{fig:mvc}
 \end{figure}
 
-Architektura MVC je ale v~ukázkách kódu od Applu používána pravděpodobně převážně proto, protože se hodí pro výstižné a~krátké ukázky kódu – obsahuje totiž minimální \emph{overhead}. Pro potřeby větších projektů začíná být nedostačující. Nelze nijak testovat logika prezentování, a~\emph{View} také nelze pomocí jednotkových testů otestovat. Jediné, co lze testovat, je \emph{Model}. a~velkou nevýhodou je právě zmíněný masivní \emph{View Controller}, který pro složitější obrazovky přestává být přehledný.
+Architektura MVC je ale v~ukázkách kódu od Applu používána pravděpodobně převážně proto, že se hodí pro výstižné a~krátké ukázky kódu – obsahuje totiž minimální \emph{overhead}. Pro potřeby větších projektů začíná být nedostačující. Nelze nijak testovat logiku prezentování, a~\emph{View} také nelze pomocí jednotkových testů otestovat. Jediné, co lze testovat, je \emph{Model}. a~velkou nevýhodou je právě zmíněný masivní \emph{View Controller}, který pro složitější obrazovky ztrácí přehlednost.
 
 Velmi rozšířenou architekturou v~iOS vývoji je \emph{Model-View-ViewModel} (zkráceně MVVM). \emph{View} a~\emph{Model} zastávají stejnou funkci jako v~MVC, a~mediátorem je zde \emph{View Model}. \emph{View} je v~tomto případě konkrétní obrazovka a/nebo \emph{View Controller}. \emph{View Model} je nezávislý na knihovně uživatelského rozhraní, což umožňuje jeho lepší testovatelnost. Drží stav obrazovky, vyvolává změny pro \emph{Model} a~aktualizuje se podle něj. Vizuální reprezentace architektury MVVM lze nahlédnout v~obrázku \ref{fig:mvvm}.
 
@@ -284,7 +284,7 @@ Jednotlivé architektury mají také své aktualizované varianty pro nově pou�
 
 Jednou z~novějších architektur, které využívají výhody deklarativních UI knihoven, jako je \emph{SwiftUI}, je \emph{Model-View-Intent} (zkráceně MVI). \emph{View} a~\emph{Model} reprezentují stejné vrstvy jako doposud a~\emph{Intent} reprezentuje nějaký úmysl vyvolat určitou akci. Tím může být například kliknutí uživatele. Konkrétní \emph{Intent} poté pomocí nějaké byznysové logiky aktualizuje stav, podle kterého se následně aktualizuje \emph{View}. \cite{swiftui-mvi}
 
-Všechny výše popsané architektury pracují s~daty pomocí nějakého \emph{Modelu} (\emph{Viper} pomocí \emph{Interactoru}). Práce s~daty ale obvykle není jednoduchá logika, která by si zasloužila pouze zmínku o~tom, že se o~ní stará nějaký \emph{Model}. Může se totiž jednat o~poměrně komplikovanou doménovou a~byznysovou logiku, stahování dat ze serveru, cache dat, práce s~databází, a~další. V~tomto ohledu je namístě diskutovat o~nějaké obecnější architektuře aplikace, ne pouze o~prezentační logice, tedy primárně o~logice uživatelského rozhraní. Obecným zvykem je aplikace rozdělovat do třívrstvé architektury. Tyto vrstvy se mohou nazývat různě, ale obvykle jde o:
+Všechny výše popsané architektury pracují s~daty pomocí nějakého \emph{Modelu} (\emph{Viper} pomocí \emph{Interactoru}). Práce s~daty ale obvykle není jednoduchá logika, která by si zasloužila pouze zmínku o~tom, že se o~ní stará nějaký \emph{Model}. Může se totiž jednat o~poměrně komplikovanou doménovou a~byznysovou logiku, stahování dat ze serveru, cache dat, práce s~databází, a~další. V~tomto ohledu je namístě diskutovat o~nějaké obecnější architektuře aplikace, ne pouze o~prezentační logice, tedy primárně o~logice uživatelského rozhraní. Obecným zvykem je aplikace rozdělovat do třívrstvé architektury. Tyto vrstvy se mohou nazývat různě, ale obvykle jde o~následující:
 \begin{itemize}
 \item\textbf{Prezentační vrstva:} Logika uživatelského rozhraní, interakce s~uživatelem, obrazovky, \dots
 \item\textbf{Doménová/byznysová vrstva:} Byznysová a~doménová logika.
@@ -307,7 +307,7 @@ V~současném prostředí mobilního vývoje se rozhodnutí ohledně vhodné pla
 Pro rozdíl mezi cross-platformním a~multi-platformním vývojem neexistuje přesná definice a~v~různých zdrojích lze nalézt různé interpretace (např. \cite{cross-multiplatform-alternative-intepretation-one} a~\cite{cross-multiplatform-alternative-intepretation-two}). V~kontextu vývoje pro mobilní aplikace si budeme tyto pojmy vykládat následovně:
 \begin{itemize}
 \item Cross-platformní vývoj představuje řešení, ve kterých sdílený kód běží na koncových platformách přímo přes nějakou formu abstrakce nebo interpretace.
-\item Multi-platformní vývoj představuje řešení, ve kterých se sdílený kód přímo interpretuje do nativního kódu specifického pro každou platformu.
+\item Multi-platformní vývoj představuje řešení, ve kterých se sdílený kód přímo kompiluje do nativního kódu specifického pro každou platformu.
 \end{itemize}
 
 %---------------------------------------------------------------
@@ -412,7 +412,7 @@ V implementaci vlastního backendu pro mobilní aplikace je důležité pečliv�
 
 V~této kapitole byly probrány všechny informace potřebné pro navazující návrh mobilní aplikace pro zaznamenávání odpracovaného času. 
 
-Co se týče domény problému, tak byla provedena rešerše spouštěčů měření času, ze které mohou být vhodně navrženy požadavky pro aplikaci na propojení s~nimi. Dále byla také provedena rešerše existujících systémů pro zaznamenávání odpracovaného času, ze které lze také vhodným způsobem navrhnout požadavky na integraci s~těmito systémy.
+Co se týče domény problému, byla provedena rešerše spouštěčů měření času, ze které mohou být vhodně navrženy požadavky pro aplikaci na propojení s~nimi. Dále byla také provedena rešerše existujících systémů pro zaznamenávání odpracovaného času, ze které lze také vhodným způsobem navrhnout požadavky na integraci s~těmito systémy.
 
 Dále se kapitola věnovala vývoji mobilních aplikací pro systém iOS, různým možnostem cross-platformního a~multi-platformního vývoje a~možnostem, jak přistupovat k~backendovým řešením podporující mobilní aplikace. Tyto informace by měly být plně postačující pro vhodný návrh funkcionalit aplikace, jejího uživatelského rozhraní, vnitřní architektury a~nástrojů k~tomu potřebným.
 
